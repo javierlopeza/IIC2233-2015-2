@@ -13,7 +13,7 @@ Asegúrate de llenar lo siguiente:
 
 | Nº Alumno    | Nombre              | Email UC      |
 |:-------------|:--------------------|:--------------|
-| 14632128     | Javier Lopez Achondo| jilopez8@uc.cl|
+| 14632128     | Javier Ignacio Lopez Achondo| jilopez8@uc.cl|
 
 
 ## Sobre las entregas
