@@ -51,6 +51,8 @@ audifono = Audifono(0,10,100,120) #Instancio un Audifono.
 aud_inalambrico = Inalambrico(0,10,100,120,50) #Instancio un Audifono Inalambrico.
 aud_bt = Bluetooth(0,10,100,120,50,123) #Instancio un Audifono Inalambrico Bluetooth.
 
+audifono.escuchar("Yellow Submarine") #Reproduzco la cancion Yellow Submarine con el Audifono instanciado anteriormente.
+aud_inalambrico.escuchar("We Will Rock You") #Reproduzco la cancion We Will Rock You con el Audifono Inalambrico instanciado anteriormente.
 aud_bt.escuchar("Thriller") #Reproduzco la cancion Thriller con el Audifono Inalambrico Bluetooth instanciado anteriormente.
 
 reproductor = Reproductor() #Instancio un Reproductor.
