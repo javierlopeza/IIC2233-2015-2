@@ -35,7 +35,6 @@ class Bluetooth(Inalambrico):
 		print(frase)
 
 class Reproductor():
-
 	def conectar_audifono(self, audifono, distancia): 
 	#1. El argumento distancia corresponde a la distancia a la 
 	#	que se encuentra el audifono del reproductor.
@@ -47,12 +46,13 @@ class Reproductor():
 			print("Error al conectar el audifono.")
 
 audifono = Audifono(min_f=0, max_f=100, impedencia=150, int_max=200) #Instancio un Audifono.
-aud_inalambrico = Inalambrico(min_f=0, max_f=100, impedencia=150, int_max=200, rango_max=50) #Instancio un Audifono Inalambrico.
+aud_over = OverEar(min_f=0, max_f=100, impedencia=150, int_max=200, p_aislacion=85) #Instancio un Audifono OverEar.
+aud_inalambrico = Inalambrico(min_f=0, max_f=100, impedencia=150, int_max=200, rango_max=45) #Instancio un Audifono Inalambrico.
 aud_bt = Bluetooth(min_f=0, max_f=100, impedencia=150, int_max=200, rango_max=50, identificador=123) #Instancio un Audifono Inalambrico Bluetooth.
 
-over = OverEar(min_f=0, max_f=100, impedencia=150, int_max=200, p_aislacion=85)
 
 audifono.escuchar("Yellow Submarine") #Reproduzco la cancion Yellow Submarine con el Audifono instanciado anteriormente.
+aud_over.escuchar("Bohemian Rapsody") #Reproduzco la cancion Bohemian Rapsody con el Audifono OverHear instanciado anteriormente.
 aud_inalambrico.escuchar("We Will Rock You") #Reproduzco la cancion We Will Rock You con el Audifono Inalambrico instanciado anteriormente.
 aud_bt.escuchar("Thriller") #Reproduzco la cancion Thriller con el Audifono Inalambrico Bluetooth instanciado anteriormente.
 
@@ -67,3 +67,6 @@ reproductor.conectar_audifono(aud_bt, 40)
 #El Audifono Inalambrico Bluetooth se encuentra 
 #a una distancia menor o igual del rango_max que permite conectarse, 
 #por lo que se conecta exitosamente.
+
+reproductor.conectar_audifono(aud_inalambrico, 55) #Intento fallido de conectar el Audifono Inalambrico al reproductor.
+reproductor.conectar_audifono(aud_inalambrico, 20) #Intento exitoso de conectar el Audifono Inalambrico al reproductor.
