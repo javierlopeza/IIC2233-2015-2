@@ -43,7 +43,7 @@ class Reproductor():
 		if distancia <= audifono.rango_max:
 			print("Conexion Exitosa.")
 		else:
-			print("Error al conectar el audifono.")
+			print("Error al conectar el audifono inalambrico.")
 
 audifono = Audifono(min_f=0, max_f=100, impedencia=150, int_max=200) #Instancio un Audifono.
 aud_over = OverEar(min_f=0, max_f=100, impedencia=150, int_max=200, p_aislacion=85) #Instancio un Audifono OverEar.
