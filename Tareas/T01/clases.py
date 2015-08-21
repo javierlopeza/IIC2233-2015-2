@@ -14,18 +14,30 @@ class Alumno(Persona):
 		self.horario_inscripcion = horario_inscripcion
 		self.cursos_por_tomar = cursos_por_tomar
 		self.alumno = "SI"
+		self.permisos_especiales = []
 	def inscribir_ramo(self, ramo):
+		#Si cumple con todos los requisitos o tiene aprobacion especial del profesor:
 		if ramo.disponibles > 0:
 			# <<<<<<<<<<<<<<<---------------------- REVISAR RESTRICCIONES DE REQUISITOS, TOPES DE HORARIO, ETC...
 			ramo.disponibles -= 1
 			ramo.ocupados +=1
-			cursos_por_tomar.append(ramo)
+			self.cursos_por_tomar.append(ramo)
+	def botar_ramo(self, ramo):
+		ramo.disponibles += 1
+		ramo.ocupados -= 1
+		self.cursos_por_tomar.remove(ramo)
+	#def generar_horario(self):
+	#def generar_calendario_evaluaciones(self):
+
 
 
 class Profesor(Persona):
 	def __init__(self, **kwargs):
 		super().__init__(**kwargs)
 		self.alumno = "NO"
+	def dar_permiso(self, alumno, ramo):
+
+
 
 class Horario():
 	def __init__(self, hora_cat="", sala_cat="", hora_ayud="", sala_ayud="", hora_lab="", sala_lab="",**kwargs):
@@ -66,8 +78,4 @@ class Evaluacion():
 		self.curso = curso
 		self.seccion = seccion
 
-javier = Alumno(nombre_apellido="Javier Lopez", usuario="jilopez8", clave="jla123", alumno="SI", idolos=["Juan Perez","Jose Gonzalez"], cursos_aprobados=["IIC1103","MAT1620"])
-print(javier.alumno)
-progra = Curso(sigla="IIC1103", profesor="Bellido Jesus", lista_de_alumnos=["a1","a2"], seccion=2, campus="San Joaquin", evaluaciones=[], pre_requisitos=[123], capacidad_maxima=100, hora_cat="L-W-V:3", sala_cat="CS-101", hora_ayud="", sala_ayud="", hora_lab="", sala_lab="") 
-print(progra.profesor.apellido)
 
