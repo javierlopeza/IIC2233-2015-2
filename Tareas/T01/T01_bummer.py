@@ -13,15 +13,16 @@ class Alumno(Persona):
 		super().__init__(**kwargs)
 		self.horario_inscripcion = horario_inscripcion
 		self.cursos_por_tomar = cursos_por_tomar
+		self.alumno = "SI"
+	def inscribir_ramo(self, ramo):
+		ramo
+
+		
 
 class Profesor(Persona):
 	def __init__(self, **kwargs):
 		super().__init__(**kwargs)
-		'''
-		nombre = self.nombre                            REVISAR TEMA DE QUE LOS PROFESORES
-		self.nombre = self.apellido   	   <<<<<-----   EN CURSOS SALEN COMO apellido nombre   
-		self.apellido = nombre                          EN PERSONAS SALEN COMO nombre apellido
-		'''
+		self.alumno = "NO"
 
 class Horario():
 	def __init__(self, hora_cat="", sala_cat="", hora_ayud="", sala_ayud="", hora_lab="", sala_lab="",**kwargs):
@@ -33,17 +34,26 @@ class Horario():
 		self.sala_lab = sala_lab
 
 class Curso(Horario):
-	def __init__(self, sigla="", profesor="", lista_de_alumnos=[], seccion=0, campus="", evaluaciones=[], requisitos=[], capacidad_maxima=0, **kwargs):
+	def __init__(self, nombre="", sigla="", nrc=0, retiro="", eng="", aprobacion_especial="", profesor="", lista_de_alumnos=[], seccion=0, campus="", creditos=0, evaluaciones=[], pre_requisitos=[], equivalencias=[], ocupados=0, disponibles=0, ofrecidos=0, **kwargs):
 		super().__init__(**kwargs)
+		self.curso = nombre
 		self.sigla = sigla
-		self.profesor = Profesor(nombre_apellido=profesor, usuario="", clave="", alumno="", idolos=[], cursos_aprobados=[])
+		self.nrc = nrc
+		self.retiro = retiro
+		self.eng = eng
+		self.apr = aprobacion_especial
+		self.profesor = Profesor(nombre_apellido=profesor)
 		self.lista_de_alumnos = lista_de_alumnos
 		self.horario = Horario(hora_cat="", sala_cat="", hora_ayud="", sala_ayud="", hora_lab="", sala_lab="")
 		self.seccion = seccion
 		self.campus = campus
+		self.creditos = creditos
 		self.evaluaciones = evaluaciones
-		self.requisitos = requisitos
-		self.capacidad_maxima = capacidad_maxima
+		self.pre_requisitos = pre_requisitos
+		self.equivalencias = equivalencias
+		self.ocupados = ocupados
+		self.disponibles = disponibles
+		self.ofrecidos = ofrecidos
 
 class Evaluacion():
 	def __init__(self, nombre="", hora="", dia="", curso=""):
@@ -54,6 +64,7 @@ class Evaluacion():
 
 
 javier = Alumno(nombre_apellido="Javier Lopez", usuario="jilopez8", clave="jla123", alumno="SI", idolos=["Juan Perez","Jose Gonzalez"], cursos_aprobados=["IIC1103","MAT1620"])
-print(javier.clave)
-progra = Curso(sigla="IIC1103", profesor="Bellido Jesus", lista_de_alumnos=["a1","a2"], seccion=2, campus="San Joaquin", evaluaciones=[], requisitos=[], capacidad_maxima=100, hora_cat="L-W-V:3", sala_cat="CS-101", hora_ayud="", sala_ayud="", hora_lab="", sala_lab="") 
-print(progra.hora_cat)
+print(javier.alumno)
+progra = Curso(sigla="IIC1103", profesor="Bellido Jesus", lista_de_alumnos=["a1","a2"], seccion=2, campus="San Joaquin", evaluaciones=[], pre_requisitos=[123], capacidad_maxima=100, hora_cat="L-W-V:3", sala_cat="CS-101", hora_ayud="", sala_ayud="", hora_lab="", sala_lab="") 
+print(progra.profesor.apellido)
+
