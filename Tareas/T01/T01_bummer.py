@@ -15,7 +15,13 @@ class Alumno(Persona):
 		self.cursos_por_tomar = cursos_por_tomar
 		self.alumno = "SI"
 	def inscribir_ramo(self, ramo):
-		ramo
+		if ramo.disponibles > 0:
+			# <<<<<<<<<<<<<<<---------------------- REVISAR RESTRICCIONES DE REQUISITOS, TOPES DE HORARIO, ETC...
+			ramo.disponibles -= 1
+			ramo.ocupados +=1
+			cursos_por_tomar.append(ramo)
+
+		
 
 		
 
@@ -56,12 +62,12 @@ class Curso(Horario):
 		self.ofrecidos = ofrecidos
 
 class Evaluacion():
-	def __init__(self, nombre="", hora="", dia="", curso=""):
+	def __init__(self, nombre="", hora="", dia="", curso="", seccion=0):
 		self.nombre = nombre
 		self.hora = hora
 		self.dia = dia
 		self.curso = curso
-
+		self.seccion = seccion
 
 javier = Alumno(nombre_apellido="Javier Lopez", usuario="jilopez8", clave="jla123", alumno="SI", idolos=["Juan Perez","Jose Gonzalez"], cursos_aprobados=["IIC1103","MAT1620"])
 print(javier.alumno)
