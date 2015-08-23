@@ -1,7 +1,8 @@
 ﻿## Tarea 01
 
 Consideraciones al revisar:
-`01` El programa que lee el archivo *personas.txt* debe tener el mismo formato que el entregado junto al enunciado, es decir, así:
+
+`01` El programa que lee el archivo *personas.txt* debe tener el mismo formato que el entregado junto al enunciado, es decir, sin cambiar el orden de los datos de las personas, así:
 ```
 [
   {
