@@ -1,5 +1,10 @@
+from clases import Persona, Alumno, Profesor, Horario, Curso, Evaluacion
+
 personas_file = open("personas.txt").readlines()
-#print(personas_file[3000:3100])
+
+profesores = []
+alumnos = []
+
 n = 0
 for i in range(len(personas_file)):
 	if personas_file[i]=='  {\n':
@@ -10,7 +15,12 @@ for i in range(len(personas_file)):
 			usuario = personas_file[i+6][16:-2]
 			idolos = []
 			ramos_pre = []
-			#Instanciar Persona (Alumno/Profesor)
+			if alumno == "NO":
+				nuevo_profesor = Profesor(nombre_apellido=nombre, usuario=usuario, clave=clave, alumno="NO", idolos=[], cursos_aprobados=[])
+				profesores.append(nuevo_profesor)
+			else:
+				nuevo_alumno = Alumno(nombre_apellido=nombre, usuario=usuario, clave=clave, alumno="SI", idolos=[], cursos_aprobados=[])
+				alumnos.append(nuevo_alumno)
 
 		else:
 			for j in range(i,len(personas_file)):
@@ -33,11 +43,16 @@ for i in range(len(personas_file)):
 			clave = personas_file[i+4+len(idolos)][14:-3]
 			alumno = personas_file[i+7+len(idolos)+len(ramos_pre)][15:-3]
 			usuario = personas_file[i+8+len(idolos)+len(ramos_pre)][16:-2]
-			print(nombre)
-			print(clave)
-			print(alumno)
-			print(usuario)
-			#Instanciar Persona (Alumno/Profesor)
+
+			if alumno == "NO":
+				nuevo_profesor = Profesor(nombre_apellido=nombre, usuario=usuario, clave=clave, alumno="NO", idolos=idolos, cursos_aprobados=ramos_pre)
+				profesores.append(nuevo_profesor)
+
+			else:
+				nuevo_alumno = Alumno(nombre_apellido=nombre, usuario=usuario, clave=clave, alumno="SI", idolos=idolos, cursos_aprobados=ramos_pre)
+				alumnos.append(nuevo_alumno)
+
+
 #print(n)
 		
 

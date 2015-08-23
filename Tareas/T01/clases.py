@@ -2,6 +2,7 @@ class Persona():
 	def __init__(self, nombre_apellido="", usuario="", clave="", alumno="", idolos=[], cursos_aprobados=[], **kwargs):
 		self.nombre = (nombre_apellido.split(" "))[0]
 		self.apellido = (nombre_apellido.split(" "))[1]
+		self.nombre_completo = self.nombre + " " + self.apellido 
 		self.usuario = usuario
 		self.clave = clave
 		self.alumno = alumno
@@ -15,6 +16,17 @@ class Alumno(Persona):
 		self.cursos_por_tomar = cursos_por_tomar
 		self.alumno = "SI"
 		self.permisos_especiales = []
+	def __repr__(self):
+		printear = "Nombre alumno: {}\nUsuario: {}\nClave: {}\nHorario de Inscripcion: {}\nCursos por tomar:\n".format(self.nombre_completo, self.usuario, self.clave, self.horario_inscripcion)
+		for curso in self.cursos_por_tomar:
+			printear += "- "+curso+"\n"
+		printear += "Lista de idolos:\n"
+		for idolo in self.idolos:
+			printear += "- "+idolo+"\n"
+		printear += "Cursos aprobados:\n"
+		for curso in self.cursos_aprobados:
+			printear += "- "+curso+"\n"
+		return printear
 	def inscribir_ramo(self, ramo):
 		#Si cumple con todos los requisitos o tiene aprobacion especial del profesor:
 		if ramo.disponibles > 0:
@@ -26,6 +38,8 @@ class Alumno(Persona):
 		ramo.disponibles += 1
 		ramo.ocupados -= 1
 		self.cursos_por_tomar.remove(ramo)
+
+
 	#def generar_horario(self):
 	#def generar_calendario_evaluaciones(self):
 
@@ -35,9 +49,11 @@ class Profesor(Persona):
 	def __init__(self, **kwargs):
 		super().__init__(**kwargs)
 		self.alumno = "NO"
+	def __repr__(self):
+		printear = "Nombre profesor: {}\nUsuario: {}\nClave: {}".format(self.nombre_completo, self.usuario, self.clave)
+		return printear
 	def dar_permiso(self, alumno, ramo):
-
-
+		pass
 
 class Horario():
 	def __init__(self, hora_cat="", sala_cat="", hora_ayud="", sala_ayud="", hora_lab="", sala_lab="",**kwargs):
