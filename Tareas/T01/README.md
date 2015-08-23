@@ -1,7 +1,8 @@
 ﻿## Tarea 01
 
-Consireaciones al revisar:
-* `01` El programa que lee el archivo *personas.txt* debe tener el mismo formato que el entregado junto al enunciado, es decir, así:
+Consideraciones al revisar:
+`01` El programa que lee el archivo *personas.txt* debe tener el mismo formato que el entregado junto al enunciado, es decir, así:
+```
 [
   {
     "idolos": [],
@@ -31,12 +32,11 @@ Consireaciones al revisar:
     "usuario": "rgarrido2"
   }
 ]
-
-* `T09`
-* `T10`
-* `T11`
-* `T12`
-* ...
+```
+`02`
+`03`
+`04`
+`05`
 
 Por ejemplo:
 * Instrucciones de uso.
