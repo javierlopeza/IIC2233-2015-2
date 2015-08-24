@@ -12,7 +12,9 @@ Consideraciones al revisar:
     "usuario"
 ```
 
-* **02.** En archivo *cursos.txt* algunos cursos tienen sus datos en distinto orden a los de otros cursos, por ejemplo,
+* **02.** En el archivo *cursos.txt* algunos cursos tienen sus datos en distinto orden a los de otros cursos, por dicha razón la parte del código correspondiente a la lectura de este archivo es un poco tediosa.
+
+Ejemplo de desorden de datos de cursos:
 ```
 #CURSO 1
   {

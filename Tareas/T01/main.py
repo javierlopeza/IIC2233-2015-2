@@ -1,8 +1,5 @@
 from clases import Persona, Alumno, Profesor, Horario, Curso, Evaluacion
-from readfile_personas import cargar_personas
+from cargar_datos import cargar_sistema	
 
-personas = cargar_personas()
 
-lista_alumnos = personas[0]
-lista_profesores = personas[1]
-
+cargar_sistema()

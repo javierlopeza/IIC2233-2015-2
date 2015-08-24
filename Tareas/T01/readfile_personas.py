@@ -1,4 +1,4 @@
-from clases import Persona, Alumno, Profesor, Horario, Curso, Evaluacion
+from clases import Alumno, Profesor
 
 
 def cargar_personas():
@@ -13,11 +13,20 @@ def cargar_personas():
                 alumno = personas_file[i + 5][15:-3]
                 usuario = personas_file[i + 6][16:-2]
                 if alumno == "NO":
-                    nuevo_profesor = Profesor(nombre=nombre, usuario=usuario, clave=clave, idolos=[],
-                                              cursos_aprobados=[])
+                    nuevo_profesor = Profesor(nombre=nombre,
+                                              usuario=usuario,
+                                              clave=clave,
+                                              idolos=[],
+                                              cursos_aprobados=[]
+                                              )
                     profesores.append(nuevo_profesor)
                 else:
-                    nuevo_alumno = Alumno(nombre=nombre, usuario=usuario, clave=clave, idolos=[], cursos_aprobados=[])
+                    nuevo_alumno = Alumno(nombre=nombre,
+                                          usuario=usuario,
+                                          clave=clave,
+                                          idolos=[],
+                                          cursos_aprobados=[]
+                                          )
                     alumnos.append(nuevo_alumno)
 
             else:
@@ -43,13 +52,19 @@ def cargar_personas():
                 usuario = personas_file[i + 8 + len(idolos) + len(ramos_pre)][16:-2]
 
                 if alumno == "NO":
-                    nuevo_profesor = Profesor(nombre=nombre, usuario=usuario, clave=clave)
+                    nuevo_profesor = Profesor(nombre=nombre,
+                                              usuario=usuario,
+                                              clave=clave
+                                              )
                     profesores.append(nuevo_profesor)
 
                 else:
-                    nuevo_alumno = Alumno(nombre=nombre, usuario=usuario, clave=clave, idolos=idolos,
-                                          cursos_aprobados=ramos_pre)
+                    nuevo_alumno = Alumno(nombre=nombre,
+                                          usuario=usuario,
+                                          clave=clave,
+                                          idolos=idolos,
+                                          cursos_aprobados=ramos_pre
+                                          )
                     alumnos.append(nuevo_alumno)
-
-    print("Sistema cargado con un total de {} alumnos y {} profesores.".format(len(alumnos), len(profesores)))
+                    
     return alumnos, profesores
