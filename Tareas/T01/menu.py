@@ -16,21 +16,27 @@ class InterfazBummerUC:
         }
 
     def display_menu(self):
-        print("""BUMMER UC - MENU PRINCIPAL:\n
+        print("""----------------------------------------\n
+BUMMER UC - MENU PRINCIPAL:\n
 1: Iniciar Sesion
 2: Buscar Curso
 3: Salir
             """)
 
-    def display_menu_datos(self):
-        print("""
-1: Equivalencias
-2: Prerrequisitos
-3: Dictado en ingles
-4: Requiere aprobacion especial
-5: Evaluaciones
-6:
-""")
+    def mas_datos(self, curso):
+        print("""\
+Equivalencias: {}
+Prerrequisitos: {}
+Se dicta en ingles?: {}
+Requiere aprobacion especial?: {}
+Es retirable?: {}
+Evaluaciones:\
+""".format(curso.equivalencias_show, curso.pre_requisitos_show, curso.eng, curso.apr, curso.retiro))
+        for ev in curso.evaluaciones:
+            print(ev)
+        print("\n")
+
+
 
     def run(self):
         while True:
@@ -47,23 +53,26 @@ class InterfazBummerUC:
         print("iniciar sesion aqui")
 
     def buscar_curso(self):
+        busqueda_valida = False
         barra_divisora = "----------------------------------------\n"
         sigla_busqueda = input("\nIngrese sigla del curso a buscar: ")
         sigla_busqueda = sigla_busqueda.upper()
-        print("\n"+barra_divisora+"\n")
         for curso in self.lista_cursos:
             if curso.sigla == sigla_busqueda:
+                busqueda_valida = True
                 print(curso)
                 print(barra_divisora)
-        '''
-        mas_datos = input("\nDesea mas informacion acerca de los cursos? [SI/NO]: ")
-        mas_datos = mas_datos.upper()
-        if mas_datos == "SI":
-            for curso in self.lista_cursos:
-                if curso.sigla == sigla_busqueda:
-                    print(curso.mas_datos)
-                    print(barra_divisora)
-        '''
+        if busqueda_valida:
+            quiere_datos = input("Desea mas informacion acerca de los cursos? [SI/NO]: ")
+            quiere_datos = quiere_datos.upper()
+            if quiere_datos == "SI":
+                for curso in self.lista_cursos:
+                    if curso.sigla == sigla_busqueda:
+                        print(curso)
+                        self.mas_datos(curso)
+                        print(barra_divisora)
+        else:
+            print("\n--- La sigla {} no existe ---\n".format(sigla_busqueda))
 
     def salir(self):
         print("Hasta la proxima!")

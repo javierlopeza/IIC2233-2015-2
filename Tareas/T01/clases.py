@@ -119,6 +119,7 @@ class Curso(Horario):
                  evaluaciones=[],
                  pre_requisitos_show=[],
                  pre_requisitos=[],
+                 equivalencias_show=[],
                  equivalencias=[],
                  ocupados=0,
                  disponibles=0,
@@ -134,13 +135,13 @@ class Curso(Horario):
         self.apr = aprobacion_especial
         self.lista_profesor = lista_profesor
         self.lista_de_alumnos = lista_de_alumnos
-        self.horario = Horario(hora_cat="", sala_cat="", hora_ayud="", sala_ayud="", hora_lab="", sala_lab="")
         self.seccion = seccion
         self.campus = campus
         self.creditos = creditos
         self.evaluaciones = evaluaciones
         self.pre_requisitos_show = pre_requisitos_show
         self.pre_requisitos = pre_requisitos
+        self.equivalencias_show = equivalencias_show
         self.equivalencias = equivalencias
         self.ocupados = ocupados
         self.disponibles = disponibles
@@ -151,23 +152,32 @@ class Curso(Horario):
         for profe in self.lista_profesor:
             printear_profesores += profe.nombre+", "
         printear_profesores = printear_profesores[:-2]
+        if printear_profesores == "":
+            printear_profesores = "Sin Profesor"
         printear = "\
 Nombre curso: {}\n\
 NRC: {}\n\
 Sigla: {}\n\
 Seccion: {}\n\
-Horario: {}\n\
+Catedra: {} - Sala: {}\n\
+Ayudantia: {} - Sala: {}\n\
+Laboratorio: {} - Sala: {}\n\
 Profesor(es): {}\n\
 Campus: {}\n\
 Creditos: {}\n\
 Vacantes Ofrecidas: {}\n\
 Vacantes Ocupadas: {}\n\
-Vacantes Disponibles: {}\n".format(
+Vacantes Disponibles: {}".format(
             self.curso,
             self.nrc,
             self.sigla,
             self.seccion,
-            self.horario,
+            self.hora_cat,
+            self.sala_cat,
+            self.hora_ayud,
+            self.sala_ayud,
+            self.hora_lab,
+            self.sala_lab,
             printear_profesores,
             self.campus,
             self.creditos,
@@ -187,8 +197,7 @@ class Evaluacion:
         self.seccion = seccion
 
     def __repr__(self):
-        printear = "{}: la evaluacion {} es el dia {} a las {} horas.".format(
-            self.curso,
+        printear = "{}: el dia {} a las {} horas.".format(
             self.nombre,
             self.dia,
             self.hora

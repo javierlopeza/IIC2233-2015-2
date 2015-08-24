@@ -13,7 +13,7 @@ def cargar_personas():
                 clave = personas_file[i + 3][14:-3]
                 alumno = personas_file[i + 5][15:-3]
                 usuario = personas_file[i + 6][16:-2]
-                if alumno == "NO":
+                if alumno == "NO" and nombre != "Profesores) (Sin" and nombre != "Fijar Por":
                     nuevo_profesor = Profesor(nombre=nombre,
                                               usuario=usuario,
                                               clave=clave,
@@ -52,13 +52,12 @@ def cargar_personas():
                 alumno = personas_file[i + 7 + len(idolos) + len(ramos_pre)][15:-3]
                 usuario = personas_file[i + 8 + len(idolos) + len(ramos_pre)][16:-2]
 
-                if alumno == "NO":
+                if alumno == "NO" and nombre != "Profesores) (Sin" and nombre != "Fijar Por":
                     nuevo_profesor = Profesor(nombre=nombre,
                                               usuario=usuario,
                                               clave=clave
                                               )
                     profesores.append(nuevo_profesor)
-
                 else:
                     nuevo_alumno = Alumno(nombre=nombre,
                                           usuario=usuario,
@@ -67,5 +66,4 @@ def cargar_personas():
                                           cursos_aprobados=ramos_pre
                                           )
                     alumnos.append(nuevo_alumno)
-                    
     return alumnos, profesores

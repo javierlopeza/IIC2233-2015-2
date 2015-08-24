@@ -64,8 +64,9 @@ def cargar_cursos():
                     nombre = nombre_profesor.split(" ")[1]
                     apellido = nombre_profesor.split(" ")[0]
                     nombre_profesor = "{0} {1}".format(nombre, apellido)
-                    profesor_agregar = Profesor(nombre=nombre_profesor)
-                    profesores.append(profesor_agregar)
+                    for profe in profesores_sistema:
+                        if profe.nombre == nombre_profesor:
+                            profesores.append(profe)
                 elif cursos_file[j] == '    "profesor": [\n':
                     profesores = []
                     for k in range(j + 1, len(cursos_file)):
@@ -75,11 +76,11 @@ def cargar_cursos():
                             nombre_profesor = cursos_file[k].split('"')[1]
                             nombre = nombre_profesor.split(" ")[1]
                             apellido = nombre_profesor.split(" ")[0]
-                            nombre_profesor = nombre + " " + apellido
+                            nombre_profesor = "{0} {1}".format(nombre, apellido)
                             for profe in profesores_sistema:
                                 if profe.nombre == nombre_profesor:
-                                    if profe.nombre != "Fijar Por":
-                                        profesores.append(profe)
+                                    profesores.append(profe)
+
                 elif cursos_file[j] == "  },\n":
                     break
 
@@ -119,7 +120,9 @@ def cargar_cursos():
                             pre_requisitos[w] = pre_requisitos[w].split(" y ")
                         if equivalencias == 'o tien':
                             equivalencias = ['No tiene']
+                            equivalencias_show = "No tiene"
                         else:
+                            equivalencias_show = equivalencias
                             equivalencias = equivalencias.split(' o ')
 
             nuevo_curso = Curso(
@@ -136,6 +139,7 @@ def cargar_cursos():
                 evaluaciones=evaluaciones,
                 pre_requisitos_show=pre_requisitos_show,
                 pre_requisitos=pre_requisitos,
+                equivalencias_show=equivalencias_show,
                 equivalencias=equivalencias,
                 ocupados=ocupados,
                 disponibles=disponibles,
@@ -147,5 +151,6 @@ def cargar_cursos():
                 hora_lab=hora_lab,
                 sala_lab=sala_lab
             )
+            print(nuevo_curso.hora_lab)
             cursos.append(nuevo_curso)
     return cursos
