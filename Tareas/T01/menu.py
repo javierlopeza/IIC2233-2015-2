@@ -2,7 +2,7 @@ import sys
 from cargar_datos import cargar_sistema
 
 
-class InterfazBummerUC:
+class BummerUC:
 
     def __init__(self):
         self.datos = cargar_sistema()
@@ -23,21 +23,6 @@ BUMMER UC - MENU PRINCIPAL:\n
 3: Salir
             """)
 
-    def mas_datos(self, curso):
-        print("""\
-Equivalencias: {}
-Prerrequisitos: {}
-Se dicta en ingles?: {}
-Requiere aprobacion especial?: {}
-Es retirable?: {}
-Evaluaciones:\
-""".format(curso.equivalencias_show, curso.pre_requisitos_show, curso.eng, curso.apr, curso.retiro))
-        for ev in curso.evaluaciones:
-            print(ev)
-        print("\n")
-
-
-
     def run(self):
         while True:
             self.display_menu()
@@ -54,31 +39,34 @@ Evaluaciones:\
 
     def buscar_curso(self):
         busqueda_valida = False
-        barra_divisora = "----------------------------------------\n"
+        barra_divisora = "----------------------------------------"
         sigla_busqueda = input("\nIngrese sigla del curso a buscar: ")
+        print("\n")
         sigla_busqueda = sigla_busqueda.upper()
         for curso in self.lista_cursos:
             if curso.sigla == sigla_busqueda:
                 busqueda_valida = True
                 print(curso)
                 print(barra_divisora)
+        print("\n")
         if busqueda_valida:
-            quiere_datos = input("Desea mas informacion acerca de los cursos? [SI/NO]: ")
+            quiere_datos = input("Desea ver toda la informacion acerca de las secciones del curso? [SI/NO]: ")
             quiere_datos = quiere_datos.upper()
             if quiere_datos == "SI":
+                print("\n")
                 for curso in self.lista_cursos:
                     if curso.sigla == sigla_busqueda:
                         print(curso)
-                        self.mas_datos(curso)
+                        curso.mas_datos()
                         print(barra_divisora)
         else:
-            print("\n--- La sigla {} no existe ---\n".format(sigla_busqueda))
+            print("--- La sigla {} no existe ---\n".format(sigla_busqueda))
 
     def salir(self):
-        print("Hasta la proxima!")
+        print("\n     --- BUMMER UC CERRADO ---")
         sys.exit(0)
 
 
 if __name__ == "__main__":
-    InterfazBummerUC().run()
+    BummerUC().run()
 

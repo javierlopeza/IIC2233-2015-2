@@ -1,5 +1,5 @@
 from readfile_personas import cargar_personas
-from readfile_cursos_evaluaciones_requisitos_pre_profesores_horarios import cargar_cursos
+from readfile_cursos_completos import cargar_cursos
 
 
 def cargar_sistema():

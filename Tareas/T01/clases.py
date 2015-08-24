@@ -159,9 +159,9 @@ Nombre curso: {}\n\
 NRC: {}\n\
 Sigla: {}\n\
 Seccion: {}\n\
-Catedra: {} - Sala: {}\n\
-Ayudantia: {} - Sala: {}\n\
-Laboratorio: {} - Sala: {}\n\
+Catedra: {} -> Sala: {}\n\
+Ayudantia: {} -> Sala: {}\n\
+Laboratorio: {} -> Sala: {}\n\
 Profesor(es): {}\n\
 Campus: {}\n\
 Creditos: {}\n\
@@ -186,6 +186,18 @@ Vacantes Disponibles: {}".format(
             self.disponibles
         )
         return printear
+
+    def mas_datos(self):
+        print("""\
+Equivalencias: {}
+Prerrequisitos: {}
+Se dicta en ingles?: {}
+Requiere aprobacion especial?: {}
+Es retirable?: {}
+Evaluaciones:\
+""".format(self.equivalencias_show, self.pre_requisitos_show, self.eng, self.apr, self.retiro))
+        for ev in self.evaluaciones:
+            print(ev)
 
 
 class Evaluacion:
