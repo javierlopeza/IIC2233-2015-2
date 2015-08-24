@@ -7,7 +7,8 @@ def cargar_personas():
     alumnos = []
     for i in range(len(personas_file)):
         if personas_file[i] == '  {\n':
-            if personas_file[i + 1] == '    "idolos": [],\n' and personas_file[i + 4] == '    "ramos_pre": [],\n':
+            if personas_file[i + 1] == '    "idolos": [],\n' and \
+            personas_file[i + 4] == '    "ramos_pre": [],\n':
                 nombre = personas_file[i + 2][15:-3]
                 clave = personas_file[i + 3][14:-3]
                 alumno = personas_file[i + 5][15:-3]

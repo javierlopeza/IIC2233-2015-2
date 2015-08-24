@@ -1,4 +1,4 @@
-from clases import Curso
+from clases import Curso, Evaluacion
 
 
 def cargar_cursos():
@@ -15,6 +15,9 @@ def cargar_cursos():
             sala_ayud = "---"
             hora_lab = "---"
             sala_lab = "---"
+            evaluaciones = []
+            equivalencias = []
+            pre_requisitos = []
             for j in range(i, len(cursos_file)):
                 leido = cursos_file[j].split(":")[0][5:-1]
                 if leido == "disp":
@@ -75,6 +78,37 @@ def cargar_cursos():
                 elif cursos_file[j] == "  },\n":
                     break
 
+            evaluaciones_file = open("evaluaciones.txt").readlines()
+            for i in range(len(evaluaciones_file)):
+                if evaluaciones_file[i] == "  {\n":
+                    sigla_eval = evaluaciones_file[i + 1][14:-3]
+                    seccion_eval = evaluaciones_file[i + 3][11:-2]
+                    if (sigla_eval == sigla) and (seccion_eval == seccion):
+                        tipo_eval = evaluaciones_file[i + 2][13:-3]
+                        fecha_eval = evaluaciones_file[i + 4][14:-2]
+                        dia_eval = fecha_eval.split(" - ")[0]
+                        hora_eval = fecha_eval.split(" - ")[1]
+                        if hora_eval[-1] == '"':
+                            hora_eval = hora_eval[:-1]
+                        nueva_evaluacion = Evaluacion(
+                            nombre=tipo_eval,
+                            hora=hora_eval,
+                            dia=dia_eval,
+                            curso=sigla_eval,
+                            seccion=seccion_eval
+                        )
+                        evaluaciones.append(nueva_evaluacion)
+            requisitos_file = open("requisitos.txt").readlines()
+            for i in range(len(requisitos_file)):
+                if requisitos_file[i] == '  {\n':
+                    sigla_curso = requisitos_file[i + 2][14:-3]
+                    if sigla_curso == sigla:
+                        equivalencias = requisitos_file[i + 1][15:-4]
+                        if equivalencias == 'o tien':
+                            equivalencias = ['No tiene']
+                        else:
+                            equivalencias = equivalencias.split(' o ')
+
             nuevo_curso = Curso(
                 nombre=nombre_curso,
                 sigla=sigla,
@@ -86,6 +120,9 @@ def cargar_cursos():
                 seccion=seccion,
                 campus=campus,
                 creditos=creditos,
+                evaluaciones=evaluaciones,
+                pre_requisitos=pre_requisitos,
+                equivalencias=equivalencias,
                 ocupados=ocupados,
                 disponibles=disponibles,
                 ofrecidos=ofrecidos,
