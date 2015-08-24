@@ -20,10 +20,13 @@ class Alumno(Persona):
     def __init__(self,
                  horario_inscripcion="",
                  cursos_por_tomar=[],
+                 grupo_bummer=0,
                  **kwargs):
         super().__init__(**kwargs)
         self.horario_inscripcion = horario_inscripcion
         self.cursos_por_tomar = cursos_por_tomar
+        self.grupo_bummer = grupo_bummer
+        self.maximo_creditos_permitidos = 55 + 2*(6 - self.grupo_bummer)
         self.alumno = "SI"
         self.permisos_especiales = []
 
@@ -108,12 +111,13 @@ class Curso(Horario):
                  retiro="",
                  eng="",
                  aprobacion_especial="",
-                 profesor="",
+                 lista_profesor=[],
                  lista_de_alumnos=[],
                  seccion=0,
                  campus="",
                  creditos=0,
                  evaluaciones=[],
+                 pre_requisitos_show=[],
                  pre_requisitos=[],
                  equivalencias=[],
                  ocupados=0,
@@ -128,13 +132,14 @@ class Curso(Horario):
         self.retiro = retiro
         self.eng = eng
         self.apr = aprobacion_especial
-        self.profesor = Profesor(nombre_apellido=profesor)
+        self.lista_profesor = lista_profesor
         self.lista_de_alumnos = lista_de_alumnos
         self.horario = Horario(hora_cat="", sala_cat="", hora_ayud="", sala_ayud="", hora_lab="", sala_lab="")
         self.seccion = seccion
         self.campus = campus
         self.creditos = creditos
         self.evaluaciones = evaluaciones
+        self.pre_requisitos_show = pre_requisitos_show
         self.pre_requisitos = pre_requisitos
         self.equivalencias = equivalencias
         self.ocupados = ocupados
@@ -142,11 +147,33 @@ class Curso(Horario):
         self.ofrecidos = ofrecidos
 
     def __repr__(self):
-        printear = "Nombre curso: {}\nSigla: {}\nSeccion: {}\nNRC: {}\n".format(
+        printear_profesores = ""
+        for profe in self.lista_profesor:
+            printear_profesores += profe.nombre+", "
+        printear_profesores = printear_profesores[:-2]
+        printear = "\
+Nombre curso: {}\n\
+NRC: {}\n\
+Sigla: {}\n\
+Seccion: {}\n\
+Horario: {}\n\
+Profesor(es): {}\n\
+Campus: {}\n\
+Creditos: {}\n\
+Vacantes Ofrecidas: {}\n\
+Vacantes Ocupadas: {}\n\
+Vacantes Disponibles: {}\n".format(
             self.curso,
-            self.sigla,
             self.nrc,
-            self.seccion
+            self.sigla,
+            self.seccion,
+            self.horario,
+            printear_profesores,
+            self.campus,
+            self.creditos,
+            self.ofrecidos,
+            self.ocupados,
+            self.disponibles
         )
         return printear
 

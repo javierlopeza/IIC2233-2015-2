@@ -1,5 +1,5 @@
 from readfile_personas import cargar_personas
-from readfile_cursos_evaluaciones_requisitos_pre import cargar_cursos
+from readfile_cursos_evaluaciones_requisitos_pre_profesores import cargar_cursos
 
 
 def cargar_sistema():
@@ -12,7 +12,7 @@ def cargar_sistema():
 - {} alumnos\n\
 - {} profesores\n\
 - {} cursos con sus evaluaciones, equivalencias y prerrequisitos\n\
-        ".format(
+".format(
         len(lista_alumnos),
         len(lista_profesores),
         len(lista_cursos)

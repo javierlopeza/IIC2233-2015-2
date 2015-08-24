@@ -1,7 +1,8 @@
 from clases import Curso, Evaluacion, Profesor
-
+from readfile_personas import cargar_personas
 
 def cargar_cursos():
+    profesores_sistema = cargar_personas()[1]
     cursos_file = open("cursos.txt", "r", encoding="utf8").readlines()
     cursos = []
     for i in range(len(cursos_file)):
@@ -75,8 +76,10 @@ def cargar_cursos():
                             nombre = nombre_profesor.split(" ")[1]
                             apellido = nombre_profesor.split(" ")[0]
                             nombre_profesor = nombre + " " + apellido
-                            profesor_agregar = Profesor(nombre=nombre_profesor)
-                            profesores.append(profesor_agregar)
+                            for profe in profesores_sistema:
+                                if profe.nombre == nombre_profesor:
+                                    if profe.nombre != "Fijar Por":
+                                        profesores.append(profe)
                 elif cursos_file[j] == "  },\n":
                     break
 
@@ -118,6 +121,7 @@ def cargar_cursos():
                             equivalencias = ['No tiene']
                         else:
                             equivalencias = equivalencias.split(' o ')
+
             nuevo_curso = Curso(
                 nombre=nombre_curso,
                 sigla=sigla,
