@@ -2,7 +2,9 @@
 
 Consideraciones al revisar:
 
-* **01.** El archivo *personas.txt* debe tener el mismo formato que el entregado junto al enunciado, es decir, sin cambiar el orden de los datos de las personas, así:
+* **01.** Considerar que la parte del código referente a la lectura y manejo de los archivos de texto es bastante tediosa debido a la restricción de solo usar lo conocido en el curso introductorio y lo que llevamos del presente curso.
+
+* **02.** El archivo *personas.txt* debe tener el mismo formato que el entregado junto al enunciado, es decir, sin cambiar el orden de los datos de las personas, así:
 ```
     "idolos"
     "nombre"
@@ -12,7 +14,7 @@ Consideraciones al revisar:
     "usuario"
 ```
 
-* **02.** En el archivo *cursos.txt* algunos cursos tienen sus datos en distinto orden a los de otros cursos, por dicha razón la parte del código correspondiente a la lectura de este archivo es un poco tediosa.
+* **03.** En el archivo *cursos.txt* algunos cursos tienen sus datos en distinto orden a los de otros cursos, por dicha razón la parte del código correspondiente a la lectura de este archivo es un poco tediosa.
 
 Ejemplo de desorden de datos de cursos:
 ```

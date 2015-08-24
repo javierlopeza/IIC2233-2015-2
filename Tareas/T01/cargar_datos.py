@@ -1,8 +1,9 @@
 from readfile_personas import cargar_personas
-from readfile_cursos_evaluaciones_requisitos import cargar_cursos
+from readfile_cursos_evaluaciones_requisitos_pre import cargar_cursos
 
 
 def cargar_sistema():
+    print("Cargando sistema...\n")
     personas = cargar_personas()
     lista_alumnos = personas[0]
     lista_profesores = personas[1]
@@ -10,7 +11,7 @@ def cargar_sistema():
     print("Sistema cargado con:\n\
 - {} alumnos\n\
 - {} profesores\n\
-- {} cursos con evaluaciones y respectivas equivalencias\n\
+- {} cursos con sus evaluaciones, equivalencias y prerrequisitos\n\
         ".format(
         len(lista_alumnos),
         len(lista_profesores),
