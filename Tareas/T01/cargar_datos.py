@@ -1,5 +1,5 @@
-from readfile_personas import cargar_personas
-from readfile_cursos_completos import cargar_cursos
+from readfiles.readfile_personas import cargar_personas
+from readfiles.readfile_cursos_completos import cargar_cursos
 
 
 def cargar_sistema():

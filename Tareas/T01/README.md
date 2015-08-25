@@ -2,19 +2,9 @@
 
 Consideraciones al revisar:
 
-* **01.** Considerar que la parte del código referente a la lectura y manejo de los archivos de texto es bastante tediosa debido a la restricción de solo usar lo conocido en el curso introductorio y lo que llevamos del presente curso.
+* **01.** Considerar que la parte del código referente a la lectura y manejo de los archivos de texto es bastante tediosa debido a la restricción de solo usar lo conocido en el curso introductorio y lo que llevamos del presente curso. Además de lo mencionado por un ayudante en una issue, que los archivos con las propiedades de las personas, cursos, etc. pueden tener las propiedades en desorden.
 
-* **02.** El archivo *personas.txt* debe tener el mismo formato que el entregado junto al enunciado, es decir, sin cambiar el orden de los datos de las personas, así:
-```
-    "idolos"
-    "nombre"
-    "clave"
-    "ramos_pre"
-    "alumno"
-    "usuario"
-```
-
-* **03.** En el archivo *cursos.txt* algunos cursos tienen sus datos en distinto orden a los de otros cursos, por dicha razón la parte del código correspondiente a la lectura de este archivo es un poco tediosa.
+* **02.** En el archivo *cursos.txt* algunos cursos tienen sus datos en distinto orden a los de otros cursos, por dicha razón la parte del código correspondiente a la lectura de este archivo es un poco tediosa. Lo mismo ocurre para el caso del archivo *personas.txt*.
 
 Ejemplo de desorden de datos de cursos:
 ```
@@ -61,3 +51,6 @@ Ejemplo de desorden de datos de cursos:
     "NRC": 16312,
     "profesor": "During Gustavo"
   } 
+
+* **03.** Para la opción de *buscar cursos* del menu principal del sistema, se debe ingresar la sigla del curso que se quiere obtener la informacion. Luego de entregar los resultados se le pregunta al usuario si quiere saber la totalidad de la informacion respecto a los cursos.
+

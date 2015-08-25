@@ -15,7 +15,8 @@ class BummerUC:
             "3": self.salir,
         }
 
-    def display_menu(self):
+    @staticmethod
+    def display_menu():
         print("""----------------------------------------\n
 BUMMER UC - MENU PRINCIPAL:\n
 1: Iniciar Sesion
@@ -50,7 +51,8 @@ BUMMER UC - MENU PRINCIPAL:\n
                 print(barra_divisora)
         print("\n")
         if busqueda_valida:
-            quiere_datos = input("Desea ver toda la informacion acerca de las secciones del curso? [SI/NO]: ")
+            quiere_datos = input("Desea ver toda la informacion\
+acerca de las secciones del curso? [SI/NO]: ")
             quiere_datos = quiere_datos.upper()
             if quiere_datos == "SI":
                 print("\n")
@@ -62,7 +64,8 @@ BUMMER UC - MENU PRINCIPAL:\n
         else:
             print("--- La sigla {} no existe ---\n".format(sigla_busqueda))
 
-    def salir(self):
+    @staticmethod
+    def salir():
         print("\n     --- BUMMER UC CERRADO ---")
         sys.exit(0)
 
