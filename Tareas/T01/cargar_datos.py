@@ -8,13 +8,4 @@ def cargar_sistema():
     lista_alumnos = personas[0]
     lista_profesores = personas[1]
     lista_cursos = cargar_cursos()
-    print("Sistema cargado con:\n\
-- {} alumnos\n\
-- {} profesores\n\
-- {} cursos con sus evaluaciones, equivalencias y prerrequisitos\n\
-".format(
-        len(lista_alumnos),
-        len(lista_profesores),
-        len(lista_cursos)
-    ))
     return lista_alumnos, lista_profesores, lista_cursos

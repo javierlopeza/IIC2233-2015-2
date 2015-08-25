@@ -1,9 +1,9 @@
 import sys
 from cargar_datos import cargar_sistema
+from inicio_sesion import iniciar_sesion
 
 
 class BummerUC:
-
     def __init__(self):
         self.datos = cargar_sistema()
         self.lista_alumnos = self.datos[0]
@@ -36,7 +36,33 @@ BUMMER UC - MENU PRINCIPAL:\n
                     eleccion))
 
     def iniciar_sesion(self):
-        print("iniciar sesion aqui")
+        print("""
+1: Ingreso Alumnos
+2: Ingreso Profesores
+""")
+        modo_ingreso = input("Ingrese la opcion correspondiente al inicio de sesion que requiere: ")
+        if modo_ingreso == "1":
+            es_alumno = "SI"
+            print("\nInicio de Sesion Alumnos")
+            usuario = input("USUARIO: ")
+            clave = input("CLAVE: ")
+            iniciar_sesion(usuario,
+                           clave,
+                           self.lista_alumnos,
+                           self.lista_profesores,
+                           es_alumno)
+        elif modo_ingreso == "2":
+            es_alumno = "NO"
+            print("\nInicio de Sesion Profesores")
+            usuario = input("USUARIO: ")
+            clave = input("CLAVE: ")
+            iniciar_sesion(usuario,
+                           clave,
+                           self.lista_alumnos,
+                           self.lista_profesores,
+                           es_alumno)
+        else:
+            print("--- La opcion {} no es valida ---\n".format(modo_ingreso))
 
     def buscar_curso(self):
         busqueda_valida = False
@@ -72,4 +98,3 @@ acerca de las secciones del curso? [SI/NO]: ")
 
 if __name__ == "__main__":
     BummerUC().run()
-

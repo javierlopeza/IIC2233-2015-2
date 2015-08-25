@@ -1,5 +1,5 @@
 from clases import Curso, Evaluacion
-from readfile_personas import cargar_personas
+from readfiles.readfile_personas import cargar_personas
 
 
 def cargar_cursos():
