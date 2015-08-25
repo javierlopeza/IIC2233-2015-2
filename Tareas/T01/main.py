@@ -1,3 +1,4 @@
-from cargar_datos import cargar_sistema
+from menu import BummerUC
 
-cargar_sistema()
+if __name__ == "__main__":
+    BummerUC().run()

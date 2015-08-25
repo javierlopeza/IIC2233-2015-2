@@ -2,7 +2,7 @@ from clases import Alumno, Profesor
 
 
 def cargar_personas():
-    personas_file = open("personas.txt").readlines()
+    personas_file = open("./readfiles/personas.txt").readlines()
     profesores = []
     alumnos = []
     for i in range(len(personas_file)):

@@ -4,7 +4,7 @@ from readfiles.readfile_personas import cargar_personas
 
 def cargar_cursos():
     profesores_sistema = cargar_personas()[1]
-    cursos_file = open("cursos.txt", "r", encoding="utf8").readlines()
+    cursos_file = open("./readfiles/cursos.txt", "r", encoding="utf8").readlines()
     cursos = []
     for i in range(len(cursos_file)):
         if cursos_file[i] == '  {\n':
@@ -85,7 +85,7 @@ def cargar_cursos():
                 elif cursos_file[j] == "  },\n":
                     break
 
-            evaluaciones_file = open("evaluaciones.txt").readlines()
+            evaluaciones_file = open("./readfiles/evaluaciones.txt").readlines()
             for i in range(len(evaluaciones_file)):
                 if evaluaciones_file[i] == "  {\n":
                     sigla_eval = evaluaciones_file[i + 1][14:-3]
@@ -105,7 +105,7 @@ def cargar_cursos():
                             seccion=seccion_eval
                         )
                         evaluaciones.append(nueva_evaluacion)
-            requisitos_file = open("requisitos.txt").readlines()
+            requisitos_file = open("./readfiles/requisitos.txt").readlines()
             for i in range(len(requisitos_file)):
                 if requisitos_file[i] == '  {\n':
                     sigla_curso = requisitos_file[i + 2][14:-3]
