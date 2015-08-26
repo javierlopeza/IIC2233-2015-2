@@ -173,6 +173,5 @@ def cargar_cursos():
                 sala_lab=sala_lab
             )
             cursos.append(nuevo_curso)
-    for curso in cursos:
-        print(curso.pre_requisitos)
+
     return cursos
