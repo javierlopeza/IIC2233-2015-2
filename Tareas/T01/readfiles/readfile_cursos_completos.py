@@ -138,6 +138,14 @@ def cargar_cursos():
                             equivalencias_show = equivalencias
                             equivalencias = equivalencias.split(' o ')
 
+            for a in range(len(pre_requisitos)):
+                for b in range(len(pre_requisitos[a])):
+                    if pre_requisitos[a][b][0] == "(":
+                        pre_requisitos[a][b] = pre_requisitos[a][b][1:]
+                    if pre_requisitos[a][b][-1] == ")":
+                        if pre_requisitos[a][b][-2] != "c":
+                            pre_requisitos[a][b] = pre_requisitos[a][b][:-1]
+
             nuevo_curso = Curso(
                 nombre=nombre_curso,
                 sigla=sigla,
@@ -165,4 +173,6 @@ def cargar_cursos():
                 sala_lab=sala_lab
             )
             cursos.append(nuevo_curso)
+    for curso in cursos:
+        print(curso.pre_requisitos)
     return cursos

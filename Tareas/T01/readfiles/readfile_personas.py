@@ -1,4 +1,5 @@
 from clases import Alumno, Profesor
+from readfiles.cargar_followers import cargar_followers
 
 
 def cargar_personas():
@@ -45,7 +46,8 @@ def cargar_personas():
                                           usuario=usuario,
                                           clave=clave,
                                           idolos=[],
-                                          cursos_aprobados=[]
+                                          cursos_aprobados=[],
+                                          followers=[]
                                           )
                 profesores.append(nuevo_profesor)
 
@@ -54,7 +56,11 @@ def cargar_personas():
                                       usuario=usuario,
                                       clave=clave,
                                       idolos=idolos,
-                                      cursos_aprobados=ramos_pre
+                                      cursos_aprobados=ramos_pre,
+                                      followers=[]
                                       )
                 alumnos.append(nuevo_alumno)
+
+    #alumnos = cargar_followers(alumnos)
+
     return alumnos, profesores

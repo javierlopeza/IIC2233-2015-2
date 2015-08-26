@@ -26,15 +26,19 @@ def inscribir_curso(menu_alumno):
             if existe_nrc:
 
                 if int(curso_posible.disponibles) > 0:
-                    if curso.pre_requisitos:
-                        for opcion_req in curso.pre_requisitos:
+                    if menu_alumno.alumno_in.tiene_permiso_especial(
+                            menu_alumno,
+                            curso_posible):
+                        cumple_requisito = True
+                    elif curso_posible.pre_requisitos:
+                        for opcion_req in curso_posible.pre_requisitos:
                             n_cursos_requisitos = len(opcion_req)
                             for sigla_curso_req in opcion_req:
                                 if menu_alumno.alumno_in.aprobo_curso(menu_alumno, sigla_curso_req):
                                     n_cursos_requisitos -= 1
                                 if n_cursos_requisitos == 0:
                                     cumple_requisito = True
-                    elif not curso.pre_requisitos:
+                    elif not curso_posible.pre_requisitos:
                         cumple_requisito = True
 
                     if cumple_requisito:

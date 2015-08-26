@@ -5,6 +5,7 @@ from interfaz.metodos_alumnos.generar_calendario import generar_calendario
 from interfaz.metodos_alumnos.botar_curso import botar_curso
 from interfaz.metodos_alumnos.inscribir_curso import inscribir_curso
 from interfaz.metodos_alumnos.aprobo_curso import aprobo_curso
+from interfaz.metodos_alumnos.tiene_permiso_especial import tiene_permiso_especial
 
 
 class Persona:
@@ -15,6 +16,7 @@ class Persona:
                  alumno="",
                  idolos=[],
                  cursos_aprobados=[],
+                 followers=[],
                  **kwargs
                  ):
         self.nombre = nombre
@@ -23,6 +25,8 @@ class Persona:
         self.alumno = alumno
         self.idolos = idolos
         self.cursos_aprobados = cursos_aprobados
+        self.followers = []
+
 
 
 class Alumno(Persona):
@@ -92,6 +96,9 @@ en el directorio principal donde esta 'main.py'---\n")
 
     def aprobo_curso(self, menu_alumno, sigla_curso):
         return aprobo_curso(menu_alumno, sigla_curso)
+
+    def tiene_permiso_especial(self, menu_alumno, curso):
+        return tiene_permiso_especial(menu_alumno, curso)
 
 
 class Profesor(Persona):
