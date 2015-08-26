@@ -2,6 +2,9 @@ from interfaz.metodos_profesores.dar_permiso import dar_permiso
 from interfaz.metodos_profesores.quitar_permiso import quitar_permiso
 from interfaz.metodos_alumnos.generar_horario import generar_horario
 from interfaz.metodos_alumnos.generar_calendario import generar_calendario
+from interfaz.metodos_alumnos.botar_curso import botar_curso
+from interfaz.metodos_alumnos.inscribir_curso import inscribir_curso
+from interfaz.metodos_alumnos.aprobo_curso import aprobo_curso
 
 class Persona:
     def __init__(self,
@@ -31,18 +34,20 @@ class Alumno(Persona):
         self.horario_inscripcion = horario_inscripcion
         self.cursos_por_tomar = cursos_por_tomar
         self.grupo_bummer = grupo_bummer
-        self.maximo_creditos_permitidos = 55 + 2*(6 - self.grupo_bummer)
+        self.maximo_creditos_permitidos =\
+            ((55 + 2*(6 - self.grupo_bummer))//5)*5
         self.alumno = "SI"
         self.permisos_especiales = []
 
     def __repr__(self):
-        printear = "Nombre alumno: {}\nUsuario: {}\n".format(
+        printear = "Nombre alumno: {0}\nUsuario: {1}\n".format(
             self.nombre,
             self.usuario
         )
-        printear += "Clave: {}\nHorario de inscripcion: {}\n".format(
+        printear += "Clave: {0}\nHorario de inscripcion: {1}\nMaximo creditos permitidos: {2}\n".format(
             self.clave,
-            self.horario_inscripcion
+            self.horario_inscripcion,
+            self.maximo_creditos_permitidos
         )
         printear += "Cursos por tomar:\n"
         for curso in self.cursos_por_tomar:
@@ -55,18 +60,14 @@ class Alumno(Persona):
             printear += "- " + idolo + "\n"
         return printear
 
-    def inscribir_ramo(self, ramo):
-        # Si cumple con todos los requisitos o tiene aprobacion especial del profesor:
-        if ramo.disponibles > 0:
-            # <<<<<<<<<<<<<<<---------------------- REVISAR RESTRICCIONES DE REQUISITOS, TOPES DE HORARIO, ETC...
-            ramo.disponibles -= 1
-            ramo.ocupados += 1
-            self.cursos_por_tomar.append(ramo)
+    def mostrar_datos_personales(self):
+        print(self)
 
-    def botar_ramo(self, ramo):
-        ramo.disponibles += 1
-        ramo.ocupados -= 1
-        self.cursos_por_tomar.remove(ramo)
+    def inscribir_curso(self, menu_alumno):
+        inscribir_curso(menu_alumno)
+
+    def botar_curso(self, menu_alumno):
+        botar_curso(menu_alumno)
 
     def mostrar_permisos(self):
         if len(self.permisos_especiales) != 0:
@@ -82,6 +83,9 @@ class Alumno(Persona):
 
     def generar_calendario(self):
         generar_calendario(self.cursos_por_tomar)
+
+    def aprobo_curso(self, menu_alumno, sigla_curso):
+        return aprobo_curso(menu_alumno, sigla_curso)
 
 
 class Profesor(Persona):

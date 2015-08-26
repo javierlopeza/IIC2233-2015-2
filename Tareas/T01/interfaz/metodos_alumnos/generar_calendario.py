@@ -32,7 +32,7 @@ evaluaciones registradas. ---\n\n"
         texto_final += texto_evaluaciones
 
     else:
-        texto_final = "\n--- Ninguno de sus cursos tiene evaluaciones\
+        texto_final = "\n--- Ninguno de sus cursos tiene evaluaciones \
 registradas ---"
 
     calendario_file = open("calendario_evaluaciones.txt", "w")
