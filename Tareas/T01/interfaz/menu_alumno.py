@@ -39,11 +39,10 @@ class MenuAlumno:
         print("botar curso")
 
     def horario(self):
-        #self.alumno_in.generar_horario()
-        print("generar horario")
+        self.alumno_in.generar_horario()
 
     def calendario(self):
-        self.alumno_in
+        #self.alumno_in
         print("generar calendario")
 
     def mostrar_permisos_especiales(self):

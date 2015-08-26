@@ -1,5 +1,6 @@
 from interfaz.metodos_profesores.dar_permiso import dar_permiso
 from interfaz.metodos_profesores.quitar_permiso import quitar_permiso
+from interfaz.metodos_alumnos.generar_horario import generar_horario
 
 class Persona:
     def __init__(self,
@@ -73,6 +74,9 @@ class Alumno(Persona):
                 print('- {}, Seccion {}'.format(curso_permiso.curso, curso_permiso.seccion))
         else:
             print("\n--- Usted no tiene permisos especiales registrados. ---")
+
+    def generar_horario(self):
+        print(generar_horario(self.cursos_por_tomar)[0])
 
 
 class Profesor(Persona):

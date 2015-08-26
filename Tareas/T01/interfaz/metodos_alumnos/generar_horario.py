@@ -191,7 +191,7 @@ def generar_horario(cursos_por_tomar):
                             if j < m:
                                 repeticiones_dia_n += repeticiones_dia[i][j]
                             if j == m:
-                                if (repeticiones_dia[d][m] < repeticiones_dia[i][j]):
+                                if repeticiones_dia[d][m] < repeticiones_dia[i][j]:
                                     if d != i:
                                         es_max = False
                         if repeticiones_dia_n > repeticiones_maximas:
@@ -286,7 +286,7 @@ def generar_horario(cursos_por_tomar):
                             if j < m:
                                 repeticiones_dia_n += repeticiones_dia[i][j]
                             if j == m:
-                                if (repeticiones_dia[d][m] < repeticiones_dia[i][j]):
+                                if repeticiones_dia[d][m] < repeticiones_dia[i][j]:
                                     if d != i:
                                         es_max = False
                         if repeticiones_dia_n > repeticiones_maximas:
@@ -332,5 +332,5 @@ def generar_horario(cursos_por_tomar):
 
     file_horario = open("horario_bacan.txt", "w")
     file_horario.write(horario_base)
-    print(horario_base)
-    return horario_listado
+
+    return horario_base, horario_listado
