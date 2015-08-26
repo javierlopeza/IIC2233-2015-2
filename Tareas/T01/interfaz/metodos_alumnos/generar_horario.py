@@ -97,12 +97,15 @@ def generar_horario(cursos_por_tomar):
                             if j < m:
                                 repeticiones_dia_n += repeticiones_dia[i][j]
                             if j == m:
-                                if (repeticiones_dia[d][m] < repeticiones_dia[i][j]) and d != i:
-                                    es_max = False
+                                if (repeticiones_dia[d][m] <
+                                        repeticiones_dia[i][j]):
+                                    if d != i:
+                                        es_max = False
                         if repeticiones_dia_n > repeticiones_maximas:
                             repeticiones_maximas = repeticiones_dia_n
 
-                    extra_modulos_anteriores_dias = (repeticiones_maximas * 105)
+                    extra_modulos_anteriores_dias = \
+                        (repeticiones_maximas * 105)
 
                     if repeticiones_individuales[d][m] == 0:
                         extra = extra_modulos_anteriores_dias
@@ -115,7 +118,8 @@ def generar_horario(cursos_por_tomar):
                         repeticiones_individuales[d][m] += 1
 
                     elif not es_max:
-                        extra = (extra_repeticiones_in + extra_modulos_anteriores_dias)
+                        extra = (extra_repeticiones_in
+                                 + extra_modulos_anteriores_dias)
                         h += extra
                         horario_base = "{0}{1}-{2}{3}".format(
                             horario_base[:h],
@@ -126,12 +130,15 @@ def generar_horario(cursos_por_tomar):
                         repeticiones_dia[d][m] += 1
 
                     elif es_max:
-                        hh += (extra_repeticiones_in + extra_modulos_anteriores_dias - 105)
+                        hh += (extra_repeticiones_in
+                               + extra_modulos_anteriores_dias
+                               - 105)
                         horario_base = "{0}{1}{2}".format(
                             horario_base[:hh],
                             extra_tope_horario,
                             horario_base[(hh + 1):])
-                        h += (extra_repeticiones_in + extra_modulos_anteriores_dias)
+                        h += (extra_repeticiones_in
+                              + extra_modulos_anteriores_dias)
                         horario_base = "{0}{1}-{2}{3}".format(
                             horario_base[:h],
                             str(curso.sigla),
@@ -191,13 +198,15 @@ def generar_horario(cursos_por_tomar):
                             if j < m:
                                 repeticiones_dia_n += repeticiones_dia[i][j]
                             if j == m:
-                                if repeticiones_dia[d][m] < repeticiones_dia[i][j]:
+                                if repeticiones_dia[d][m] \
+                                        < repeticiones_dia[i][j]:
                                     if d != i:
                                         es_max = False
                         if repeticiones_dia_n > repeticiones_maximas:
                             repeticiones_maximas = repeticiones_dia_n
 
-                    extra_modulos_anteriores_dias = (repeticiones_maximas * 105)
+                    extra_modulos_anteriores_dias = \
+                        (repeticiones_maximas * 105)
 
                     if repeticiones_individuales[d][m] == 0:
                         extra = extra_modulos_anteriores_dias
@@ -210,7 +219,8 @@ def generar_horario(cursos_por_tomar):
                         repeticiones_individuales[d][m] += 1
 
                     elif not es_max:
-                        extra = (extra_repeticiones_in + extra_modulos_anteriores_dias)
+                        extra = (extra_repeticiones_in
+                                 + extra_modulos_anteriores_dias)
                         h += extra
                         horario_base = "{0}{1}-{2}{3}".format(
                             horario_base[:h],
@@ -221,12 +231,14 @@ def generar_horario(cursos_por_tomar):
                         repeticiones_dia[d][m] += 1
 
                     elif es_max:
-                        hh += (extra_repeticiones_in + extra_modulos_anteriores_dias - 105)
+                        hh += (extra_repeticiones_in
+                               + extra_modulos_anteriores_dias - 105)
                         horario_base = "{0}{1}{2}".format(
                             horario_base[:hh],
                             extra_tope_horario,
                             horario_base[(hh + 1):])
-                        h += (extra_repeticiones_in + extra_modulos_anteriores_dias)
+                        h += (extra_repeticiones_in
+                              + extra_modulos_anteriores_dias)
                         horario_base = "{0}{1}-{2}{3}".format(
                             horario_base[:h],
                             str(curso.sigla),
@@ -286,13 +298,15 @@ def generar_horario(cursos_por_tomar):
                             if j < m:
                                 repeticiones_dia_n += repeticiones_dia[i][j]
                             if j == m:
-                                if repeticiones_dia[d][m] < repeticiones_dia[i][j]:
+                                if repeticiones_dia[d][m] \
+                                        < repeticiones_dia[i][j]:
                                     if d != i:
                                         es_max = False
                         if repeticiones_dia_n > repeticiones_maximas:
                             repeticiones_maximas = repeticiones_dia_n
 
-                    extra_modulos_anteriores_dias = (repeticiones_maximas * 105)
+                    extra_modulos_anteriores_dias = \
+                        (repeticiones_maximas * 105)
 
                     if repeticiones_individuales[d][m] == 0:
                         extra = extra_modulos_anteriores_dias
@@ -305,7 +319,8 @@ def generar_horario(cursos_por_tomar):
                         repeticiones_individuales[d][m] += 1
 
                     elif not es_max:
-                        extra = (extra_repeticiones_in + extra_modulos_anteriores_dias)
+                        extra = (extra_repeticiones_in
+                                 + extra_modulos_anteriores_dias)
                         h += extra
                         horario_base = "{0}{1}-{2}{3}".format(
                             horario_base[:h],
@@ -316,12 +331,14 @@ def generar_horario(cursos_por_tomar):
                         repeticiones_dia[d][m] += 1
 
                     elif es_max:
-                        hh += (extra_repeticiones_in + extra_modulos_anteriores_dias - 105)
+                        hh += (extra_repeticiones_in
+                               + extra_modulos_anteriores_dias - 105)
                         horario_base = "{0}{1}{2}".format(
                             horario_base[:hh],
                             extra_tope_horario,
                             horario_base[(hh + 1):])
-                        h += (extra_repeticiones_in + extra_modulos_anteriores_dias)
+                        h += (extra_repeticiones_in
+                              + extra_modulos_anteriores_dias)
                         horario_base = "{0}{1}-{2}{3}".format(
                             horario_base[:h],
                             str(curso.sigla),
@@ -330,7 +347,7 @@ def generar_horario(cursos_por_tomar):
                         repeticiones_dia[d][m] += 1
                         repeticiones_individuales[d][m] += 1
 
-    file_horario = open("horario_bacan.txt", "w")
+    file_horario = open("horario.txt", "w")
     file_horario.write(horario_base)
 
     return horario_base, horario_listado

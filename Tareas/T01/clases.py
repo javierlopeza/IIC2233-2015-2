@@ -78,6 +78,7 @@ class Alumno(Persona):
 
     def generar_horario(self):
         print(generar_horario(self.cursos_por_tomar)[0])
+        print("       --- Horario de clases guardado en 'horario.txt' en el directorio principal 'T01'---\n")
 
     def generar_calendario(self):
         generar_calendario(self.cursos_por_tomar)

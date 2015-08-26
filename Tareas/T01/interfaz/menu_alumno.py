@@ -28,22 +28,22 @@ class MenuAlumno:
             if accion:
                 accion()
             else:
-                print("\n--- {0} no es una opcion valida ---\n".format(eleccion))
+                print("\n--- {0} no es una opcion valida ---\n".format(
+                    eleccion))
 
     def agregar_curso(self):
-        #self.alumno_in.inscribir_ramo()
+        # self.alumno_in.inscribir_ramo()
         print("agregar curso")
 
     def botar_curso(self):
-        #self.alumno_in.botar_ramo()
+        # self.alumno_in.botar_ramo()
         print("botar curso")
 
     def horario(self):
         self.alumno_in.generar_horario()
 
     def calendario(self):
-        #self.alumno_in
-        print("generar calendario")
+        self.alumno_in.generar_calendario()
 
     def mostrar_permisos_especiales(self):
         self.alumno_in.mostrar_permisos()
