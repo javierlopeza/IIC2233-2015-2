@@ -56,23 +56,23 @@ Ejemplo de desorden de datos de cursos:
 * **03.** El control de tope de horario en Bummer se realiza solo para CAT-CAT, LAB-LAB, CAT-LAB.
 
 * **04.** Al ingresar a Bummer, se presenta un menu principal que permite iniciar sesión, buscar cursos o salir del sistema.
-⋅⋅*Al seleccionar la opción de iniciar sesión, el sistema pregunta al usuario si desea ingresar con credenciales de profesor o alumno, por lo que la lista de personas que revisa sus credenciales (profesores o alumnos) depende de la elección realizada en ese momento. 
-⋅⋅*Para la opción de *buscar cursos* del menu principal del sistema, se debe ingresar la sigla del curso que se quiere obtener la informacion. Luego de entregar los resultados se le pregunta al usuario si quiere saber la totalidad de la informacion respecto a los cursos.
+⋅⋅* Al seleccionar la opción de iniciar sesión, el sistema pregunta al usuario si desea ingresar con credenciales de profesor o alumno, por lo que la lista de personas que revisa sus credenciales (profesores o alumnos) depende de la elección realizada en ese momento. 
+⋅⋅* Para la opción de *buscar cursos* del menu principal del sistema, se debe ingresar la sigla del curso que se quiere obtener la informacion. Luego de entregar los resultados se le pregunta al usuario si quiere saber la totalidad de la informacion respecto a los cursos.
 
 * **05.** Al ingresar con credenciales válidas de alumno, el sistema desplega el menu de alumno que permite inscribir un curso, botar un curso, generar un horario en consola y en un archivo *"horario.txt"*, generar un calendario de las evaluaciones en consola y en un archivo *"evaluaciones.txt"*,
 mostrar los permisos especiales que tiene el alumno,
 mostrar la información personal del alumno y cerrar sesión.
-⋅⋅*Para la opción de inscribir un curso, el alumno ingresa
+⋅⋅* Para la opción de inscribir un curso, el alumno ingresa
 el NRC del curso que desea inscribir y si el sistema permite la inscripción, 
 se le informa al alumno
 en consola que el curso fue inscrito exitosamente.
 Si existe algún error de inscripción se le informa el tipo de error al alumno en consola, en
 específico para el tope de horario se le muestra al alumno el tope de horario en un horario impreso en consola.
-⋅⋅*Para la opción de botar curso, el alumno ingresa el NRC del curso que desea botar, mostrando en consola el exito de botar el ramo.
-⋅⋅*Para la opcion de generar horario, se muestra en consola un horario de forma amigable con los cursos que tiene inscritos hasta el momento,
+⋅⋅* Para la opción de botar curso, el alumno ingresa el NRC del curso que desea botar, mostrando en consola el exito de botar el ramo.
+⋅⋅* Para la opcion de generar horario, se muestra en consola un horario de forma amigable con los cursos que tiene inscritos hasta el momento,
 además se crea en el directorio principal de *main.py* un archivo llamado *"horario.txt"* con el mismo horario 
 impreso en consola.
-⋅⋅*Para la opcion de generar calendario, se imprime en consola las evaluaciones de todos los ramos tomados hasta el momento, 
+⋅⋅* Para la opcion de generar calendario, se imprime en consola las evaluaciones de todos los ramos tomados hasta el momento, 
 guardando además en un archivo *"evaluaciones.txt"* en el directorio principal de *main.py* que contiene las evaluaciones impresas en consola.
-⋅⋅*Para la opcion de mostrar datos personales, se imprime en consola el Nombre, Usuario, Clave, Horario de Inscripcion, Maximo de Creditos Permitidos, Cursos por Tomar, Cursos Aprobados, Lista de Idolos.
-⋅⋅*Para la opción de cerrar sesión, se vuelve al menu principal de Bummer.
+⋅⋅* Para la opcion de mostrar datos personales, se imprime en consola el Nombre, Usuario, Clave, Horario de Inscripcion, Maximo de Creditos Permitidos, Cursos por Tomar, Cursos Aprobados, Lista de Idolos.
+⋅⋅* Para la opción de cerrar sesión, se vuelve al menu principal de Bummer.
