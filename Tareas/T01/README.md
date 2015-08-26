@@ -76,3 +76,10 @@ impreso en consola.
 guardando además en un archivo *"evaluaciones.txt"* en el directorio principal de *main.py* que contiene las evaluaciones impresas en consola.
 <br>  - Para la opcion de mostrar datos personales, se imprime en consola el Nombre, Usuario, Clave, Horario de Inscripcion, Maximo de Creditos Permitidos, Cursos por Tomar, Cursos Aprobados, Lista de Idolos.
 <br>  - Para la opción de cerrar sesión, se vuelve al menu principal de Bummer.
+
+**6.** Al ingresar con credenciales válidas de profesor, el sistema desplega el menu de profesor que permite dar permisos especiales, quitar permisos especiales o cerrar sesión.
+<br>  - Para la opción de dar permiso especial, se le pide al profesor que ingrese el NRC del curso que quiere otorgar el permiso especial y el usuario del alumno al que quiere darselo, 
+si el profesor dicta el ramo entonces se le da el permiso especial al alumno mostrando el exito en consola. Si existe algun error, que por ejemplo el profesor no dicta el ramo, se muestra en pantalla informando al profesor el tipo de error correspondiente.
+<br>  - Para la opción de quitar permiso especial, se le pide al profesor que ingrese el NRC del curso que quiere quitar el permiso especial y el usuario del alumno al que quiere quitarselo, 
+si el profesor dicta el ramo entonces se le quita el permiso especial al alumno mostrando el exito en consola. Si existe algun error, que por ejemplo el profesor no dicta el ramo, se muestra en pantalla informando al profesor el tipo de error correspondiente.
+<br>  - Para la opción de cerrar sesión, se vuelve al menu principal de Bummer.
