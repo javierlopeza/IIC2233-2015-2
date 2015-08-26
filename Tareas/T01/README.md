@@ -55,3 +55,4 @@ Ejemplo de desorden de datos de cursos:
 
 * **03.** Para la opción de *buscar cursos* del menu principal del sistema, se debe ingresar la sigla del curso que se quiere obtener la informacion. Luego de entregar los resultados se le pregunta al usuario si quiere saber la totalidad de la informacion respecto a los cursos.
 
+* **04.** El control de tope de horario en Bummer se realiza solo para CAT-CAT, LAB-LAB, CAT-LAB.

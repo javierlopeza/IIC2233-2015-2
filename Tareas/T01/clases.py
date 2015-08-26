@@ -1,3 +1,6 @@
+from interfaz.metodos_profesores.dar_permiso import dar_permiso
+from interfaz.metodos_profesores.quitar_permiso import quitar_permiso
+
 class Persona:
     def __init__(self,
                  nombre="",
@@ -63,9 +66,13 @@ class Alumno(Persona):
         ramo.ocupados -= 1
         self.cursos_por_tomar.remove(ramo)
 
-
-        # def generar_horario(self):
-        # def generar_calendario_evaluaciones(self):
+    def mostrar_permisos(self):
+        if len(self.permisos_especiales) != 0:
+            print("\nUsted tiene permisos especiales para los siguientes cursos:")
+            for curso_permiso in self.permisos_especiales:
+                print('- {}, Seccion {}'.format(curso_permiso.curso, curso_permiso.seccion))
+        else:
+            print("\n--- Usted no tiene permisos especiales registrados. ---")
 
 
 class Profesor(Persona):
@@ -81,8 +88,11 @@ class Profesor(Persona):
         )
         return printear
 
-    def dar_permiso(self, alumno, ramo):
-        pass
+    def dar_permiso(self, menu_profesor):
+        dar_permiso(menu_profesor)
+
+    def quitar_permiso(self, menu_profesor):
+        quitar_permiso(menu_profesor)
 
 
 class Horario:
