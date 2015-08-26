@@ -26,13 +26,16 @@ def inscribir_curso(menu_alumno):
             if existe_nrc:
 
                 if int(curso_posible.disponibles) > 0:
-                    for opcion_req in curso.pre_requisitos:
-                        n_cursos_requisitos = len(opcion_req)
-                        for sigla_curso_req in opcion_req:
-                            if menu_alumno.alumno_in.aprobo_curso(menu_alumno, sigla_curso_req):
-                                n_cursos_requisitos -= 1
-                            if n_cursos_requisitos == 0:
-                                cumple_requisito = True
+                    if curso.pre_requisitos:
+                        for opcion_req in curso.pre_requisitos:
+                            n_cursos_requisitos = len(opcion_req)
+                            for sigla_curso_req in opcion_req:
+                                if menu_alumno.alumno_in.aprobo_curso(menu_alumno, sigla_curso_req):
+                                    n_cursos_requisitos -= 1
+                                if n_cursos_requisitos == 0:
+                                    cumple_requisito = True
+                    elif not curso.pre_requisitos:
+                        cumple_requisito = True
 
                     if cumple_requisito:
                         cursos_por_tomar_posible = menu_alumno.alumno_in.cursos_por_tomar[:]
@@ -43,12 +46,16 @@ def inscribir_curso(menu_alumno):
                                 if horario_posible[d][m - 1]:
                                     if horario_posible[d][m - 1][0].campus != curso_posible.campus:
                                         tope_campus = True
-                                        cursos_tope_campus = [horario_posible[d][m - 1][0], horario_posible[d][m][0]]
+                                        cursos_tope_campus = [
+                                            horario_posible[d][m - 1][0],
+                                            horario_posible[d][m][0]]
                                 if m != 7:
                                     if horario_posible[d][m + 1]:
                                         if horario_posible[d][m + 1][0].campus != curso_posible.campus:
                                             tope_campus = True
-                                            cursos_tope_campus = [horario_posible[d][m + 1][0], horario_posible[d][m][0]]
+                                            cursos_tope_campus = [
+                                                horario_posible[d][m + 1][0],
+                                                horario_posible[d][m][0]]
                                 if len(horario_posible[d][m]) > 1:
                                     tope_horario = True
                                     cursos_topados = horario_posible[d][m][:]
@@ -61,7 +68,9 @@ def inscribir_curso(menu_alumno):
                                         for evaluacion_posible in curso_posible.evaluaciones:
                                             if evaluacion.hora == evaluacion_posible.hora:
                                                 if evaluacion.dia == evaluacion_posible.dia:
-                                                    cursos_tope_evaluaciones = [curso_posible, curso_tomado]
+                                                    cursos_tope_evaluaciones = [
+                                                        curso_posible,
+                                                        curso_tomado]
                                                     tope_evaluaciones = True
 
                             if not tope_evaluaciones:
@@ -80,8 +89,6 @@ def inscribir_curso(menu_alumno):
                                     curso_posible.lista_de_alumnos.append(menu_alumno.alumno_in)
                                     menu_alumno.alumno_in.cursos_por_tomar.append(curso_posible)
                                     curso_inscrito_exito = True
-
-
 
     if not existe_nrc:
         print("\n--- ERROR: El NRC:{0} ingresado no existe. ---\n".format(

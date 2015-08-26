@@ -39,4 +39,4 @@ registradas ---"
     calendario_file.write(texto_final)
     print(texto_final)
     print("--- Calendario de evaluaciones guardado en \
-'calendario_evaluaciones.txt' ---")
+'calendario_evaluaciones.txt' en el directorio donde esta 'main.py' ---")

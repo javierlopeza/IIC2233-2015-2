@@ -6,6 +6,7 @@ from interfaz.metodos_alumnos.botar_curso import botar_curso
 from interfaz.metodos_alumnos.inscribir_curso import inscribir_curso
 from interfaz.metodos_alumnos.aprobo_curso import aprobo_curso
 
+
 class Persona:
     def __init__(self,
                  nombre="",
@@ -34,8 +35,8 @@ class Alumno(Persona):
         self.horario_inscripcion = horario_inscripcion
         self.cursos_por_tomar = cursos_por_tomar
         self.grupo_bummer = grupo_bummer
-        self.maximo_creditos_permitidos =\
-            ((55 + 2*(6 - self.grupo_bummer))//5)*5
+        self.maximo_creditos_permitidos = \
+            ((55 + 2 * (6 - self.grupo_bummer)) // 5) * 5
         self.alumno = "SI"
         self.permisos_especiales = []
 
@@ -44,14 +45,15 @@ class Alumno(Persona):
             self.nombre,
             self.usuario
         )
-        printear += "Clave: {0}\nHorario de inscripcion: {1}\nMaximo creditos permitidos: {2}\n".format(
+        printear += "Clave: {0}\nHorario de inscripcion: {1}\n\
+Maximo creditos permitidos: {2}\n".format(
             self.clave,
             self.horario_inscripcion,
             self.maximo_creditos_permitidos
         )
         printear += "Cursos por tomar:\n"
         for curso in self.cursos_por_tomar:
-            printear += "- " + curso + "\n"
+            printear += "- " + curso.sigla + "-" + curso.seccion + "\n"
         printear += "Cursos aprobados:\n"
         for curso in self.cursos_aprobados:
             printear += "- " + curso + "\n"
@@ -71,15 +73,19 @@ class Alumno(Persona):
 
     def mostrar_permisos(self):
         if len(self.permisos_especiales) != 0:
-            print("\nUsted tiene permisos especiales para los siguientes cursos:")
+            print("\nUsted tiene permisos especiales para \
+los siguientes cursos:")
             for curso_permiso in self.permisos_especiales:
-                print('- {}, Seccion {}'.format(curso_permiso.curso, curso_permiso.seccion))
+                print('- {}, Seccion {}'.format(
+                    curso_permiso.curso,
+                    curso_permiso.seccion))
         else:
             print("\n--- Usted no tiene permisos especiales registrados. ---")
 
     def generar_horario(self):
         print(generar_horario(self.cursos_por_tomar)[0])
-        print("       --- Horario de clases guardado en 'horario.txt' en el directorio principal 'T01'---\n")
+        print("       --- Horario de clases guardado en 'horario.txt' \
+en el directorio principal donde esta 'main.py'---\n")
 
     def generar_calendario(self):
         generar_calendario(self.cursos_por_tomar)
@@ -173,7 +179,7 @@ class Curso(Horario):
     def __repr__(self):
         printear_profesores = ""
         for profe in self.lista_profesor:
-            printear_profesores += profe.nombre+", "
+            printear_profesores += profe.nombre + ", "
         printear_profesores = printear_profesores[:-2]
         if printear_profesores == "":
             printear_profesores = "Sin Profesor"
@@ -236,5 +242,5 @@ class Evaluacion:
             self.nombre,
             self.dia,
             self.hora
-            )
+        )
         return printear

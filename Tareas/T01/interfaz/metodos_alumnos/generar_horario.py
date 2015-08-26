@@ -22,11 +22,11 @@ def generar_horario(cursos_por_tomar):
                        """
 
     horario_listado_sin_ayudantias = [[[], [], [], [], [], [], [], []],
-                                       [[], [], [], [], [], [], [], []],
-                                       [[], [], [], [], [], [], [], []],
-                                       [[], [], [], [], [], [], [], []],
-                                       [[], [], [], [], [], [], [], []],
-                                       [[], [], [], [], [], [], [], []]]
+                                      [[], [], [], [], [], [], [], []],
+                                      [[], [], [], [], [], [], [], []],
+                                      [[], [], [], [], [], [], [], []],
+                                      [[], [], [], [], [], [], [], []],
+                                      [[], [], [], [], [], [], [], []]]
 
     extra_tope_horario = "|\n   |               |             |             \
 |             |             |             |             |"
@@ -107,7 +107,7 @@ def generar_horario(cursos_por_tomar):
                     extra_modulos_anteriores_dias = \
                         (repeticiones_maximas * 105)
 
-                    extra_sigla = (7-len(curso.sigla))*" "
+                    extra_sigla = (7 - len(curso.sigla)) * " "
 
                     if repeticiones_individuales[d][m] == 0:
                         extra = extra_modulos_anteriores_dias
@@ -211,7 +211,7 @@ def generar_horario(cursos_por_tomar):
                     extra_modulos_anteriores_dias = \
                         (repeticiones_maximas * 105)
 
-                    extra_sigla = (7-len(curso.sigla))*" "
+                    extra_sigla = (7 - len(curso.sigla)) * " "
 
                     if repeticiones_individuales[d][m] == 0:
                         extra = extra_modulos_anteriores_dias
@@ -317,7 +317,7 @@ def generar_horario(cursos_por_tomar):
                     extra_modulos_anteriores_dias = \
                         (repeticiones_maximas * 105)
 
-                    extra_sigla = (7-len(curso.sigla))*" "
+                    extra_sigla = (7 - len(curso.sigla)) * " "
 
                     if repeticiones_individuales[d][m] == 0:
                         extra = extra_modulos_anteriores_dias
