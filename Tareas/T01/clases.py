@@ -1,6 +1,7 @@
 from interfaz.metodos_profesores.dar_permiso import dar_permiso
 from interfaz.metodos_profesores.quitar_permiso import quitar_permiso
 from interfaz.metodos_alumnos.generar_horario import generar_horario
+from interfaz.metodos_alumnos.generar_calendario import generar_calendario
 
 class Persona:
     def __init__(self,
@@ -77,6 +78,9 @@ class Alumno(Persona):
 
     def generar_horario(self):
         print(generar_horario(self.cursos_por_tomar)[0])
+
+    def generar_calendario(self):
+        generar_calendario(self.cursos_por_tomar)
 
 
 class Profesor(Persona):
