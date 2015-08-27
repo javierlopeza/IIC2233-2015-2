@@ -3,6 +3,7 @@ from cargar_datos import cargar_sistema
 from inicio_sesion import iniciar_sesion
 from interfaz.menu_alumno import MenuAlumno
 from interfaz.menu_profesor import MenuProfesor
+from readfiles.cargar_followers import cargar_followers
 
 
 
@@ -15,7 +16,8 @@ class BummerUC:
         self.opciones = {
             "1": self.iniciar_sesion,
             "2": self.buscar_curso,
-            "3": self.salir,
+            "3": self.cargar_bacanosidad,
+            "0": self.salir
         }
 
     @staticmethod
@@ -24,7 +26,8 @@ class BummerUC:
               "BUMMER UC - MENU PRINCIPAL:\n\n"
               "1: Iniciar Sesion\n"
               "2: Buscar Curso\n"
-              "3: Salir\n"
+              "3: Cargar Bacanosidad\n"
+              "0: Salir\n"
               "            ")
 
     def run(self):
@@ -105,6 +108,9 @@ acerca de las secciones del curso? [SI/NO]: ")
 
         else:
             print("--- La sigla {} no existe ---\n".format(sigla_busqueda))
+
+    def cargar_bacanosidad(self):
+        self.lista_alumnos = cargar_followers(self.lista_alumnos)
 
     @staticmethod
     def salir():

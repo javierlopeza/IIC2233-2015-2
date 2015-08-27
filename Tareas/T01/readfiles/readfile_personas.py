@@ -61,6 +61,4 @@ def cargar_personas():
                                       )
                 alumnos.append(nuevo_alumno)
 
-# alumnos = cargar_followers(alumnos)
-
     return alumnos, profesores
