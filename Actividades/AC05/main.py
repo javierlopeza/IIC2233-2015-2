@@ -71,12 +71,12 @@ class Repository:
         # Crear branch a partir del último estado de la 'from_branch_name'.
         #############
         if new_branch_name=='master':
-            branch_master = Branch(new_branch_name='master', message='master branch created')
+            branch_master = Branch(nombre='master', message='master branch created')
             self.ramas.append(branch_master)
         else:
             for branch in self.ramas:
                 if branch.nombre == from_branch_name:
-                    nueva_branch = Branch(message, changes, commit_padre)
+                    nueva_branch = Branch(message, changes, nombre=new_branch_name, commit_padre=branch.rama[-1])
                     self.ramas.append(nueva_branch)
 
     def branch(self, branch_name):
