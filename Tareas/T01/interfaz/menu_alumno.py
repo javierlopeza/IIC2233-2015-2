@@ -34,10 +34,18 @@ class MenuAlumno:
                     eleccion))
 
     def inscribir_curso(self):
-        self.alumno_in.inscribir_curso(self)
+        if self.sistema.bacanosidades_cargadas:
+            self.alumno_in.inscribir_curso(self)
+        else:
+            print("--- Las bacanosidades no han sido cargadas al sistema todavia. Vuelva al menu principal y \
+escoga la opcion de cargar bacanosidades.---")
 
     def botar_curso(self):
-        self.alumno_in.botar_curso(self)
+        if self.sistema.bacanosidades_cargadas:
+            self.alumno_in.botar_curso(self)
+        else:
+            print("--- Las bacanosidades no han sido cargadas al sistema todavia. Vuelva al menu principal y \
+escoga la opcion de cargar bacanosidades.---")
 
     def horario(self):
         self.alumno_in.generar_horario()
@@ -53,4 +61,7 @@ class MenuAlumno:
 
     def cerrar_sesion(self):
         self.sesion_abierta = False
+        if self.alumno_in.creditos_tomados() < 30:
+            print("\n     ===== ADVERTENCIA: USTED TIENE MENOS DE 30 CREDITOS INSCRITOS =====")
+            print(" ===== Vuelva a ingresar para tomar el minimo de creditos permitidos =====\n")
         print("     --- SESION FINALIZADA ---\n")

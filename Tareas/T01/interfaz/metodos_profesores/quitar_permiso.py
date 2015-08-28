@@ -20,7 +20,7 @@ que quiere quitar la autorizacion especial: ')
                                 a.permisos_especiales.remove(
                                 curso)
                                 if curso in a.cursos_por_tomar:
-                                    a.cursos_por_tomar.remove(curso)
+                                    a.botar_ramo(curso, acceso_profesor=True)
                                 print('\n--- Le ha quitado el permiso \
 especial al alumno(a) {0} para tomar el ramo {1} ---'.format(
                                 a.nombre,

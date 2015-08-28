@@ -1,5 +1,4 @@
 from clases import Alumno, Profesor
-from readfiles.cargar_followers import cargar_followers
 
 
 def cargar_personas():

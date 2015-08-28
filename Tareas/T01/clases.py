@@ -39,31 +39,43 @@ class Alumno(Persona):
         self.horario_inscripcion = horario_inscripcion
         self.cursos_por_tomar = cursos_por_tomar
         self.grupo_bummer = grupo_bummer
+        self.bacanosipuntos = 0
+        self.puntos_recibidos = 0
+        self.bacanosidad_relativa = 0
         self.maximo_creditos_permitidos = \
             ((55 + 2 * (6 - self.grupo_bummer)) // 5) * 5
         self.alumno = "SI"
         self.permisos_especiales = []
+        self.idolos_instanciados = False
+
 
     def __repr__(self):
         printear = "Nombre alumno: {0}\nUsuario: {1}\n".format(
             self.nombre,
             self.usuario
         )
-        printear += "Clave: {0}\nHorario de inscripcion: {1}\n\
-Maximo creditos permitidos: {2}\n".format(
+        printear += "Cursos aprobados:\n"
+        for curso in self.cursos_aprobados:
+            printear += "- " + curso + "\n"
+        printear += "Lista de idolos:\n"
+        if not self.idolos_instanciados:
+            for idolo in self.idolos:
+                printear += "- " + idolo + "\n"
+        elif self.idolos_instanciados:
+            for idolo in self.idolos:
+                printear += "- " + idolo.nombre + "\n"
+        printear += "Clave: {0}\nHorario de inscripcion: {1} a {2}\n\
+Grupo BummerUC: {3}\nMaximo creditos permitidos: {4}\n".format(
             self.clave,
-            self.horario_inscripcion,
+            self.horario_inscripcion[0],
+            self.horario_inscripcion[1],
+            self.grupo_bummer,
             self.maximo_creditos_permitidos
         )
         printear += "Cursos por tomar:\n"
         for curso in self.cursos_por_tomar:
             printear += "- " + curso.sigla + "-" + curso.seccion + "\n"
-        printear += "Cursos aprobados:\n"
-        for curso in self.cursos_aprobados:
-            printear += "- " + curso + "\n"
-        printear += "Lista de idolos:\n"
-        for idolo in self.idolos:
-            printear += "- " + idolo + "\n"
+
         return printear
 
     def mostrar_datos_personales(self):
@@ -72,8 +84,8 @@ Maximo creditos permitidos: {2}\n".format(
     def inscribir_curso(self, menu_alumno):
         inscribir_curso(menu_alumno)
 
-    def botar_curso(self, menu_alumno):
-        botar_curso(menu_alumno)
+    def botar_curso(self, menu_alumno, acceso_profesor=False):
+        botar_curso(menu_alumno, acceso_profesor)
 
     def mostrar_permisos(self):
         if len(self.permisos_especiales) != 0:
@@ -100,6 +112,11 @@ en el directorio principal donde esta 'main.py'---\n")
     def tiene_permiso_especial(self, menu_alumno, curso):
         return tiene_permiso_especial(menu_alumno, curso)
 
+    def creditos_tomados(self):
+        creditos = 0
+        for curso_tomado in self.cursos_por_tomar:
+            creditos += int(curso_tomado.creditos)
+        return creditos
 
 class Profesor(Persona):
     def __init__(self, **kwargs):

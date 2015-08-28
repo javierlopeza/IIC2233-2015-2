@@ -83,3 +83,19 @@ si el profesor dicta el ramo entonces se le da el permiso especial al alumno mos
 <br>  - Para la opción de quitar permiso especial, se le pide al profesor que ingrese el NRC del curso que quiere quitar el permiso especial y el usuario del alumno al que quiere quitarselo, 
 si el profesor dicta el ramo entonces se le quita el permiso especial al alumno mostrando el exito en consola. Si existe algun error, que por ejemplo el profesor no dicta el ramo, se muestra en pantalla informando al profesor el tipo de error correspondiente.
 <br>  - Para la opción de cerrar sesión, se vuelve al menu principal de Bummer.
+
+**7.** Para calcular las bacanosidades de los alumnos, lo que hace el programa es darle un punto por cada 
+seguidor que tiene el alumno. Esta decisión de hacerlo así se debe a que probe haciendo que la cantidad de seguidores de los seguidores del alumno se sumaran a la bacanosidad del alumno pero aun ponderando dicha cantidad me encontre con que cada vez que aumentaba la ponderacion más me alejaba de cumplir la verificación del algoritmo que se menciona en *bacanosidad.pdf*.
+Es por esto que el algoritmo de: *"asignar un punto de bacanosidad al alumno por cada persona que lo considera ídolo"* calculé que me entrega una eficiencia promedio de un 92.71% respecto a la eficiencia del algoritmo perfecto (*el cual hace que los bacanosipuntos de un alumno equivalen a los puntos recibidos en un 100%*). 
+Ejemplificando: *si Juan tiene 100 bacanosipuntos asignados por mi algoritmo, al hacer la verificación de repartición de puntos, me encuentro con que Juan recibe 92,72 puntos (o 107,28)*. Es lo más eficiente que logré hacer el algoritmo, teniendo en cuenta que puede estar afectado en poca parte por cómo Python trabaja los decimales de los *float*.
+En el archivo *cargar_bacanosipuntos.py* esta 
+el codigo que calcula el porcentaje de eficiencia mencionada anteriormente.
+**PD:** Para ordenar el ranking de alumnos por bacanosidad uso la bacanosidad relativa calculada con los puntos recibidos relativos en cuanto al con mayor puntos recibidos, ya que esta permite mayor diferencia en cuanto a decimales.
+
+**8.** Para cargar las bacanosidades a los alumnos del programa hay dos opciones, la primera es elegir la opcion del menu que carga las bacanosidades de los alumnos con el algoritmo creado,
+ lo cual demora unos minutos (aproximadamente 3 minutos). La segunda opcion es que al haber realizado previamente la primera opcion se guarda un archivo llamado *bacanosidades_bummer.txt* el cual al iniciar el programa se carga si es que existe dicho archivo, de lo contrario
+ hay que ejecutar la opcion del menu mencionada. 
+
+**9.** Como en el enunciado dice que cada grupo de Bummer tiene máximo 435 alumnos, lo que hice fue llenar todos los grupos que se puedan con 435 partiendo del grupo 1 y el grupo 10 quedará con los alumnos que resten.
+
+**10.** Para el caso en que un alumno ingresa e inscribe menos de 30 creditos, al cerrar su sesión le aparecerá una advertencia de que no cumple con esa restricción, aunque igual se le permitirá salir del sistema diciendole que vuelva a ingresar para inscribir mas creditos.

@@ -1,4 +1,4 @@
-from interfaz.menu import BummerUC
+from interfaz.menu_bummer import BummerUC
 
 if __name__ == "__main__":
     BummerUC().run()

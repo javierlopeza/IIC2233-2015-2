@@ -1,19 +1,11 @@
 from interfaz.metodos_alumnos.generar_horario import generar_horario
-
+from interfaz.metodos_alumnos.pertenece_horario import pertenece_horario
+from interfaz.metodos_alumnos.hora_valida import hora_valida
 
 def inscribir_curso(menu_alumno):
     hora = input("\nIngrese la hora actual [HH:MM]:")
 
-    hora_valida = False
-    if len(hora) == 5 and hora[2] == ":":
-        if 48 <= ord(hora[0]) <= 50:
-            if 48 <= ord(hora[1]) <= 57:
-                if 48 <= ord(hora[3]) <= 53:
-                    if 48 <= ord(hora[4]) <= 57:
-                        hora_valida = True
-
-    #FALTA VERIFICAR QUE LA HORA CORRESPONDE A SU GRUPO
-
+    horario_correcto = False
     existe_nrc = False
     tope_horario = False
     tope_campus = False
@@ -29,93 +21,99 @@ def inscribir_curso(menu_alumno):
     curso_a_inscribir = None
     ya_tiene_curso = False
 
-    if hora_valida:
-        curso_a_inscribir = input("\nIngrese el NRC del curso que desea inscribir: ")
+    if hora_valida(hora):
+        if pertenece_horario(hora, menu_alumno.alumno_in.horario_inscripcion):
+            horario_correcto = True
 
-        for curso in menu_alumno.alumno_in.cursos_por_tomar:
-            if curso.nrc == curso_a_inscribir:
-                ya_tiene_curso = True
+            curso_a_inscribir = input("\nIngrese el NRC del curso que desea inscribir: ")
 
-        if not ya_tiene_curso:
-            for curso in menu_alumno.sistema.lista_cursos:
-
+            for curso in menu_alumno.alumno_in.cursos_por_tomar:
                 if curso.nrc == curso_a_inscribir:
-                    curso_posible = curso
-                    existe_nrc = True
+                    ya_tiene_curso = True
 
-                    if existe_nrc:
+            if not ya_tiene_curso:
+                for curso in menu_alumno.sistema.lista_cursos:
 
-                        if int(curso_posible.disponibles) > 0:
-                            if menu_alumno.alumno_in.tiene_permiso_especial(
-                                    menu_alumno,
-                                    curso_posible):
-                                cumple_requisito = True
-                            elif curso_posible.pre_requisitos:
-                                for opcion_req in curso_posible.pre_requisitos:
-                                    n_cursos_requisitos = len(opcion_req)
-                                    for sigla_curso_req in opcion_req:
-                                        if menu_alumno.alumno_in.aprobo_curso(menu_alumno, sigla_curso_req):
-                                            n_cursos_requisitos -= 1
-                                        if n_cursos_requisitos == 0:
-                                            cumple_requisito = True
-                            elif not curso_posible.pre_requisitos:
-                                cumple_requisito = True
+                    if curso.nrc == curso_a_inscribir:
+                        curso_posible = curso
+                        existe_nrc = True
 
-                            if cumple_requisito:
-                                cursos_por_tomar_posible = menu_alumno.alumno_in.cursos_por_tomar[:]
-                                cursos_por_tomar_posible.append(curso_posible)
-                                horario_posible = generar_horario(cursos_por_tomar_posible)[1]
-                                for d in range(len(horario_posible)):
-                                    for m in range(len(horario_posible[d])):
-                                        if horario_posible[d][m - 1]:
-                                            if horario_posible[d][m - 1][0].campus != curso_posible.campus:
-                                                tope_campus = True
-                                                cursos_tope_campus = [
-                                                    horario_posible[d][m - 1][0],
-                                                    horario_posible[d][m][0]]
-                                        if m != 7:
-                                            if horario_posible[d][m + 1]:
-                                                if horario_posible[d][m + 1][0].campus != curso_posible.campus:
+                        if existe_nrc:
+
+                            if int(curso_posible.disponibles) > 0:
+                                if menu_alumno.alumno_in.tiene_permiso_especial(
+                                        menu_alumno,
+                                        curso_posible):
+                                    cumple_requisito = True
+                                elif curso_posible.pre_requisitos:
+                                    for opcion_req in curso_posible.pre_requisitos:
+                                        n_cursos_requisitos = len(opcion_req)
+                                        for sigla_curso_req in opcion_req:
+                                            if menu_alumno.alumno_in.aprobo_curso(menu_alumno, sigla_curso_req):
+                                                n_cursos_requisitos -= 1
+                                            if n_cursos_requisitos == 0:
+                                                cumple_requisito = True
+                                elif not curso_posible.pre_requisitos:
+                                    cumple_requisito = True
+
+                                if cumple_requisito:
+                                    cursos_por_tomar_posible = menu_alumno.alumno_in.cursos_por_tomar[:]
+                                    cursos_por_tomar_posible.append(curso_posible)
+                                    horario_posible = generar_horario(cursos_por_tomar_posible)[1]
+                                    for d in range(len(horario_posible)):
+                                        for m in range(len(horario_posible[d])):
+                                            if horario_posible[d][m - 1]:
+                                                if horario_posible[d][m - 1][0].campus != curso_posible.campus:
                                                     tope_campus = True
                                                     cursos_tope_campus = [
-                                                        horario_posible[d][m + 1][0],
+                                                        horario_posible[d][m - 1][0],
                                                         horario_posible[d][m][0]]
-                                        if len(horario_posible[d][m]) > 1:
-                                            tope_horario = True
-                                            cursos_topados = horario_posible[d][m][:]
-                                            foto_horario_tope = generar_horario(cursos_por_tomar_posible)[0]
+                                            if m != 7:
+                                                if horario_posible[d][m + 1]:
+                                                    if horario_posible[d][m + 1][0].campus != curso_posible.campus:
+                                                        tope_campus = True
+                                                        cursos_tope_campus = [
+                                                            horario_posible[d][m + 1][0],
+                                                            horario_posible[d][m][0]]
+                                            if len(horario_posible[d][m]) > 1:
+                                                tope_horario = True
+                                                cursos_topados = horario_posible[d][m][:]
+                                                foto_horario_tope = generar_horario(cursos_por_tomar_posible)[0]
 
-                                if not (tope_horario or tope_campus):
-                                    for curso_tomado in menu_alumno.alumno_in.cursos_por_tomar:
-                                        if curso_tomado.evaluaciones:
-                                            for evaluacion in curso_tomado.evaluaciones:
-                                                for evaluacion_posible in curso_posible.evaluaciones:
-                                                    if evaluacion.hora == evaluacion_posible.hora:
-                                                        if evaluacion.dia == evaluacion_posible.dia:
-                                                            cursos_tope_evaluaciones = [
-                                                                curso_posible,
-                                                                curso_tomado]
-                                                            tope_evaluaciones = True
-
-                                    if not tope_evaluaciones:
-                                        creditos_por_tomar = 0
+                                    if not (tope_horario or tope_campus):
                                         for curso_tomado in menu_alumno.alumno_in.cursos_por_tomar:
-                                            creditos_por_tomar += int(curso_tomado.creditos)
-                                        creditos_hipoteticos = \
-                                            int(curso_posible.creditos) + \
-                                            creditos_por_tomar
-                                        if creditos_hipoteticos > menu_alumno.alumno_in.maximo_creditos_permitidos:
-                                            exceso_creditos = True
+                                            if curso_tomado.evaluaciones:
+                                                for evaluacion in curso_tomado.evaluaciones:
+                                                    for evaluacion_posible in curso_posible.evaluaciones:
+                                                        if evaluacion.hora == evaluacion_posible.hora:
+                                                            if evaluacion.dia == evaluacion_posible.dia:
+                                                                cursos_tope_evaluaciones = [
+                                                                    curso_posible,
+                                                                    curso_tomado]
+                                                                tope_evaluaciones = True
 
-                                        if not exceso_creditos:
-                                            curso_posible.disponibles = str(int(curso_posible.disponibles) - 1)
-                                            curso_posible.ocupados = str(int(curso_posible.ocupados) + 1)
-                                            curso_posible.lista_de_alumnos.append(menu_alumno.alumno_in)
-                                            menu_alumno.alumno_in.cursos_por_tomar.append(curso_posible)
-                                            curso_inscrito_exito = True
+                                        if not tope_evaluaciones:
+                                            creditos_por_tomar = 0
+                                            for curso_tomado in menu_alumno.alumno_in.cursos_por_tomar:
+                                                creditos_por_tomar += int(curso_tomado.creditos)
+                                            creditos_hipoteticos = \
+                                                int(curso_posible.creditos) + \
+                                                creditos_por_tomar
+                                            if creditos_hipoteticos > menu_alumno.alumno_in.maximo_creditos_permitidos:
+                                                exceso_creditos = True
 
-    if not hora_valida:
+                                            if not exceso_creditos:
+                                                curso_posible.disponibles = str(int(curso_posible.disponibles) - 1)
+                                                curso_posible.ocupados = str(int(curso_posible.ocupados) + 1)
+                                                curso_posible.lista_de_alumnos.append(menu_alumno.alumno_in)
+                                                menu_alumno.alumno_in.cursos_por_tomar.append(curso_posible)
+                                                curso_inscrito_exito = True
+
+    if not hora_valida(hora):
         print("\n--- La hora ingresada no respeta el formato valido. ---\n")
+
+    elif not horario_correcto:
+        print("\n--- No esta autorizado para inscribir cursos en este horario. ---\n")
 
     elif ya_tiene_curso:
         print("\n--- El curso que desea inscribir ya lo tiene inscrito. ---\n")

@@ -213,6 +213,10 @@ def generar_horario(cursos_por_tomar):
 
                     extra_sigla = (7 - len(curso.sigla)) * " "
 
+                    n_doble_seccion = ""
+                    if len(curso.seccion) == 1:
+                        n_doble_seccion = ' '
+
                     if repeticiones_individuales[d][m] == 0:
                         extra = extra_modulos_anteriores_dias
                         h += extra
