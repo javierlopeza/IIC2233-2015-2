@@ -13,6 +13,6 @@ def otorgar_vacantes(sistema):
             break
     for alumno in sistema.lista_alumnos:
         puntos_efectivos_totales += alumno.puntos_efectivos
-    print("\n---  Se han otorgado las vacantes a los alumnos con mayores apuestas en los cursos.  ---\n")
-    print("\n---  Se ha logrado un maximo total de {0} Puntos Efectivos ---\n".format(puntos_efectivos_totales))
+    print("\n---  Se han otorgado las vacantes a los alumnos con mayores apuestas en los cursos.  ---")
+    print("---  Se ha logrado un maximo total de {0} Puntos Efectivos ---\n".format(puntos_efectivos_totales))
     return puntos_efectivos_totales
