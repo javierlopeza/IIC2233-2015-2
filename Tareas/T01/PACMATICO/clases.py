@@ -34,7 +34,7 @@ class Alumno(Persona):
                  cursos_por_tomar=[],
                  **kwargs):
         super().__init__(**kwargs)
-        self.cursos_por_tomar = cursos_por_tomar
+        self.cursos_por_tomar = []
         self.cursos_pedidos = []
         self.bacanosipuntos = 0
         self.puntos_recibidos = 0
@@ -43,6 +43,7 @@ class Alumno(Persona):
         self.alumno = "SI"
         self.permisos_especiales = []
         self.idolos_instanciados = False
+        self.cursos_con_puntajes = []
 
     def __str__(self):
         printear = "Nombre alumno: {0}\nUsuario: {1}\nClave: {2}\n".format(
@@ -120,7 +121,7 @@ en el directorio principal donde esta 'main.py'---\n")
         return puntaje_pacmatico
 
     def redistribuir_puntaje(self):
-        redistribuir_puntaje(self.cursos_pedidos, self.puntaje_pacmatico)
+        return redistribuir_puntaje(self.cursos_pedidos, self.puntaje_pacmatico)
 
 
 class Profesor(Persona):
@@ -204,6 +205,7 @@ class Curso(Horario):
         self.ocupados = ocupados
         self.disponibles = disponibles
         self.ofrecidos = ofrecidos
+        self.lista_apuestas = []
 
     def __repr__(self):
         printear_profesores = ""

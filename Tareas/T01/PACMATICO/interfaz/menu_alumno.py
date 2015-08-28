@@ -41,14 +41,13 @@ class MenuAlumno:
 escoga la opcion de cargar bacanosidades.---")
 
     def revisar_cursos_obtenidos(self):
-        pass
-
-    def inscribir_curso(self):
-        if self.sistema.bacanosidades_cargadas:
-            self.alumno_in.inscribir_curso(self)
+        if self.sistema.vacantes_otorgadas:
+            print("\nCARGA ACADEMICA OBTENIDA: ")
+            for curso in self.alumno_in.cursos_por_tomar:
+                print("   -> ",curso.curso, " - ", curso.sigla, "-",curso.seccion)
         else:
-            print("--- Las bacanosidades no han sido cargadas al sistema todavia. Vuelva al menu principal y \
-escoga la opcion de cargar bacanosidades.---")
+            print("\n--- Todavia no se realiza la reparticion de vacantes. \nEn el menu principal \
+seleccione la opcion de Dar Cursos para realizar dicha reparticion---\n")
 
     def botar_curso(self):
         if self.sistema.bacanosidades_cargadas:

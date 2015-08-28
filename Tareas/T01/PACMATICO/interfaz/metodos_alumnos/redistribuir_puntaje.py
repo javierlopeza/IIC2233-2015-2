@@ -63,7 +63,10 @@ maximo 45 creditos ---\n")
                             else:
                                 print("\n --- ERROR: La distribucion de puntos de los cursos \
 quedaria negativa ---\n")
-                                
+
+        print("\n--- FIN REDISTRIBUCION DE PUNTOS DE LOS RAMOS PEDIDOS ---\n")
+        print("\n--- Si desea hacer cambios debe volver a empezar la solicitud de ramos ---\n")
+
         return cursos_con_puntajes
 
 

@@ -1,4 +1,8 @@
 def pedir_cursos(menu_alumno):
+    # Si el alumno solicita pedir ramos de nuevo, los cursos pedidos y puntuados anteriormente se borran.
+    menu_alumno.alumno_in.cursos_pedidos = []
+    menu_alumno.alumno_in.cursos_con_puntajes = []
+
     existe_nrc = False
     cumple_requisito = False
     curso_posible = None
@@ -74,5 +78,5 @@ def pedir_cursos(menu_alumno):
         while pregunta_si_pide_mas_cursos.upper() != "SI" and pregunta_si_pide_mas_cursos.upper() != "NO":
             pregunta_si_pide_mas_cursos = input("\nDesea pedir mas cursos? [SI/NO]: ")
         if pregunta_si_pide_mas_cursos.upper() == "NO":
-            menu_alumno.alumno_in.redistribuir_puntaje()
+            menu_alumno.alumno_in.cursos_con_puntajes = menu_alumno.alumno_in.redistribuir_puntaje()
             pedir_mas_cursos = False

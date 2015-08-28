@@ -6,6 +6,8 @@ from interfaz.menu_profesor import MenuProfesor
 from bacanosidad.cargar_followers import cargar_followers
 from bacanosidad.cargar_bacanosipuntos import cargar_bacanosipuntos
 from bacanosidad.ordenar_bacanosidad import ordenar_bacanosidad
+from interfaz.metodos_alumnos.cargar_apuestas_a_cursos import cargar_apuestas_a_cursos
+from interfaz.metodos_alumnos.otorgar_vacantes import otorgar_vacantes
 
 
 class Pacmatico:
@@ -15,6 +17,7 @@ class Pacmatico:
         self.lista_profesores = self.datos[1]
         self.lista_cursos = self.datos[2]
         self.bacanosidades_cargadas = self.datos[3]
+        self.vacantes_otorgadas = False
         self.opciones = {
             "1": self.iniciar_sesion,
             "2": self.buscar_curso,
@@ -120,7 +123,10 @@ acerca de las secciones del curso? [SI/NO]: ")
         self.bacanosidades_cargadas = True
 
     def dar_cursos(self):
-        pass
+        cargar_apuestas_a_cursos(self.lista_cursos, self.lista_alumnos)
+        puntos_efectivos_totales = otorgar_vacantes(self)
+        self.vacantes_otorgadas = True
+        return puntos_efectivos_totales
 
     @staticmethod
     def salir():
