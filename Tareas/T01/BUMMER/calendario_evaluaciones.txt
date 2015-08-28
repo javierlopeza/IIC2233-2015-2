@@ -1,2 +1,20 @@
+EVALUACIONES DE CURSOS POR TOMAR
 
---- Ninguno de sus cursos tiene evaluaciones registradas ---
+-> Curso: Álgebra Lineal - Seccion: 1
+   --- El curso no tieneevaluaciones registradas. ---
+
+-> Curso: Cálculo II - Seccion: 13
+   --- El curso no tieneevaluaciones registradas. ---
+
+-> Curso: Ética para Ingenieros - Seccion: 2
+   --- El curso no tieneevaluaciones registradas. ---
+
+-> Curso: Investigación, Innovación y Emprendimiento - Seccion: 4
+   --- El curso no tieneevaluaciones registradas. ---
+
+-> Curso: Optimización - Seccion: 5
+    - I1: el dia 25/08 a las 18:30 horas
+    - I2: el dia 25/09 a las 18:30 horas
+    - I3: el dia 24/10 a las 9:00 horas
+    - EX: el dia 25/11 a las NA horas
+
