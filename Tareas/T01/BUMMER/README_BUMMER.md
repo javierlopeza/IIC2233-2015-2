@@ -1,4 +1,4 @@
-﻿## Tarea 01 / Bummer UC
+﻿## Tarea 01 - Bummer UC
 
 Consideraciones al revisar:
 
@@ -76,7 +76,7 @@ Es por esto que el algoritmo de: *"asignar un punto de bacanosidad al alumno por
 Ejemplificando: *si Juan tiene 100 bacanosipuntos asignados por mi algoritmo, al hacer la verificación de repartición de puntos, me encuentro con que Juan recibe 92,72 puntos (o 107,28)*. Es lo más eficiente que logré hacer el algoritmo, teniendo en cuenta que puede estar afectado en poca parte por cómo Python trabaja los decimales de los *float*.
 En el archivo *cargar_bacanosipuntos.py* esta 
 el codigo que calcula el porcentaje de eficiencia mencionada anteriormente.
-**PD:** Para ordenar el ranking de alumnos por bacanosidad uso la bacanosidad relativa calculada con los puntos recibidos relativos en cuanto al con mayor puntos recibidos, ya que esta permite mayor diferenciacion de los alumnos en cuanto a decimales.
+<br>**PD:** Para ordenar el ranking de alumnos por bacanosidad uso la bacanosidad relativa calculada con los puntos recibidos relativos en cuanto al con mayor puntos recibidos, ya que esta permite mayor diferenciacion de los alumnos en cuanto a decimales.
 
 **8.** Para cargar las bacanosidades a los alumnos del programa hay dos opciones, la primera es elegir la opcion del *menu principal* que carga las bacanosidades de los alumnos con el algoritmo creado,
  lo cual demora unos minutos (aproximadamente 3 a 4 minutos). La segunda opcion es que al haber realizado previamente la primera opcion se guarda un archivo llamado *bacanosidades.txt* el cual al iniciar el programa se carga si es que existe dicho archivo, de lo contrario
