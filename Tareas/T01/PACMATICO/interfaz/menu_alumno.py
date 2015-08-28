@@ -44,7 +44,11 @@ escoga la opcion de cargar bacanosidades.---")
         if self.sistema.vacantes_otorgadas:
             print("\nCARGA ACADEMICA OBTENIDA: ")
             for curso in self.alumno_in.cursos_por_tomar:
-                print("   -> ",curso.curso, " - ", curso.sigla, "-",curso.seccion)
+                print("   -> {0} - {1}-{2}".format(
+                    curso.curso,
+                    curso.sigla,
+                    curso.seccion
+                ))
         else:
             print("\n--- Todavia no se realiza la reparticion de vacantes. \nEn el menu principal \
 seleccione la opcion de Dar Cursos para realizar dicha reparticion---\n")
