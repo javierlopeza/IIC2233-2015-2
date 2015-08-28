@@ -39,7 +39,7 @@ class Alumno(Persona):
         self.bacanosipuntos = 0
         self.puntos_recibidos = 0
         self.bacanosidad_relativa = 0
-        self.puntos_efectivos = 0,
+        self.puntos_efectivos = 0
         self.alumno = "SI"
         self.permisos_especiales = []
         self.idolos_instanciados = False
