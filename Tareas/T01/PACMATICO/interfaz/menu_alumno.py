@@ -1,15 +1,12 @@
-
 class MenuAlumno:
     def __init__(self, sistema, alumno):
         self.opciones_alumno = {
-            "1": self.pedir_curso,
-            "2": self.borrar_curso,
-            "3": self.redistribuir_puntos,
-            "4": self.revisar_cursos_obtenidos,
-            "5": self.horario,
-            "6": self.calendario,
-            "7": self.mostrar_permisos_especiales,
-            "8": self.mostrar_datos_personales,
+            "1": self.pedir_cursos,
+            "2": self.revisar_cursos_obtenidos,
+            "3": self.horario,
+            "4": self.calendario,
+            "5": self.mostrar_permisos_especiales,
+            "6": self.mostrar_datos_personales,
             "0": self.cerrar_sesion
         }
         self.sesion_abierta = True
@@ -20,14 +17,12 @@ class MenuAlumno:
         while self.sesion_abierta:
             print("""----------------------------------------\n
     PACMATICO - MENU ALUMNO - SESION INICIADA: {0} ({1})\n
-    1: Pedir Curso
-    2: Borrar Curso Pedido
-    3: Redistribuir Puntos de Cursos Pedidos
-    4: Revisar Cursos Obtenidos
-    5: Generar Horario
-    6: Generar Calendario
-    7: Revisar Permisos Especiales
-    8: Mostrar Datos Personales
+    1: Pedir Cursos
+    2: Revisar Cursos Obtenidos
+    3: Generar Horario
+    4: Generar Calendario
+    5: Revisar Permisos Especiales
+    6: Mostrar Datos Personales
     0: Cerrar Sesion
                 """.format(self.alumno_in.nombre, self.alumno_in.usuario))
             eleccion = input("Ingrese Opcion: ")
@@ -38,20 +33,14 @@ class MenuAlumno:
                 print("\n--- {0} no es una opcion valida ---\n".format(
                     eleccion))
 
-    def pedir_curso(self):
+    def pedir_cursos(self):
         if self.sistema.bacanosidades_cargadas:
-            self.alumno_in.pedir_curso(self)
+            self.alumno_in.pedir_cursos(self)
         else:
             print("--- Las bacanosidades no han sido cargadas al sistema todavia. Vuelva al menu principal y \
 escoga la opcion de cargar bacanosidades.---")
 
-    def borrar_curso(self):
-        pass
-
     def revisar_cursos_obtenidos(self):
-        pass
-
-    def redistribuir_puntos(self):
         pass
 
     def inscribir_curso(self):

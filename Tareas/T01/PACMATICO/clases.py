@@ -3,9 +3,10 @@ from interfaz.metodos_profesores.quitar_permiso import quitar_permiso
 from interfaz.metodos_alumnos.generar_horario import generar_horario
 from interfaz.metodos_alumnos.generar_calendario import generar_calendario
 from interfaz.metodos_alumnos.botar_curso import botar_curso
-from interfaz.metodos_alumnos.pedir_curso import pedir_curso
+from interfaz.metodos_alumnos.pedir_cursos import pedir_cursos
 from interfaz.metodos_alumnos.aprobo_curso import aprobo_curso
 from interfaz.metodos_alumnos.tiene_permiso_especial import tiene_permiso_especial
+from interfaz.metodos_alumnos.redistribuir_puntaje import redistribuir_puntaje
 
 
 class Persona:
@@ -75,8 +76,8 @@ class Alumno(Persona):
     def mostrar_datos_personales(self):
         print(self)
 
-    def pedir_curso(self, menu_alumno):
-        pedir_curso(menu_alumno)
+    def pedir_cursos(self, menu_alumno):
+        pedir_cursos(menu_alumno)
 
     def botar_curso(self, menu_alumno):
         botar_curso(menu_alumno)
@@ -115,8 +116,11 @@ en el directorio principal donde esta 'main.py'---\n")
 
     @property
     def puntaje_pacmatico(self):
-        puntaje_pacmatico = (1 + (self.bacanosidad_relativa / 4) + (self.creditos_tomados / 4000)) * 800
+        puntaje_pacmatico = (1 + (float(self.bacanosidad_relativa) / 4) + (self.creditos_tomados / 4000)) * 800
         return puntaje_pacmatico
+
+    def redistribuir_puntaje(self):
+        redistribuir_puntaje(self.cursos_pedidos, self.puntaje_pacmatico)
 
 
 class Profesor(Persona):
