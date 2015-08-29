@@ -38,8 +38,9 @@ Ejemplo de desorden de datos de cursos:
   } 
 ```
 
-**3.** A diferencia de Bummer UC, el Pacmatico la unica restriccion que pone al pedir cursos es que el alumno cumpla con los prerrequisitos del curso o tenga un permiso especial del profesor.
+**3.** A diferencia de Bummer UC, el Pacmatico no pone restricciones al pedir cursos.
 Si el alumno presenta topes de horario, evaluaciones, campus, creditos maximos, el Pacmatico lo deja pedir el curso igual.
+Solamente al otorgar las vacantes se revisa si el alumno cumple con requisitos y correquisitos (o permisos especiales de los profesores).
 
 **4.** Al ingresar al Pacmatico, se presenta un menu principal que permite **iniciar sesión**, **buscar cursos**, **dar cursos**, **cargar bacanosidad** o **salir del sistema**.
 <br>  - Al seleccionar la opción de **iniciar sesión**, el sistema pregunta al usuario si desea ingresar con credenciales de profesor o alumno, por lo que la lista de personas que revisa sus credenciales (profesores o alumnos) depende de la elección realizada en ese momento. 
