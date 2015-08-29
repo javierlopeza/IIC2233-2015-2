@@ -28,6 +28,10 @@ def pedir_cursos(menu_alumno):
                     if existe_nrc:
 
                         if int(curso_posible.disponibles) > 0:
+                            menu_alumno.alumno_in.cursos_pedidos.append(curso_posible)
+                            curso_pedido_exito = True
+
+                            '''
                             if menu_alumno.alumno_in.tiene_permiso_especial(
                                     menu_alumno,
                                     curso_posible):
@@ -42,10 +46,8 @@ def pedir_cursos(menu_alumno):
                                             cumple_requisito = True
                             elif not curso_posible.pre_requisitos:
                                 cumple_requisito = True
+                            '''
 
-                            if cumple_requisito:
-                                menu_alumno.alumno_in.cursos_pedidos.append(curso_posible)
-                                curso_pedido_exito = True
 
         if ya_tiene_curso:
             print("\n--- ERROR: El curso que desea pedir ya lo ha solicitado. ---\n")
@@ -61,11 +63,6 @@ def pedir_cursos(menu_alumno):
                 curso_posible.sigla,
                 curso_posible.seccion
             ))
-
-        elif not cumple_requisito:
-            print("\n--- ERROR: No cumple con alguno de los \
-    prerrequisitos del curso. ---\n")
-            cumple_requisito = False
 
         elif curso_pedido_exito:
             print("\n--- PETICION EXITOSA: El curso {0}-{1} fue pedido exitosamente. ---\n".format(

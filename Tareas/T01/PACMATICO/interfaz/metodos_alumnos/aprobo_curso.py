@@ -1,13 +1,13 @@
-def aprobo_curso(menu_alumno, sigla_curso):
+def aprobo_curso(alumno, sigla_curso):
     if sigla_curso[-2] == "c":
-        for curso_tomado in menu_alumno.alumno_in.cursos_por_tomar:
+        for curso_tomado in alumno.cursos_por_tomar:
             if sigla_curso[:-3] == curso_tomado.sigla:
                 return True
         else:
             return False
 
     else:
-        if sigla_curso in menu_alumno.alumno_in.cursos_aprobados:
+        if sigla_curso in alumno.cursos_aprobados:
             return True
         else:
             return False
