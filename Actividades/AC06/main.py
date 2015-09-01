@@ -11,6 +11,9 @@ class Paciente:
         self.hora = hora
         self.motivo = motivo
 
+    def __str__(self):
+        return "{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}".format(ide,year,mes,dia,color,hora,motivo)
+
 class Reporte:
     def __init__(self):
         self.lista_pacientes = []
@@ -34,14 +37,10 @@ class Reporte:
             nuevo_paciente = Paciente(ide,year,mes,dia,color,hora,motivo)
             self.lista_pacientes.append(nuevo_paciente)
 
-    def generador(self):
+    def retornar_linea(self):
         archivo_reporte = open("Reporte.txt")
         for linea in archivo_reporte:
             yield linea
-
-    def retornar_linea(self):
-        gen = self.generador()
-        return next(gen)
 
     def color(self, color_pedido):
         lista_color = [p for p in self.lista_pacientes if p.color == color_pedido ]
@@ -52,6 +51,6 @@ class Reporte:
             yield self.ide
             n += 1
 
-r = Reporte()
-r.agregar_pacientes()
-print(r.color('azul'))
+r = Reporte
+while (len(r.color('azul'))) != 10:
+    r.agregar_pacientes
