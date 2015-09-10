@@ -3,6 +3,12 @@ __author__ = 'Javier Lopez'
 
 class MetaRobot(type):
     def __new__(meta, nombre, base_clases, diccionario):
+
+        if nombre != 'Robot':
+            mensaje_error = 'SOLO LA CLASE Robot SE PUEDE CONSTRUIR ' \
+                            'A PARTIR DE LA METACLASE MetaRobot'
+            raise NameError(mensaje_error)
+
         atributos = {'creador': 'javierlopeza',
                      'ip_inicio': '190.102.62.283'}
         diccionario.update(atributos)
