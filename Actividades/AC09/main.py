@@ -11,6 +11,7 @@ programadores = ['Belen', 'Patricio', 'Jaime', 'Marco', 'Bastian',
 
 
 class Robot(metaclass=MetaRobot):
+
     def __init__(self, creadores, inicial):
         self.creadores = creadores
         self.actual = inicial
@@ -22,6 +23,7 @@ class Robot(metaclass=MetaRobot):
 
 
 class Puerto():
+
     def __init__(self, ide, hacker):
         self.hacker = hacker
         self.ide = ide
@@ -30,7 +32,6 @@ class Puerto():
     El atributo hacker es un número entero que se comporta como bool
     (si, en python bool es subclase de int)
     """
-
 
 if __name__ == '__main__':
     puertos = {}
