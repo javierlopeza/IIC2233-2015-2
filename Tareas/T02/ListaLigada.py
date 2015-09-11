@@ -44,6 +44,15 @@ class ListaLigada:
         else:
             return nodo.valor
 
+    def __setitem__(self, key, value):
+        """ Permite realizar item assignment en la lista.
+        """
+        nodo = self.cabeza
+        for n in range(key):
+            if nodo:
+                nodo = nodo.siguiente
+        nodo.valor = value
+
     def __len__(self):
         """ Retorna la cantidad de nodos existentes.
         """
@@ -53,6 +62,14 @@ class ListaLigada:
             largo += 1
             nodo = nodo.siguiente
         return largo
+
+    def has(self, valor):
+        nodo_actual = self.cabeza
+        while nodo_actual:
+            if nodo_actual.valor == valor:
+                return True
+            nodo_actual = nodo_actual.siguiente
+        return False
 
     def __repr__(self):
         """ Imprime la lista ligada de manera simple y comprensible.
@@ -64,12 +81,3 @@ class ListaLigada:
             nodo_actual = nodo_actual.siguiente
         rep = rep[:-5]
         return rep
-
-'''
-l = ListaLigada()
-for n in range(10):
-    l.append(n)
-print('Lista l:', l)
-print('Largo:', len(l))
-print('Elemento en el indice 3:', l[3])
-'''
