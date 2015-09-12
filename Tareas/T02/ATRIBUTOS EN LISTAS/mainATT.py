@@ -1,15 +1,15 @@
 import datetime
 import sistema
-from Conexion_Puerto_Red import Red
-from writefile_red import writefile_red
+from Conexion_Puerto_RedATT import Red
+from writefile_redATT import writefile_red
 
 t1 = datetime.datetime.now()
 
 red_bummer = Red()
 red_bummer.agregar_puerto(0, sistema.posibles_conexiones())
 
-while not red_bummer.revisar_completitud():
-#iteraciones = 7000
+while red_bummer.revisar_completitud():
+#iteraciones = 10000
 #for w in range(iteraciones):
     ide_puerto_actual = sistema.preguntar_puerto_actual()[0]
     posibles_conexiones_puerto_actual = sistema.posibles_conexiones()

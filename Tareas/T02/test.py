@@ -93,6 +93,14 @@ for n in range(6):
 print('Lista:', lista)
 print('Largo:', len(lista))
 
-from functools import reduce
-a = reduce(lambda i,j: lista[i]+lista[j], range(5))
-print(a)
+
+import datetime
+
+t0 = datetime.datetime.now()
+
+total = 1100*6*20*100
+for i in range(total):
+    print("Porcentaje progreso: {}%".format(round((100 * i)/total)), end="\r")
+tf = datetime.datetime.now()
+print("TIEMPO ITERACION:", tf - t0)
+

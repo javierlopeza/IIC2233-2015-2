@@ -4,6 +4,7 @@ Generador de datos aleatorios
 
 from random import choice
 import itertools
+import sys
 
 
 def generate(ammount):
@@ -39,6 +40,7 @@ def generate(ammount):
                 choice(colores), choice(horas), choice(motivos_alta)
             ))
 
-
+'''
 if __name__ == '__main__':
     generate(10000)
+'''

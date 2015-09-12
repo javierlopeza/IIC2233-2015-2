@@ -1,4 +1,4 @@
-from ListaLigada import ListaLigada
+from ListaLigadaTestATT import ListaLigadaATT
 
 
 class Conexion:
@@ -9,13 +9,14 @@ class Conexion:
 
     def __init__(self, puerto_base):
         self.puerto_base = puerto_base
-        self.puertos_destino = ListaLigada()
+        self.puertos_destino = ListaLigadaATT()
         self.pasadas = 0
         self.tipo = None
 
     def usar(self, ide):
-        self.pasadas += 1
-        self.puertos_destino.append(ide)
+        if self.pasadas < 1:
+            self.pasadas += 1
+            self.puertos_destino.append(ide)
 
     def clasificar(self):
         primer_destino = self.puertos_destino[0]
@@ -82,7 +83,7 @@ class Puerto:
     def __init__(self, ide, posibles_conexiones):
         self.ide = ide
         self.posibles_conexiones = posibles_conexiones
-        self.conexiones = ListaLigada()
+        self.conexiones = ListaLigadaATT()
         self.agregar_conexiones()
         self.conexion_siguiente = 0
 
@@ -124,14 +125,19 @@ class Red:
     """
 
     def __init__(self):
-        self.puertos = ListaLigada()
+        self.puertos = ListaLigadaATT()
 
     def revisar_completitud(self):
+        faltantes = 0
         for p in range(len(self.puertos)):
             for c in range(len(self.puertos[p].conexiones)):
-                if self.puertos[p].conexiones[c].pasadas < 20:
-                    return False
-        return True
+                rest_s = 1 - self.puertos[p].conexiones[c].pasadas
+                faltantes += rest_s
+                #if self.puertos[p].conexiones[c].pasadas < 20:
+                #    return False
+        #return True
+        print(faltantes, end="\r")
+        return faltantes
 
     def agregar_puerto(self, ide_nuevo_puerto, posibles_conexiones_nuevo_puerto):
         """ Primero verifica si el puerto ya ha sido agregado a la Red que se esta construyendo.
@@ -140,7 +146,6 @@ class Red:
         if not self.tiene_puerto(ide_nuevo_puerto):
             nuevo_puerto = Puerto(ide_nuevo_puerto, posibles_conexiones_nuevo_puerto)
             self.puertos.append(nuevo_puerto)
-            print("NUEVO PUERTO:", len(self.puertos))
 
     def tiene_puerto(self, ide_puerto):
         for p in range(len(self.puertos)):
