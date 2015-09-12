@@ -1,9 +1,10 @@
 from ListaLigada import ListaLigada
 
+
 class Conexion:
     """
     Clase que construye una estructura simulando una conexion
-    que sale de puerto_base y lleva a cualquier de los puertos_llevados.
+    que sale de puerto_base y lleva a cualquier de los puertos_destino.
     """
 
     def __init__(self, puerto_base):
@@ -12,7 +13,7 @@ class Conexion:
         self.pasadas = 0
         self.tipo = None
 
-    def actualizar(self, ide):
+    def usar(self, ide):
         self.pasadas += 1
         self.puertos_destino.append(ide)
 
@@ -39,7 +40,7 @@ class Conexion:
         if not conexion_normal:
             for b in range(2, len(self.puertos_destino)):
                 if self.puertos_destino[b] != primer_destino:
-                    if self.puertos_destino[b]  != segundo_destino:
+                    if self.puertos_destino[b] != segundo_destino:
                         if primer_destino != segundo_destino:
                             conexion_random = True
                             self.tipo = 'RANDOM'
@@ -53,15 +54,15 @@ class Conexion:
         conexion_alternante = False
         if not conexion_normal:
             if not conexion_random:
-                for c in range(len(self.puertos_destino)-7):
+                for c in range(len(self.puertos_destino) - 7):
                     conexion_alternante = True
                     uno = self.puertos_destino[c]
                     dos = self.puertos_destino[c + 1]
                     if uno != dos:
-                        for e1 in range(0,9,2):
+                        for e1 in range(0, 9, 2):
                             if self.puertos_destino[c + e1] != uno:
                                 conexion_alternante = False
-                        for e2 in range(1,9,2):
+                        for e2 in range(1, 9, 2):
                             if self.puertos_destino[c + e2] != dos:
                                 conexion_alternante = False
                     else:
@@ -86,16 +87,37 @@ class Puerto:
         self.conexion_siguiente = 0
 
     def agregar_conexiones(self):
-        nueva_conexion = Conexion(self.ide)
         for c in range(self.posibles_conexiones):
+            nueva_conexion = Conexion(self.ide)
             self.conexiones.append(nueva_conexion)
 
     def conectar(self, sistema):
-        sistema.hacer_conexion(self.conexion_siguiente)
-        if self.conexion_siguiente + 1 == self.posibles_conexiones:
-            self.conexion_siguiente = 0
+        indice_conexion = self.conexion_siguiente
+        # Uso la siguiente conexion sin pasadas, o la siguiente_conexion que le toca al Puerto.
+        hay_cero = False
+        for s_p in range(len(self.conexiones)):
+            if self.conexiones[s_p].pasadas == 0:
+                hay_cero = True
+                indice_conexion = s_p
+                sistema.hacer_conexion(s_p)
+                print("ME METI AL CERO")
+                break
+        if not hay_cero:
+            print("NO HABIAN CEROS :(")
+            sistema.hacer_conexion(indice_conexion)
+            # Cambio el valor de la proxima conexion a la siguiente.
+            if self.conexion_siguiente + 1 == self.posibles_conexiones:
+                self.conexion_siguiente = 0
+            else:
+                self.conexion_siguiente += 1
+
+        # Si el robot no me pillo continuo:
+        if not sistema.preguntar_puerto_actual()[1]:
+            # A la conexion usada le agrego una pasada y el puerto al que llego.
+            ide_puerto_llegada = sistema.preguntar_puerto_actual()[0]
+            self.conexiones[indice_conexion].usar(ide_puerto_llegada)
         else:
-            self.conexion_siguiente += 1
+            print("PILLADO POR EL ROBOT")
 
 
 class Red:
@@ -103,8 +125,20 @@ class Red:
     """
 
     def __init__(self):
-        self.construccion_completa = False
         self.puertos = ListaLigada()
+
+    def revisar_completitud(self):
+        total_ceros = 0
+        for p in range(len(self.puertos)):
+            for c in range(len(self.puertos[p].conexiones)):
+                if self.puertos[p].conexiones[c].pasadas == 0:
+                    total_ceros += 1
+                #print(self.puertos[p].conexiones[c].pasadas)
+                #if self.puertos[p].conexiones[c].pasadas < 1:
+                #   return False
+        print(total_ceros)
+        return total_ceros
+        #return True
 
     def agregar_puerto(self, ide_nuevo_puerto, posibles_conexiones_nuevo_puerto):
         """ Primero verifica si el puerto ya ha sido agregado a la Red que se esta construyendo.
@@ -113,6 +147,7 @@ class Red:
         if not self.tiene_puerto(ide_nuevo_puerto):
             nuevo_puerto = Puerto(ide_nuevo_puerto, posibles_conexiones_nuevo_puerto)
             self.puertos.append(nuevo_puerto)
+            print("NUEVO PUERTO:", len(self.puertos))
 
     def tiene_puerto(self, ide_puerto):
         for p in range(len(self.puertos)):

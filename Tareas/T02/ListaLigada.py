@@ -17,6 +17,7 @@ class ListaLigada:
         """
         self.cola = None
         self.cabeza = None
+        self.largo = 0
 
     def append(self, valor):
         """ Agrega el valor en un nuevo nodo despues
@@ -29,6 +30,7 @@ class ListaLigada:
         else:
             self.cola.siguiente = Nodo(valor)
             self.cola = self.cola.siguiente
+        self.largo += 1
 
     def __getitem__(self, item):
         """ Retorna el elemento de indice item.
@@ -40,7 +42,7 @@ class ListaLigada:
             if nodo:
                 nodo = nodo.siguiente
         if not nodo:
-            return "posicion no encontrada"
+            return "error de item"
         else:
             return nodo.valor
 
@@ -56,12 +58,7 @@ class ListaLigada:
     def __len__(self):
         """ Retorna la cantidad de nodos existentes.
         """
-        nodo = self.cabeza
-        largo = 0
-        while nodo:
-            largo += 1
-            nodo = nodo.siguiente
-        return largo
+        return self.largo
 
     def has(self, valor):
         nodo_actual = self.cabeza

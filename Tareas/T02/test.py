@@ -17,6 +17,7 @@ class ListaLigada:
         """
         self.cola = None
         self.cabeza = None
+        self.largo = 0
 
     def append(self, valor):
         """ Agrega el valor en un nuevo nodo despues
@@ -29,6 +30,7 @@ class ListaLigada:
         else:
             self.cola.siguiente = Nodo(valor)
             self.cola = self.cola.siguiente
+        self.largo += 1
 
     def __getitem__(self, item):
         """ Retorna el elemento de indice item.
@@ -56,12 +58,7 @@ class ListaLigada:
     def __len__(self):
         """ Retorna la cantidad de nodos existentes.
         """
-        nodo = self.cabeza
-        largo = 0
-        while nodo:
-            largo += 1
-            nodo = nodo.siguiente
-        return largo
+        return self.largo
 
     def has(self, valor):
         nodo_actual = self.cabeza
@@ -87,16 +84,15 @@ class Perro:
     def __init__(self, nombre):
         self.nombre = nombre
 
-
 lista = ListaLigada()
 chubi = Perro("Chubiii")
-for n in range(3):
+for n in range(6):
     lista.append(1)
-    lista.append(5)
-lista.append(chubi)
+    lista.append(0)
 
 print('Lista:', lista)
 print('Largo:', len(lista))
-#print('Elemento en el indice 3:', lista[3])
 
-
+from functools import reduce
+a = reduce(lambda i,j: lista[i]+lista[j], range(5))
+print(a)
