@@ -8,8 +8,8 @@ t1 = datetime.datetime.now()
 red_bummer = Red()
 red_bummer.agregar_puerto(0, sistema.posibles_conexiones())
 
-while not red_bummer.revisar_completitud():
-#iteraciones = 7000
+while red_bummer.revisar_completitud():
+#iteraciones = 10000
 #for w in range(iteraciones):
     ide_puerto_actual = sistema.preguntar_puerto_actual()[0]
     posibles_conexiones_puerto_actual = sistema.posibles_conexiones()
@@ -30,8 +30,10 @@ print("TOTAL PUERTOS:", len(red_bummer.puertos))
 
 total_pasadas = 0
 for k in range(len(red_bummer.puertos)):
-    #print("PUERTO:", red_bummer.puertos[k].ide)
+    print(40 * "-")
+    print("PUERTO:", red_bummer.puertos[k].ide)
     for j in range(len(red_bummer.puertos[k].conexiones)):
         total_pasadas += red_bummer.puertos[k].conexiones[j].pasadas
-        #print("C({0}):".format(j), red_bummer.puertos[k].conexiones[j].puertos_destino)
+        print("C({0}):".format(j), red_bummer.puertos[k].conexiones[j].puertos_destino)
+print(40 * "-")
 print("TOTAL PASADAS:", total_pasadas)
