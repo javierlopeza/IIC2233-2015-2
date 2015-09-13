@@ -9,13 +9,13 @@ red_bummer = Red()
 red_bummer.agregar_puerto(0, sistema.posibles_conexiones())
 
 while red_bummer.revisar_completitud():
-#iteraciones = 10000
-#for w in range(iteraciones):
+# iteraciones = 10000
+# for w in range(iteraciones):
     ide_puerto_actual = sistema.preguntar_puerto_actual()[0]
     posibles_conexiones_puerto_actual = sistema.posibles_conexiones()
     red_bummer.agregar_puerto(ide_puerto_actual, posibles_conexiones_puerto_actual)
     red_bummer.puerto(ide_puerto_actual).conectar(sistema)
-    #print("Porcentaje progreso: {}%".format(round((100 * w)/iteraciones)), end="\r")
+    # print("Porcentaje progreso: {}%".format(round((100 * w)/iteraciones)), end="\r")
 
 t2 = datetime.datetime.now()
 print("TIEMPO DE RECORRIDO TOTAL:", t2 - t1)

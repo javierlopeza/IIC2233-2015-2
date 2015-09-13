@@ -32,6 +32,18 @@ class ListaLigada:
         """
         return self.largo
 
+    def indice_min(self):
+        """ Retorna el indice donde se encuentra el elemento de menor valor.
+        """
+        indice_menor = 0
+        menor = getattr(self, 'e0')
+        for a in range(self.largo):
+            elemento_actual = getattr(self, 'e{0}'.format(a))
+            if elemento_actual < menor:
+                indice_menor = a
+                menor = elemento_actual
+        return indice_menor
+
     def __repr__(self):
         """ Imprime la lista ligada de manera simple y comprensible.
         """
