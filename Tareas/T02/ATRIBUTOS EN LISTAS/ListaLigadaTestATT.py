@@ -11,10 +11,7 @@ class ListaLigadaATT:
     def append(self, valor):
         """ Agrega el valor en un nuevo atributo de la lista.
         """
-        if not self.e0:
-            self.e0 = valor
-        else:
-            setattr(self, 'e{0}'.format(self.largo), valor)
+        setattr(self, 'e{0}'.format(self.largo), valor)
         self.largo += 1
 
     def __getitem__(self, item):
@@ -34,6 +31,18 @@ class ListaLigadaATT:
         """ Retorna la cantidad de elementos existentes.
         """
         return self.largo
+
+    def indice_min(self):
+        """ Retorna el indice donde se encuentra el elemento de menor valor.
+        """
+        indice_menor = 0
+        menor = getattr(self, 'e0')
+        for a in range(self.largo):
+            elemento_actual = getattr(self, 'e{0}'.format(a))
+            if elemento_actual < menor:
+                indice_menor = a
+                menor = elemento_actual
+        return indice_menor
 
     def __repr__(self):
         """ Imprime la lista ligada de manera simple y comprensible.

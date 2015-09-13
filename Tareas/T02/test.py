@@ -93,14 +93,8 @@ for n in range(6):
 print('Lista:', lista)
 print('Largo:', len(lista))
 
+lista = [1,1,0,1,1]
+print(lista.index(min(lista)))
 
-import datetime
-
-t0 = datetime.datetime.now()
-
-total = 1100*6*20*100
-for i in range(total):
-    print("Porcentaje progreso: {}%".format(round((100 * i)/total)), end="\r")
-tf = datetime.datetime.now()
-print("TIEMPO ITERACION:", tf - t0)
-
+for i in range(1):
+    print(True)

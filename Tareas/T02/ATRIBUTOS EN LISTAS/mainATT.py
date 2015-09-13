@@ -30,8 +30,10 @@ print("TOTAL PUERTOS:", len(red_bummer.puertos))
 
 total_pasadas = 0
 for k in range(len(red_bummer.puertos)):
-    #print("PUERTO:", red_bummer.puertos[k].ide)
+    print(40 * "-")
+    print("PUERTO:", red_bummer.puertos[k].ide)
     for j in range(len(red_bummer.puertos[k].conexiones)):
         total_pasadas += red_bummer.puertos[k].conexiones[j].pasadas
-        #print("C({0}):".format(j), red_bummer.puertos[k].conexiones[j].puertos_destino)
+        print("C({0}):".format(j), red_bummer.puertos[k].conexiones[j].puertos_destino)
+print(40 * "-")
 print("TOTAL PASADAS:", total_pasadas)

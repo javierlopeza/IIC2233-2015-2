@@ -14,7 +14,7 @@ class Conexion:
         self.tipo = None
 
     def usar(self, ide):
-        if self.pasadas < 1:
+        if self.pasadas < 20:
             self.pasadas += 1
             self.puertos_destino.append(ide)
 
@@ -102,7 +102,19 @@ class Puerto:
                 indice_conexion = s_p
                 sistema.hacer_conexion(s_p)
                 break
+
+        hay_menor = False
+        pasadas_min = self.conexiones[indice_conexion].pasadas
         if not hay_cero:
+            for m_p in range(len(self.conexiones)):
+                if self.conexiones[m_p].pasadas < pasadas_min:
+                    indice_conexion = m_p
+                    pasadas_min = self.conexiones[m_p].pasadas
+                    hay_menor = True
+        if hay_menor:
+            sistema.hacer_conexion(indice_conexion)
+
+        if not hay_cero and not hay_menor:
             sistema.hacer_conexion(indice_conexion)
             # Cambio el valor de la proxima conexion a la siguiente.
             if self.conexion_siguiente + 1 == self.posibles_conexiones:
@@ -115,10 +127,9 @@ class Puerto:
             # A la conexion usada le agrego una pasada y el puerto al que llego.
             ide_puerto_llegada = sistema.preguntar_puerto_actual()[0]
             self.conexiones[indice_conexion].usar(ide_puerto_llegada)
-        #else:
-            #print("PILLADO POR EL ROBOT")
+        else:
+            print("PILLADO POR EL ROBOT")
 
-import datetime
 
 class Red:
     """ Clase que construye una estructura simulando una red.
@@ -128,14 +139,13 @@ class Red:
         self.puertos = ListaLigadaATT()
 
     def revisar_completitud(self):
+        self.puertos_faltantes = ListaLigadaATT()
         faltantes = 0
         for p in range(len(self.puertos)):
             for c in range(len(self.puertos[p].conexiones)):
-                rest_s = 1 - self.puertos[p].conexiones[c].pasadas
+                pasadas_s = self.puertos[p].conexiones[c].pasadas
+                rest_s = 20 - pasadas_s
                 faltantes += rest_s
-                #if self.puertos[p].conexiones[c].pasadas < 20:
-                #    return False
-        #return True
         print(faltantes, end="\r")
         return faltantes
 
