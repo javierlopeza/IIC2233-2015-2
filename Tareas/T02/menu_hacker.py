@@ -3,6 +3,8 @@ from ListaLigada import ListaLigada
 from cargar_red import cargar_red
 from cargar_padres import cargar_padres
 from rutas_dobles import rutas_doble_sentido
+from ciclos_triangulares import ciclos_triangulares
+from ciclos_cuadrados import ciclos_cuadrados
 
 
 class Hacker:
@@ -98,11 +100,46 @@ class Hacker:
                     escribir += "\n"
                     archivo_doblesentido.write(escribir)
 
+            archivo_doblesentido.close()
+
+            print("\n--- ARCHIVO GENERADO rutasDobleSentido.txt ---\n")
+
         else:
             print("\n--- ERROR: LA RED NO ESTA CARGADA ---\n")
 
     def ciclos_triangulares_cuadrados(self):
-        pass
+        if self.red_bummer:
+
+            if len(self.pares_padre_destino) == 0:
+                cargar_padres(self)
+
+            ciclos_tri = ciclos_triangulares(self.pares_padre_destino)
+
+            archivo_ciclos = open("ciclos.txt", "w")
+            for c in range(len(ciclos_tri)):
+                escribir = "{0} {1} {2}\n".format(
+                    ciclos_tri[c][0],
+                    ciclos_tri[c][1],
+                    ciclos_tri[c][2]
+                )
+                archivo_ciclos.write(escribir)
+
+            ciclos_cuad = ciclos_cuadrados(self.pares_padre_destino)
+            for c in range(len(ciclos_cuad)):
+                escribir = "{0} {1} {2} {3}\n".format(
+                    ciclos_cuad[c][0],
+                    ciclos_cuad[c][1],
+                    ciclos_cuad[c][2],
+                    ciclos_cuad[c][3]
+                )
+                archivo_ciclos.write(escribir)
+
+            archivo_ciclos.close()
+
+            print("\n--- ARCHIVO GENERADO ciclos.txt ---\n")
+
+        else:
+            print("\n--- ERROR: LA RED NO ESTA CARGADA ---\n")
 
     def ruta_maxima(self):
         pass
