@@ -14,7 +14,7 @@ class Conexion:
         self.tipo = None
 
     def usar(self, ide):
-        if self.pasadas < 20:
+        if self.pasadas < 10:
             self.pasadas += 1
             self.puertos_destino.append(ide)
 
@@ -33,6 +33,9 @@ class Conexion:
                 break
             anterior = siguiente
         if conexion_normal:
+            unico_destino = self.puertos_destino[0]
+            self.puertos_destino = ListaLigada()
+            self.puertos_destino.append(unico_destino)
             self.tipo = 'NORMAL'
 
         # Se verifica si la conexion ha llevado
@@ -44,14 +47,14 @@ class Conexion:
                     if self.puertos_destino[b] != segundo_destino:
                         if primer_destino != segundo_destino:
                             conexion_random = True
-                            self.tipo = 'RANDOM'
+                            self.tipo = 'RAND'
                             break
                         else:
                             segundo_destino = self.puertos_destino[b]
 
         # Si no es Normal ni Random de 3 puertos, puede ser:
         # Alternante o Random de 2 puertos
-        # --> Aqui se hace una suposicion explicada detalladamente en el README (1).
+        # --> Aqui se hace una suposicion explicada detalladamente en el README (2).
         conexion_alternante = False
         if not conexion_normal:
             if not conexion_random:
@@ -69,10 +72,29 @@ class Conexion:
                     else:
                         conexion_alternante = False
                     if conexion_alternante:
-                        self.tipo = 'ALTERNANTE'
+                        self.tipo = 'ALT'
                         break
         if not conexion_alternante:
-            self.tipo = 'RANDOM'
+            self.tipo = 'RAND'
+
+        if self.tipo == 'ALT':
+            d1 = self.puertos_destino[0]
+            d2 = None
+            for d in range(len(self.puertos_destino)):
+                if self.puertos_destino[d] != d1:
+                    d2 = self.puertos_destino[d]
+                    break
+            self.puertos_destino = ListaLigada()
+            self.puertos_destino.append(d1)
+            self.puertos_destino.append(d2)
+
+        if self.tipo == "RAND":
+            destinos = ListaLigada()
+            destinos.append(self.puertos_destino[0])
+            for d in range(len(self.puertos_destino)):
+                if not destinos.contiene(self.puertos_destino[d]):
+                    destinos.append(self.puertos_destino[d])
+            self.puertos_destino = destinos
 
 
 class Puerto:
@@ -86,6 +108,7 @@ class Puerto:
         self.conexiones = ListaLigada()
         self.agregar_conexiones()
         self.conexion_siguiente = 0
+        self.padres = ListaLigada()
 
     def agregar_conexiones(self):
         for c in range(self.posibles_conexiones):
@@ -95,26 +118,18 @@ class Puerto:
     def conectar(self, sistema):
         indice_conexion = self.conexion_siguiente
         # Uso la siguiente conexion sin pasadas, o la siguiente_conexion que le toca al Puerto.
-        hay_cero = False
-        for s_p in range(len(self.conexiones)):
-            if self.conexiones[s_p].pasadas == 0:
-                hay_cero = True
-                indice_conexion = s_p
-                sistema.hacer_conexion(s_p)
-                break
 
         hay_menor = False
         pasadas_min = self.conexiones[indice_conexion].pasadas
-        if not hay_cero:
-            for m_p in range(len(self.conexiones)):
-                if self.conexiones[m_p].pasadas < pasadas_min:
-                    indice_conexion = m_p
-                    pasadas_min = self.conexiones[m_p].pasadas
-                    hay_menor = True
+        for m_p in range(len(self.conexiones)):
+            if self.conexiones[m_p].pasadas < pasadas_min:
+                indice_conexion = m_p
+                pasadas_min = self.conexiones[m_p].pasadas
+                hay_menor = True
         if hay_menor:
             sistema.hacer_conexion(indice_conexion)
 
-        if not hay_cero and not hay_menor:
+        if not hay_menor:
             sistema.hacer_conexion(indice_conexion)
             # Cambio el valor de la proxima conexion a la siguiente.
             if self.conexion_siguiente + 1 == self.posibles_conexiones:
@@ -127,8 +142,6 @@ class Puerto:
             # A la conexion usada le agrego una pasada y el puerto al que llego.
             ide_puerto_llegada = sistema.preguntar_puerto_actual()[0]
             self.conexiones[indice_conexion].usar(ide_puerto_llegada)
-        else:
-            print("PILLADO POR EL ROBOT")
 
 
 class Red:
@@ -137,15 +150,19 @@ class Red:
 
     def __init__(self):
         self.puertos = ListaLigada()
+        self.caminos = ListaLigada()
 
     def revisar_completitud(self):
         faltantes = 0
+        totales = 0
         for p in range(len(self.puertos)):
             for c in range(len(self.puertos[p].conexiones)):
                 pasadas_s = self.puertos[p].conexiones[c].pasadas
-                rest_s = 20 - pasadas_s
+                rest_s = 10 - pasadas_s
                 faltantes += rest_s
-        print(faltantes, end="\r")
+                totales += 10
+        avance = round((1-(faltantes/totales))*100, 2)
+        print(" --> Porcentaje Completo: {0}%".format(avance), end="\r")
         return faltantes
 
     def agregar_puerto(self, ide_nuevo_puerto, posibles_conexiones_nuevo_puerto):

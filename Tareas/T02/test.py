@@ -98,3 +98,9 @@ print(lista.index(min(lista)))
 
 for i in range(1):
     print(True)
+
+import sys
+
+print(sys.getsizeof(lista))
+
+print("hola {}".format(2))

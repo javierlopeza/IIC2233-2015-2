@@ -7,6 +7,12 @@ def writefile_red(red_bummer):
         for c in range(len(red_bummer.puertos[p].conexiones)):
             puerto_base = red_bummer.puertos[p].conexiones[c].puerto_base
             for d in range(len(red_bummer.puertos[p].conexiones[c].puertos_destino)):
-                puerto_destino = red_bummer.puertos[p].conexiones[c].puertos_destino[d]
-                escribir_conexion = "CONEXION {0} {1}\n".format(puerto_base, puerto_destino)
+                puerto_destino = \
+                    red_bummer.puertos[p].conexiones[c].puertos_destino[d]
+                tipo_conexion = red_bummer.puertos[p].conexiones[c].tipo
+                escribir_conexion = "CONEXION {0} {1} {2}\n".format(
+                    puerto_base,
+                    puerto_destino,
+                    tipo_conexion)
                 archivo_red.write(escribir_conexion)
+    print("\n--- SE HA GENERADO EL ARCHIVO red.txt ---\n")

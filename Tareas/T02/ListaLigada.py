@@ -19,8 +19,10 @@ class ListaLigada:
         Se usa igual que las listas de Python,
         indicando el indice entre corchetes: self[i]
         """
-        valor_item = getattr(self, 'e{0}'.format(item))
-        return valor_item
+        if str(item).isdigit():
+            if int(item) < self.largo:
+                valor_item = getattr(self, 'e{0}'.format(item))
+                return valor_item
 
     def __setitem__(self, key, value):
         """ Permite realizar item assignment en la lista.
@@ -32,17 +34,13 @@ class ListaLigada:
         """
         return self.largo
 
-    def indice_min(self):
-        """ Retorna el indice donde se encuentra el elemento de menor valor.
+    def contiene(self, valor):
+        """ Retorna True si la lista contiene valor.
         """
-        indice_menor = 0
-        menor = getattr(self, 'e0')
         for a in range(self.largo):
-            elemento_actual = getattr(self, 'e{0}'.format(a))
-            if elemento_actual < menor:
-                indice_menor = a
-                menor = elemento_actual
-        return indice_menor
+            if getattr(self, 'e{0}'.format(a)) == valor:
+                return True
+        return False
 
     def __repr__(self):
         """ Imprime la lista ligada de manera simple y comprensible.
