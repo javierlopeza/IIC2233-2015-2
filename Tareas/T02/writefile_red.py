@@ -15,4 +15,5 @@ def writefile_red(red_bummer):
                     puerto_destino,
                     tipo_conexion)
                 archivo_red.write(escribir_conexion)
+    archivo_red.close()
     print("\n--- SE HA GENERADO EL ARCHIVO red.txt ---\n")

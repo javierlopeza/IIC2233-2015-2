@@ -7,14 +7,15 @@ class Conexion:
     que sale de puerto_base y lleva a cualquier de los puertos_destino.
     """
 
-    def __init__(self, puerto_base):
+    def __init__(self,
+                 puerto_base):
         self.puerto_base = puerto_base
         self.puertos_destino = ListaLigada()
         self.pasadas = 0
         self.tipo = None
 
     def usar(self, ide):
-        if self.pasadas < 10:
+        if self.pasadas < 1:
             self.pasadas += 1
             self.puertos_destino.append(ide)
 
@@ -58,15 +59,15 @@ class Conexion:
         conexion_alternante = False
         if not conexion_normal:
             if not conexion_random:
-                for c in range(len(self.puertos_destino) - 7):
+                for c in range(len(self.puertos_destino) - 6):
                     conexion_alternante = True
                     uno = self.puertos_destino[c]
                     dos = self.puertos_destino[c + 1]
                     if uno != dos:
-                        for e1 in range(0, 9, 2):
+                        for e1 in range(0, 7, 2):
                             if self.puertos_destino[c + e1] != uno:
                                 conexion_alternante = False
-                        for e2 in range(1, 9, 2):
+                        for e2 in range(1, 7, 2):
                             if self.puertos_destino[c + e2] != dos:
                                 conexion_alternante = False
                     else:
@@ -74,7 +75,7 @@ class Conexion:
                     if conexion_alternante:
                         self.tipo = 'ALT'
                         break
-        if not conexion_alternante:
+        if not conexion_alternante and not conexion_normal:
             self.tipo = 'RAND'
 
         if self.tipo == 'ALT':
@@ -102,9 +103,13 @@ class Puerto:
     para ser agregado a una red.
     """
 
-    def __init__(self, ide, posibles_conexiones):
+    def __init__(self,
+                 ide,
+                 posibles_conexiones,
+                 capacidad):
         self.ide = ide
         self.posibles_conexiones = posibles_conexiones
+        self.capacidad = capacidad
         self.conexiones = ListaLigada()
         self.agregar_conexiones()
         self.conexion_siguiente = 0
@@ -150,7 +155,7 @@ class Red:
 
     def __init__(self):
         self.puertos = ListaLigada()
-        self.caminos = ListaLigada()
+        self.arcos = ListaLigada()
 
     def revisar_completitud(self):
         faltantes = 0
@@ -158,19 +163,25 @@ class Red:
         for p in range(len(self.puertos)):
             for c in range(len(self.puertos[p].conexiones)):
                 pasadas_s = self.puertos[p].conexiones[c].pasadas
-                rest_s = 10 - pasadas_s
+                rest_s = 1 - pasadas_s
                 faltantes += rest_s
-                totales += 10
-        avance = round((1-(faltantes/totales))*100, 2)
+                totales += 1
+        avance = round((1 - (faltantes / totales)) * 100, 2)
         print(" --> Porcentaje Completo: {0}%".format(avance), end="\r")
         return faltantes
 
-    def agregar_puerto(self, ide_nuevo_puerto, posibles_conexiones_nuevo_puerto):
-        """ Primero verifica si el puerto ya ha sido agregado a la Red que se esta construyendo.
+    def agregar_puerto(self,
+                       ide_nuevo_puerto,
+                       posibles_conexiones_nuevo_puerto,
+                       capacidad_nuevo_puerto):
+        """ Primero verifica si el puerto ya
+        ha sido agregado a la Red que se esta construyendo.
         Si el puerto no se encuentra en la Red, entonces lo agrega.
         """
         if not self.tiene_puerto(ide_nuevo_puerto):
-            nuevo_puerto = Puerto(ide_nuevo_puerto, posibles_conexiones_nuevo_puerto)
+            nuevo_puerto = Puerto(ide_nuevo_puerto,
+                                  posibles_conexiones_nuevo_puerto,
+                                  capacidad_nuevo_puerto)
             self.puertos.append(nuevo_puerto)
 
     def tiene_puerto(self, ide_puerto):

@@ -84,6 +84,8 @@ class Perro:
     def __init__(self, nombre):
         self.nombre = nombre
 
+
+'''
 lista = ListaLigada()
 chubi = Perro("Chubiii")
 for n in range(6):
@@ -104,3 +106,94 @@ import sys
 print(sys.getsizeof(lista))
 
 print("hola {}".format(2))
+
+graph = [['A', ['B', 'C']],
+         ['B', ['C', 'D']],
+         ['C', ['D']],
+         ['D', ['C']],
+         ['E', ['F']],
+         ['F', ['C']]]
+
+def find_path(graph, start, end, path=[]):
+    path.append(start)
+    if start == end:
+        return path
+    contador = len(graph)
+    graph_start = None
+    for n in range(len(graph)):
+        if not start == graph[n][0]:
+            contador -= 1
+        if graph[n][0] == start:
+            graph_start = graph[n][1]
+    if contador == 0:
+        return None
+    for node in graph_start:
+        if node not in path:
+            newpath = find_path(graph, node, end, path)
+            if newpath: return newpath
+    return None
+
+print(find_path(graph, 'A', 'D'))
+
+
+graph = [['A', ['B', 'C']],
+         ['B', ['C', 'D']],
+         ['C', ['D']],
+         ['D', ['C']],
+         ['E', ['F']],
+         ['F', ['C']]]
+
+arcos = ListaLigada()
+
+a = ListaLigada()
+a.append(1)
+aa = ListaLigada()
+aa.append(2)
+aa.append(3)
+a.append(aa)
+
+arcos.append(a)
+
+a = ListaLigada()
+a.append(2)
+aa = ListaLigada()
+aa.append(3)
+aa.append(4)
+a.append(aa)
+
+arcos.append(a)
+
+a = ListaLigada()
+a.append(3)
+aa = ListaLigada()
+aa.append(4)
+a.append(aa)
+
+arcos.append(a)
+
+a = ListaLigada()
+a.append(4)
+aa = ListaLigada()
+aa.append(3)
+a.append(aa)
+
+arcos.append(a)
+
+a = ListaLigada()
+a.append(5)
+aa = ListaLigada()
+aa.append(6)
+a.append(aa)
+
+arcos.append(a)
+
+a = ListaLigada()
+a.append(6)
+aa = ListaLigada()
+aa.append(3)
+a.append(aa)
+
+arcos.append(a)
+
+print(encontrar_camino(arcos, , 4))
+'''
