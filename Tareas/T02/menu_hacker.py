@@ -2,11 +2,12 @@ import sys
 from ListaLigada import ListaLigada
 from cargar_red import cargar_red
 from cargar_padres import cargar_padres
-from encontrar_camino import encontrar_camino
+from encontrar_caminos import encontrar_caminos
 from pares_doble_sentido import pares_doble_sentido
 from rutas_dobles import rutas_doble_sentido
 from ciclos_triangulares import ciclos_triangulares
 from ciclos_cuadrados import ciclos_cuadrados
+from ruta_maxima import ruta_maxima
 
 
 class Hacker:
@@ -14,6 +15,7 @@ class Hacker:
         self.sistema = sistema
         self.red_bummer = None
         self.pares_padre_destino = ListaLigada()
+        self.rutas_a_bummer = None
         self.pares_bi = ListaLigada()
         self.rutas_bi = ListaLigada()
         self.opciones = ListaLigada()
@@ -58,13 +60,21 @@ class Hacker:
     def ruta_bummer(self):
         if self.red_bummer:
 
-            print(" ---> BUSCANDO EL CAMINO MAS CORTO AL PUERTO DE BUMMER")
-
             if len(self.pares_padre_destino) == 0:
+                print(" ---> ANALIZANDO CONEXIONES")
                 cargar_padres(self)
 
-            ruta_corta = encontrar_camino(self.red_bummer.arcos, 0, self.sistema.puerto_final())
+            if not self.rutas_a_bummer:
+                print(" ---> BUSCANDO RUTAS A BUMMER")
+                self.rutas_a_bummer = encontrar_caminos(self.red_bummer.arcos, 0, self.sistema.puerto_final())
 
+            print(" ---> BUSCANDO EL CAMINO MAS CORTO A BUMMER")
+            ruta_corta = self.rutas_a_bummer[0]
+            for r in range(len(self.rutas_a_bummer)):
+                if len(self.rutas_a_bummer[r]) < len(ruta_corta):
+                    ruta_corta = self.rutas_a_bummer[r]
+
+            print(" ---> GENERANDO ARCHIVO rutaABummer.txt")
             archivo_rutabummer = open("rutaABummer.txt", "w")
             archivo_rutabummer.write("CONEXION 0")
             for p in range(1, len(ruta_corta) - 1):
@@ -143,7 +153,32 @@ class Hacker:
             print("\n--- ERROR: LA RED NO ESTA CARGADA ---\n")
 
     def ruta_maxima(self):
-        pass
+        if self.red_bummer:
+
+            if len(self.pares_padre_destino) == 0:
+                print(" ---> ANALIZANDO CONEXIONES")
+                cargar_padres(self)
+
+            if not self.rutas_a_bummer:
+                print(" ---> BUSCANDO RUTAS A BUMMER")
+                self.rutas_a_bummer = encontrar_caminos(self.red_bummer.arcos, 0, self.sistema.puerto_final())
+
+            rutamax_capacidad = ruta_maxima(self.red_bummer.puertos, self.rutas_a_bummer)
+
+            rutamax = rutamax_capacidad[0]
+            capacidadmax = rutamax_capacidad[1]
+
+            print(" ---> GENERANDO ARCHIVO rutaMaxima.txt")
+            archivo_rutamax = open("rutaMaxima.txt", "w")
+            archivo_rutamax.write("CAP {0}\n".format(capacidadmax))
+            for p in range(len(rutamax) - 1):
+                escribir = "{0} {1}\n".format(rutamax[p], rutamax[p + 1])
+                archivo_rutamax.write(escribir)
+            archivo_rutamax.close()
+            print("\n--- ARCHIVO GENERADO rutaMaxima.txt ---\n")
+
+        else:
+            print("\n--- ERROR: LA RED NO ESTA CARGADA ---\n")
 
     def hackear_red(self):
         pass

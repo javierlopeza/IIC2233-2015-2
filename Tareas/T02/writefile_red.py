@@ -1,4 +1,7 @@
 def writefile_red(red_bummer):
+
+    print("---> GENERANDO ARCHIVO red.txt")
+
     archivo_red = open("red.txt", "w")
     for p in range(len(red_bummer.puertos)):
         escribir_puerto = "PUERTO {0}\n".format(red_bummer.puertos[p].ide)

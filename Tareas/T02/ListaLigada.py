@@ -34,6 +34,14 @@ class ListaLigada:
         """
         return self.largo
 
+    def __add__(self, other):
+        lista_retorno = ListaLigada()
+        for e1 in range(len(self)):
+            lista_retorno.append(self[e1])
+        for e2 in range(len(other)):
+            lista_retorno.append(other[e2])
+        return lista_retorno
+
     def contiene(self, valor):
         """ Retorna True si la lista contiene valor.
         """
