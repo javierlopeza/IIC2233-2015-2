@@ -26,11 +26,12 @@ class Hacker:
         print("----------------------------------------\n\n"
               "MENU HACKEO RED BUMMER:\n\n"
               "1: Modelar y Cargar Red\n"
-              "2: Ruta a Bummer\n"
-              "3: Rutas Doble Sentido\n"
-              "4: Ciclos Triangulares y Cuadrados\n"
-              "5: Ruta Maxima\n"
-              "6: Hackear Red\n"
+              "2: Ver Total Puertos\n"
+              "3: Ruta a Bummer\n"
+              "4: Rutas Doble Sentido\n"
+              "5: Ciclos Triangulares y Cuadrados\n"
+              "6: Ruta Maxima\n"
+              "7: Hackear Red\n"
               "0: Salir\n"
               "            ")
 
@@ -48,6 +49,7 @@ class Hacker:
     def cargar_opciones(self):
         self.opciones.append(self.salir)
         self.opciones.append(self.cargar_red)
+        self.opciones.append(self.mostrar_datos)
         self.opciones.append(self.ruta_bummer)
         self.opciones.append(self.rutas_doble_sentido)
         self.opciones.append(self.ciclos_triangulares_cuadrados)
@@ -56,6 +58,15 @@ class Hacker:
 
     def cargar_red(self):
         self.red_bummer = cargar_red(self.sistema)
+
+    def mostrar_datos(self):
+        if self.red_bummer:
+            print("""
+            INFORMACION DE LA RED MODELADA:
+            -> Cantidad de Puertos: {0}
+            """.format(len(self.red_bummer.puertos)))
+        else:
+            print("\n--- ERROR: LA RED NO ESTA CARGADA ---\n")
 
     def ruta_bummer(self):
         if self.red_bummer:
@@ -92,12 +103,16 @@ class Hacker:
             print(" ---> BUSCANDO RUTAS DOBLE SENTIDO")
 
             if len(self.pares_padre_destino) == 0:
+                print(" ---> ANALIZANDO CONEXIONES")
                 cargar_padres(self)
 
+            print(" ---> BUSCANDO PARES BIDIRECCIONALES")
             self.pares_bi = pares_doble_sentido(self.pares_padre_destino)
 
+            print(" ---> BUSCANDO RUTAS DOBLE SENTIDO")
             self.rutas_bi = rutas_doble_sentido(self.pares_bi)
 
+            print(" ---> GENERANDO ARCHIVO rutasDobleSentido.txt")
             archivo_doblesentido = open("rutasDobleSentido.txt", "w")
             for pb in range(len(self.pares_bi)):
                 escribir = "PAR {0} {1}\n".format(self.pares_bi[pb][0], self.pares_bi[pb][1])
@@ -123,9 +138,12 @@ class Hacker:
             print(" ---> BUSCANDO CICLOS TRIANGULARES Y CUADRADOS")
 
             if len(self.pares_padre_destino) == 0:
+                print(" ---> ANALIZANDO CONEXIONES")
                 cargar_padres(self)
 
+            print(" ---> BUSCANDO CICLOS TRIANGULARES")
             ciclos_tri = ciclos_triangulares(self.pares_padre_destino)
+            print(" ---> ESCRIBIENDO CICLOS TRIANGULARES EN ciclos.txt")
             archivo_ciclos = open("ciclos.txt", "w")
             for c in range(len(ciclos_tri)):
                 escribir = "{0} {1} {2}\n".format(
@@ -135,7 +153,9 @@ class Hacker:
                 )
                 archivo_ciclos.write(escribir)
 
+            print(" ---> BUSCANDO CICLOS CUADRADOS")
             ciclos_cuad = ciclos_cuadrados(self.pares_padre_destino)
+            print(" ---> ESCRIBIENDO CICLOS CUADRADOS EN ciclos.txt")
             for c in range(len(ciclos_cuad)):
                 escribir = "{0} {1} {2} {3}\n".format(
                     ciclos_cuad[c][0],

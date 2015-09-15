@@ -14,8 +14,8 @@ class Conexion:
         self.pasadas = 0
         self.tipo = None
 
-    def usar(self, ide):
-        if self.pasadas < 1:
+    def usar(self, ide, rang):
+        if self.pasadas < rang:
             self.pasadas += 1
             self.puertos_destino.append(ide)
 
@@ -37,7 +37,8 @@ class Conexion:
             unico_destino = self.puertos_destino[0]
             self.puertos_destino = ListaLigada()
             self.puertos_destino.append(unico_destino)
-            self.tipo = 'NORMAL'
+            self.tipo = ' '
+            # Normal, solo que por enunciado no se menciona el tipo de esta.
 
         # Se verifica si la conexion ha llevado
         # a mas de 2 puertos diferentes (CONEXION ALEATORIA)
@@ -120,10 +121,14 @@ class Puerto:
             nueva_conexion = Conexion(self.ide)
             self.conexiones.append(nueva_conexion)
 
-    def conectar(self, sistema):
-        indice_conexion = self.conexion_siguiente
-        # Uso la siguiente conexion sin pasadas, o la siguiente_conexion que le toca al Puerto.
+    def conectar(self, sistema, conexiones_raras):
+        if conexiones_raras:
+            rang = 10
+        elif not conexiones_raras:
+            rang = 1
 
+        indice_conexion = self.conexion_siguiente
+        # Uso la siguiente conexion con menor pasadas o la siguiente_conexion que le toca al Puerto.
         hay_menor = False
         pasadas_min = self.conexiones[indice_conexion].pasadas
         for m_p in range(len(self.conexiones)):
@@ -146,7 +151,7 @@ class Puerto:
         if not sistema.preguntar_puerto_actual()[1]:
             # A la conexion usada le agrego una pasada y el puerto al que llego.
             ide_puerto_llegada = sistema.preguntar_puerto_actual()[0]
-            self.conexiones[indice_conexion].usar(ide_puerto_llegada)
+            self.conexiones[indice_conexion].usar(ide_puerto_llegada, rang)
 
 
 class Red:
@@ -157,15 +162,19 @@ class Red:
         self.puertos = ListaLigada()
         self.arcos = ListaLigada()
 
-    def revisar_completitud(self):
+    def revisar_completitud(self, conexiones_raras):
+        if conexiones_raras:
+            rang = 10
+        elif not conexiones_raras:
+            rang = 1
         faltantes = 0
         totales = 0
         for p in range(len(self.puertos)):
             for c in range(len(self.puertos[p].conexiones)):
                 pasadas_s = self.puertos[p].conexiones[c].pasadas
-                rest_s = 1 - pasadas_s
+                rest_s = rang - pasadas_s
                 faltantes += rest_s
-                totales += 1
+                totales += rang
         avance = round((1 - (faltantes / totales)) * 100, 2)
         print(" --> Porcentaje Completo: {0}%".format(avance), end="\r")
         return faltantes
