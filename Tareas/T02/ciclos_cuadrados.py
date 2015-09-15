@@ -40,6 +40,8 @@ def cuad_igual(cuad1, cuad2):
 def ciclos_cuadrados(pares_padre_destino):
     ciclos_cuad = ListaLigada()
     for p1 in range(len(pares_padre_destino)):
+        porcentaje = round((p1/len(pares_padre_destino))*100, 2)
+        print(" --> Porcentaje Revisado: {0}%".format(porcentaje), end='\r')
         a1 = pares_padre_destino[p1][0]
         a2 = pares_padre_destino[p1][1]
         for p2 in range(len(pares_padre_destino)):

@@ -1,5 +1,8 @@
 ﻿## Tarea 02
 
+**0.** Se pide detallar cómo implementé las estructuras que utilicé en la Tarea 2.
+La estructura que construí fue ```ListaLigada```.
+
 **1.** Debido a no poder saber la cantidad de puertos a los que llevan las conexiones aleatorias
 pasaré 10 veces por cada conexión para así poder clasificarlas correctamente. 
 Es importante notar que al no saber si algunas conexiones me llevan a puertos que no había descubierto,
@@ -26,8 +29,8 @@ la clasificacion.
 **3.** Si descubro que una conexión me envió a más de dos puertos diferentes, sé de
 inmediato que es del tipo aleatoria.
 
+**4.** El programa da la opción de considerar las rutas ALT y RAND, o no considerarlas para 
+cargar la red. Al considerarlas el programa demora 10 veces más tiempo ya que debe
+recorrer 10 veces cada conexión.
 
-**4.** Las Rutas Doble Sentido se detectan y arman perfectamente. Lo probé con casos más pequeños.
-
-**5.** Los Ciclos Triangulares y Cuadrados se detectan y arman perfectamente. Lo probé con casos más pequeños.
-
+**5.** 

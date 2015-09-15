@@ -183,6 +183,7 @@ class Hacker:
                 print(" ---> BUSCANDO RUTAS A BUMMER")
                 self.rutas_a_bummer = encontrar_caminos(self.red_bummer.arcos, 0, self.sistema.puerto_final())
 
+            print(" ---> BUSCANDO RUTA CON MAXIMA CAPACIDAD")
             rutamax_capacidad = ruta_maxima(self.red_bummer.puertos, self.rutas_a_bummer)
 
             rutamax = rutamax_capacidad[0]
