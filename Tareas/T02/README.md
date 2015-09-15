@@ -17,8 +17,8 @@ class ListaLigada:
 
     def append(self, valor):
         """ Agrega el valor en un nuevo atributo de la lista.
-	Le suma 1 al largo de la lista.
-	"""
+        Le suma 1 al largo de la lista.
+        """
         setattr(self, 'e{0}'.format(self.largo), valor)
         self.largo += 1
 
@@ -34,7 +34,7 @@ class ListaLigada:
 
     def __setitem__(self, key, value):
         """ Permite realizar item assignment en la lista, 
-	reasignandole un valor al atributo correspondiente al key.
+        reasignandole un valor al atributo correspondiente al key.
         """
         setattr(self, 'e{0}'.format(key), value)
 
@@ -45,7 +45,7 @@ class ListaLigada:
 
     def __repr__(self):
         """ Imprime la lista ligada de manera simple y comprensible,
-	de manera similar a las listas de Python.
+        de manera similar a las listas de Python.
         """
         rep = '['
         for a in range(self.largo):
