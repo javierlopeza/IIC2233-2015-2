@@ -100,8 +100,6 @@ class Hacker:
     def rutas_doble_sentido(self):
         if self.red_bummer:
 
-            print(" ---> BUSCANDO RUTAS DOBLE SENTIDO")
-
             if len(self.pares_padre_destino) == 0:
                 print(" ---> ANALIZANDO CONEXIONES")
                 cargar_padres(self)
@@ -146,24 +144,26 @@ class Hacker:
             print(" ---> ESCRIBIENDO CICLOS TRIANGULARES EN ciclos.txt")
             archivo_ciclos = open("ciclos.txt", "w")
             for c in range(len(ciclos_tri)):
-                escribir = "{0} {1} {2}\n".format(
-                    ciclos_tri[c][0],
-                    ciclos_tri[c][1],
-                    ciclos_tri[c][2]
-                )
-                archivo_ciclos.write(escribir)
+                if ciclos_tri[c]:
+                    escribir = "{0} {1} {2}\n".format(
+                        ciclos_tri[c][0],
+                        ciclos_tri[c][1],
+                        ciclos_tri[c][2]
+                    )
+                    archivo_ciclos.write(escribir)
 
             print(" ---> BUSCANDO CICLOS CUADRADOS")
             ciclos_cuad = ciclos_cuadrados(self.pares_padre_destino)
             print(" ---> ESCRIBIENDO CICLOS CUADRADOS EN ciclos.txt")
             for c in range(len(ciclos_cuad)):
-                escribir = "{0} {1} {2} {3}\n".format(
-                    ciclos_cuad[c][0],
-                    ciclos_cuad[c][1],
-                    ciclos_cuad[c][2],
-                    ciclos_cuad[c][3]
-                )
-                archivo_ciclos.write(escribir)
+                if ciclos_cuad[c]:
+                    escribir = "{0} {1} {2} {3}\n".format(
+                        ciclos_cuad[c][0],
+                        ciclos_cuad[c][1],
+                        ciclos_cuad[c][2],
+                        ciclos_cuad[c][3]
+                    )
+                    archivo_ciclos.write(escribir)
 
             archivo_ciclos.close()
 

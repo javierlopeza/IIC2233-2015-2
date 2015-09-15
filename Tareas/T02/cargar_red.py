@@ -37,8 +37,9 @@ def cargar_red(sistema):
         t2 = datetime.datetime.now()
         print("---> TIEMPO EN CONSTRUIR LA RED DE BUMMER:", t2 - t1)
 
-        print("---> CLASIFICANDO CONEXIONES")
-        clasificar_conexiones(red_bummer)
+        if conexiones_raras:
+            print("---> CLASIFICANDO CONEXIONES")
+            clasificar_conexiones(red_bummer)
 
         print("---> GENERANDO ARCHIVO red.txt")
         writefile_red(red_bummer)

@@ -32,5 +32,4 @@ def encontrar_caminos(arcos, inicio, final, camino=ListaLigada()):
             nuevos_caminos = encontrar_caminos(arcos, arcos_sig[n], final, camino)
             for c in range(len(nuevos_caminos)):
                 caminos.append(nuevos_caminos[c])
-
     return caminos

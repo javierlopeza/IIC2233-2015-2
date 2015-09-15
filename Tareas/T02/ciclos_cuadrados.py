@@ -32,6 +32,8 @@ def cuad_igual(cuad1, cuad2):
         return True
     if a1 == b2 and a2 == b3 and a3 == b4 and a4 == b1:
         return True
+    if a1 == b1 and a2 == b2 and a3 == b3 and a4 == b4:
+        return True
     return False
 
 

@@ -12,7 +12,7 @@ class Conexion:
         self.puerto_base = puerto_base
         self.puertos_destino = ListaLigada()
         self.pasadas = 0
-        self.tipo = None
+        self.tipo = ' '
 
     def usar(self, ide, rang):
         if self.pasadas < rang:

@@ -1,6 +1,14 @@
 from ListaLigada import ListaLigada
 
 
+def tri_falso(tri):
+    a1 = tri[0]
+    a2 = tri[1]
+    a3 = tri[2]
+    if a1 == a2 or a1 == a3 or a2 == a3:
+        return True
+
+
 def trio_igual(trio1, trio2):
     a1 = trio1[0]
     a2 = trio1[1]
@@ -11,6 +19,8 @@ def trio_igual(trio1, trio2):
     if a1 == b3 and a2 == b1 and a3 == b2:
         return True
     if a1 == b2 and a2 == b3 and a3 == b1:
+        return True
+    if a1 == b1 and a2 == b2 and a3 == b3:
         return True
     return False
 
@@ -38,4 +48,8 @@ def ciclos_triangulares(pares_padre_destino):
                 if ciclos_tri[c1] and ciclos_tri[c2]:
                     if trio_igual(ciclos_tri[c1], ciclos_tri[c2]):
                         ciclos_tri[c1] = None
+    for c in range(len(ciclos_tri)):
+        if ciclos_tri[c]:
+            if tri_falso(ciclos_tri[c]):
+                ciclos_tri[c] = None
     return ciclos_tri
