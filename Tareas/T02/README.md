@@ -2,6 +2,58 @@
 
 **0.** Se pide detallar cómo implementé las estructuras que utilicé en la Tarea 2.
 La estructura que construí fue ```ListaLigada```.
+Se construye de la siguiente manera:
+```python
+class ListaLigada:
+    """ Clase que construye una estructura simulando una lista ligada.
+    """
+
+    def __init__(self):
+        """ Se inicializa sin elementos.
+	Los elementos se van guardando en atributos de la instancia.
+        """
+        self.e0 = None
+        self.largo = 0
+
+    def append(self, valor):
+        """ Agrega el valor en un nuevo atributo de la lista.
+	Le suma 1 al largo de la lista.
+	"""
+        setattr(self, 'e{0}'.format(self.largo), valor)
+        self.largo += 1
+
+    def __getitem__(self, item):
+        """ Retorna el elemento de indice item.
+        Se usa igual que las listas de Python,
+        indicando el indice entre corchetes: self[i]
+        """
+        if str(item).isdigit():
+            if int(item) < self.largo:
+                valor_item = getattr(self, 'e{0}'.format(item))
+                return valor_item
+
+    def __setitem__(self, key, value):
+        """ Permite realizar item assignment en la lista, 
+	reasignandole un valor al atributo correspondiente al key.
+        """
+        setattr(self, 'e{0}'.format(key), value)
+
+    def __len__(self):
+        """ Retorna la cantidad de elementos existentes.
+        """
+        return self.largo
+
+    def __repr__(self):
+        """ Imprime la lista ligada de manera simple y comprensible,
+	de manera similar a las listas de Python.
+        """
+        rep = '['
+        for a in range(self.largo):
+            rep += '{0}, '.format(getattr(self, 'e{0}'.format(a)))
+        rep = rep[:-2]
+        rep += ']'
+        return rep
+```
 
 **1.** Debido a no poder saber la cantidad de puertos a los que llevan las conexiones aleatorias
 pasaré 10 veces por cada conexión para así poder clasificarlas correctamente. 

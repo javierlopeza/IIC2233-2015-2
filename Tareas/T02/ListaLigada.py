@@ -34,27 +34,12 @@ class ListaLigada:
         """
         return self.largo
 
-    def __add__(self, other):
-        lista_retorno = ListaLigada()
-        for e1 in range(len(self)):
-            lista_retorno.append(self[e1])
-        for e2 in range(len(other)):
-            lista_retorno.append(other[e2])
-        return lista_retorno
-
-    def contiene(self, valor):
-        """ Retorna True si la lista contiene valor.
-        """
-        for a in range(self.largo):
-            if getattr(self, 'e{0}'.format(a)) == valor:
-                return True
-        return False
-
     def __repr__(self):
         """ Imprime la lista ligada de manera simple y comprensible.
         """
-        rep = ''
+        rep = '['
         for a in range(self.largo):
-            rep += '{0} >>> '.format(getattr(self, 'e{0}'.format(a)))
-        rep = rep[:-5]
+            rep += '{0}, '.format(getattr(self, 'e{0}'.format(a)))
+        rep = rep[:-2]
+        rep += ']'
         return rep
