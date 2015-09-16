@@ -9,7 +9,7 @@ def encontrar_caminos(arcos, inicio, final, camino=ListaLigada()):
     if inicio == final:
         lista_camino = ListaLigada()
         lista_camino.append(camino)
-        print("NUEVO CAMINO:", lista_camino)
+        print("NUEVO CAMINO :)")
         return lista_camino
 
     contador = len(arcos)

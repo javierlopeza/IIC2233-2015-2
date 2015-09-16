@@ -3,57 +3,8 @@
 **0.** Se pide detallar cómo implementé las estructuras que utilicé en la Tarea 2.
 La estructura que construí fue ```ListaLigada```.
 Se construye de la siguiente manera:
-```python
-class ListaLigada:
-    """ Clase que construye una estructura simulando una lista ligada.
-    """
 
-    def __init__(self):
-        """ Se inicializa sin elementos.
-	Los elementos se van guardando en atributos de la instancia.
-        """
-        self.e0 = None
-        self.largo = 0
-
-    def append(self, valor):
-        """ Agrega el valor en un nuevo atributo de la lista.
-        Le suma 1 al largo de la lista.
-        """
-        setattr(self, 'e{0}'.format(self.largo), valor)
-        self.largo += 1
-
-    def __getitem__(self, item):
-        """ Retorna el elemento de indice item.
-        Se usa igual que las listas de Python,
-        indicando el indice entre corchetes: self[i]
-        """
-        if str(item).isdigit():
-            if int(item) < self.largo:
-                valor_item = getattr(self, 'e{0}'.format(item))
-                return valor_item
-
-    def __setitem__(self, key, value):
-        """ Permite realizar item assignment en la lista, 
-        reasignandole un valor al atributo correspondiente al key.
-        """
-        setattr(self, 'e{0}'.format(key), value)
-
-    def __len__(self):
-        """ Retorna la cantidad de elementos existentes.
-        """
-        return self.largo
-
-    def __repr__(self):
-        """ Imprime la lista ligada de manera simple y comprensible,
-        de manera similar a las listas de Python.
-        """
-        rep = '['
-        for a in range(self.largo):
-            rep += '{0}, '.format(getattr(self, 'e{0}'.format(a)))
-        rep = rep[:-2]
-        rep += ']'
-        return rep
-```
+XXXX ------------------XXXXXXXX-------------XXXXXXXX
 
 **1.** Debido a no poder saber la cantidad de puertos a los que llevan las conexiones aleatorias
 pasaré 10 veces por cada conexión para así poder clasificarlas correctamente. 
@@ -83,6 +34,16 @@ inmediato que es del tipo aleatoria.
 
 **4.** El programa da la opción de considerar las rutas ALT y RAND, o no considerarlas para 
 cargar la red. Al considerarlas el programa demora 10 veces más tiempo ya que debe
-recorrer 10 veces cada conexión.
+recorrer 10 veces cada conexión. Es por esto que al no considerarlas, obviamente no realiza la clasificación,
+pero si es que son consideradas sí realiza la clasificación de las conexiones, mostrando el tipo de ellas en el 
+archivo *red.txt*.
 
-**5.** 
+**5.** Para efectos de encontrar la ruta de capacidad máxima, se consideran todas las conexiones como normales,
+aun cuando se hayan encontrado las conexiones RAND y ALT.
+
+**6.** Debido a que mi algoritmo de modelar la red no es rápido, lo corrí una vez y guarde en el archivo
+*ARCOS.txt* todos los arcos del grafo de la red. Con estos arcos pude testear de manera correcta la
+detección de ciclos triangulares y cuadrados, y encontrar los caminos a Bummer.
+Para la detección de rutas bidireccionales, utilicé la 'lista' de todos los pares de padres-destinos
+que se crea al momento de hacer ```cargar_padres(hacker)```. Consideré esto más útil en esta parte de la tarea.
+

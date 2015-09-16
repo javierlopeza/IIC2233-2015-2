@@ -38,7 +38,8 @@ class Conexion:
             self.puertos_destino = ListaLigada()
             self.puertos_destino.append(unico_destino)
             self.tipo = ' '
-            # Normal, solo que por enunciado no se menciona el tipo de esta.
+            # Normal, solo que por enunciado no se
+            # debe mencionar el tipo de esta en el archivo.
 
         # Se verifica si la conexion ha llevado
         # a mas de 2 puertos diferentes (CONEXION ALEATORIA)

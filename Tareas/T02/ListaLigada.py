@@ -34,9 +34,49 @@ class ListaLigada:
         """
         return self.largo
 
+    def __add__(self, other):
+        lista_retorno = ListaLigada()
+        for e1 in range(len(self)):
+            lista_retorno.append(self[e1])
+        for e2 in range(len(other)):
+            lista_retorno.append(other[e2])
+        return lista_retorno
+
+    def pop(self):
+        valor_popeado = getattr(self, "e{0}".format(self.largo - 1))
+        delattr(self, "e{0}".format(self.largo - 1))
+        self.largo -= 1
+        return valor_popeado
+
+    def remove(self, value):
+        i_remover = None
+        for n in range(self.largo):
+            if getattr(self, "e{0}".format(n)) == value:
+                i_remover = n
+                break
+        if i_remover is not None:
+            for i in range(i_remover, self.largo - 1):
+                setattr(self, "e{0}".format(i), getattr(self, "e{0}".format(i + 1)))
+            delattr(self, "e{0}".format(self.largo - 1))
+            self.largo -= 1
+
+    def extend(self, other):
+        for e in range(len(other)):
+            self.append(other[e])
+
+    def contiene(self, valor):
+        """ Retorna True si la lista contiene valor.
+        """
+        for a in range(self.largo):
+            if getattr(self, 'e{0}'.format(a)) == valor:
+                return True
+        return False
+
     def __repr__(self):
         """ Imprime la lista ligada de manera simple y comprensible.
         """
+        if self.largo == 0:
+            return "[]"
         rep = '['
         for a in range(self.largo):
             rep += '{0}, '.format(getattr(self, 'e{0}'.format(a)))

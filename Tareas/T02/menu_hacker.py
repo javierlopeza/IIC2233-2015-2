@@ -5,10 +5,9 @@ from cargar_padres import cargar_padres
 from encontrar_caminos import encontrar_caminos
 from pares_doble_sentido import pares_doble_sentido
 from rutas_dobles import rutas_doble_sentido
-from ciclos_triangulares import ciclos_triangulares
-from ciclos_cuadrados import ciclos_cuadrados
 from ruta_maxima import ruta_maxima
-
+from triangulos import ciclos_triangulares
+from cuadrados import cuadrados_limpios
 
 class Hacker:
     def __init__(self, sistema=None):
@@ -62,9 +61,11 @@ class Hacker:
     def mostrar_datos(self):
         if self.red_bummer:
             print("""
-            INFORMACION DE LA RED MODELADA:
-            -> Cantidad de Puertos: {0}
-            """.format(len(self.red_bummer.puertos)))
+INFORMACION DE LA RED MODELADA:
+   -> Cantidad de Puertos: {0}
+   -> Puerto Bummer: {1}
+            """.format(len(self.red_bummer.puertos),
+                       self.sistema.puerto_final()))
         else:
             print("\n--- ERROR: LA RED NO ESTA CARGADA ---\n")
 
@@ -106,6 +107,7 @@ class Hacker:
 
             print(" ---> BUSCANDO PARES BIDIRECCIONALES")
             self.pares_bi = pares_doble_sentido(self.pares_padre_destino)
+            print(" ---> Porcentaje Revisado: 100%", end="\r")
 
             print(" ---> BUSCANDO RUTAS DOBLE SENTIDO")
             self.rutas_bi = rutas_doble_sentido(self.pares_bi)
@@ -133,36 +135,37 @@ class Hacker:
     def ciclos_triangulares_cuadrados(self):
         if self.red_bummer:
 
-            print(" ---> BUSCANDO CICLOS TRIANGULARES Y CUADRADOS")
-
             if len(self.pares_padre_destino) == 0:
                 print(" ---> ANALIZANDO CONEXIONES")
                 cargar_padres(self)
 
             print(" ---> BUSCANDO CICLOS TRIANGULARES")
-            ciclos_tri = ciclos_triangulares(self.pares_padre_destino)
-            print(" ---> ESCRIBIENDO CICLOS TRIANGULARES EN ciclos.txt")
+            ciclos_tri = ciclos_triangulares(self.red_bummer.arcos)
+            print(" ---> Porcentaje Revisado: 100%", end="\r")
             archivo_ciclos = open("ciclos.txt", "w")
-            for c in range(len(ciclos_tri)):
-                if ciclos_tri[c]:
-                    escribir = "{0} {1} {2}\n".format(
-                        ciclos_tri[c][0],
-                        ciclos_tri[c][1],
-                        ciclos_tri[c][2]
-                    )
-                    archivo_ciclos.write(escribir)
+            for ciclo in ciclos_tri:
+                escribir = "{0} {1} {2}\n".format(
+                    ciclo[0],
+                    ciclo[1],
+                    ciclo[2]
+                )
+                archivo_ciclos.write(escribir)
 
             print(" ---> BUSCANDO CICLOS CUADRADOS")
-            ciclos_cuad = ciclos_cuadrados(self.pares_padre_destino)
-            print(" ---> ESCRIBIENDO CICLOS CUADRADOS EN ciclos.txt")
+            ciclos_cuad = cuadrados_limpios(self.red_bummer.arcos)
+            print(" ---> Porcentaje Revisado: 100%", end="\r")
             for c in range(len(ciclos_cuad)):
-                if ciclos_cuad[c]:
+                if ciclos_cuad[c][0] != ciclos_cuad[c][1] and \
+                                ciclos_cuad[c][0] != ciclos_cuad[c][2] and \
+                                ciclos_cuad[c][0] != ciclos_cuad[c][3] and \
+                                ciclos_cuad[c][1] != ciclos_cuad[c][2] and \
+                                ciclos_cuad[c][1] != ciclos_cuad[c][3] and \
+                                ciclos_cuad[c][2] != ciclos_cuad[c][3]:
                     escribir = "{0} {1} {2} {3}\n".format(
                         ciclos_cuad[c][0],
                         ciclos_cuad[c][1],
                         ciclos_cuad[c][2],
-                        ciclos_cuad[c][3]
-                    )
+                        ciclos_cuad[c][3])
                     archivo_ciclos.write(escribir)
 
             archivo_ciclos.close()
