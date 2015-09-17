@@ -57,7 +57,8 @@ class Conexion:
 
         # Si no es Normal ni Random de 3 puertos, puede ser:
         # Alternante o Random de 2 puertos
-        # --> Aqui se hace una suposicion explicada detalladamente en el README (2).
+        # --> Aqui se hace una suposicion explicada detalladamente
+        # en el README (2).
         conexion_alternante = False
         if not conexion_normal:
             if not conexion_random:
@@ -129,7 +130,8 @@ class Puerto:
             rang = 1
 
         indice_conexion = self.conexion_siguiente
-        # Uso la siguiente conexion con menor pasadas o la siguiente_conexion que le toca al Puerto.
+        # Uso la siguiente conexion con menor pasadas o
+        # la siguiente_conexion que le toca al Puerto.
         hay_menor = False
         pasadas_min = self.conexiones[indice_conexion].pasadas
         for m_p in range(len(self.conexiones)):
@@ -150,7 +152,8 @@ class Puerto:
 
         # Si el robot no me pillo continuo:
         if not sistema.preguntar_puerto_actual()[1]:
-            # A la conexion usada le agrego una pasada y el puerto al que llego.
+            # A la conexion usada le agrego una pasada
+            # y el puerto al que llego.
             ide_puerto_llegada = sistema.preguntar_puerto_actual()[0]
             self.conexiones[indice_conexion].usar(ide_puerto_llegada, rang)
 
@@ -201,7 +204,8 @@ class Red:
         return False
 
     def puerto(self, ide):
-        """ ide corresponde al ide del puerto que se quiere encontrar en la red ya construida.
+        """ ide corresponde al ide del puerto que se
+        quiere encontrar en la red ya construida.
         Retorna el puerto con tal ide.
         """
         for p in range(len(self.puertos)):

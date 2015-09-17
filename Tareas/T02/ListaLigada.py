@@ -29,6 +29,10 @@ class ListaLigada:
         """
         setattr(self, 'e{0}'.format(key), value)
 
+    def __iter__(self):
+        for i in range(self.largo):
+            yield getattr(self, "e{0}".format(i))
+
     def __len__(self):
         """ Retorna la cantidad de elementos existentes.
         """
@@ -56,7 +60,8 @@ class ListaLigada:
                 break
         if i_remover is not None:
             for i in range(i_remover, self.largo - 1):
-                setattr(self, "e{0}".format(i), getattr(self, "e{0}".format(i + 1)))
+                setattr(self, "e{0}".format(i), getattr(self,
+                                                        "e{0}".format(i + 1)))
             delattr(self, "e{0}".format(self.largo - 1))
             self.largo -= 1
 

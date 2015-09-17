@@ -7,7 +7,7 @@ programadores = ['Belen', 'Patricio', 'Jaime', 'Marco', 'Bastian',
                  'Ariel', 'Francisco', 'Francisca', 'Iacopo', 'Enrique',
                  'Patricio', 'Vicente', 'Rodolfo', 'Eduardo', 'Diego',
                  'Guillermo', 'Fernando', 'Juan1', 'Juan2', 'Nicolás',
-                 'Antonio2']
+                 'Antonio2', 'javierlopeza']
 
 
 class Robot(metaclass=MetaRobot):

@@ -1,6 +1,7 @@
 from ListaLigada import ListaLigada
 from copy import deepcopy
 
+
 def dfs(arcos, start):
     grafo = deepcopy(arcos)
     visitados = ListaLigada()

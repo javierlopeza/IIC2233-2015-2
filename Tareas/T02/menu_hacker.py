@@ -8,6 +8,9 @@ from rutas_dobles import rutas_doble_sentido
 from ruta_maxima import ruta_maxima
 from triangulos import ciclos_triangulares
 from cuadrados import cuadrados_limpios
+from hackear_red import hackear_red
+from copy import deepcopy
+
 
 class Hacker:
     def __init__(self, sistema=None):
@@ -78,7 +81,10 @@ INFORMACION DE LA RED MODELADA:
 
             if not self.rutas_a_bummer:
                 print(" ---> BUSCANDO RUTAS A BUMMER")
-                self.rutas_a_bummer = encontrar_caminos(self.red_bummer.arcos, 0, self.sistema.puerto_final())
+                self.rutas_a_bummer = encontrar_caminos(
+                    self.red_bummer.arcos,
+                    0,
+                    self.sistema.puerto_final())
 
             print(" ---> BUSCANDO EL CAMINO MAS CORTO A BUMMER")
             ruta_corta = self.rutas_a_bummer[0]
@@ -91,8 +97,10 @@ INFORMACION DE LA RED MODELADA:
             archivo_rutabummer.write("CONEXION 0")
             for p in range(1, len(ruta_corta) - 1):
                 puerto = ruta_corta[p]
-                archivo_rutabummer.write(' {0}\nCONEXION {1}'.format(puerto))
-            archivo_rutabummer.write(' {0}'.format(self.sistema.puerto_final()))
+                archivo_rutabummer.write(' {0}\nCONEXION {1}'.format(
+                    puerto))
+            archivo_rutabummer.write(' {0}'.format(
+                self.sistema.puerto_final()))
             archivo_rutabummer.close()
             print("\n--- ARCHIVO GENERADO rutaABummer.txt ---\n")
         else:
@@ -115,7 +123,8 @@ INFORMACION DE LA RED MODELADA:
             print(" ---> GENERANDO ARCHIVO rutasDobleSentido.txt")
             archivo_doblesentido = open("rutasDobleSentido.txt", "w")
             for pb in range(len(self.pares_bi)):
-                escribir = "PAR {0} {1}\n".format(self.pares_bi[pb][0], self.pares_bi[pb][1])
+                escribir = "PAR {0} {1}\n".format(self.pares_bi[pb][0],
+                                                  self.pares_bi[pb][1])
                 archivo_doblesentido.write(escribir)
             for rb in range(len(self.rutas_bi)):
                 if self.rutas_bi[rb]:
@@ -155,18 +164,18 @@ INFORMACION DE LA RED MODELADA:
             ciclos_cuad = cuadrados_limpios(self.red_bummer.arcos)
             print(" ---> Porcentaje Revisado: 100%", end="\r")
             for c in range(len(ciclos_cuad)):
-                if ciclos_cuad[c][0] != ciclos_cuad[c][1] and \
-                                ciclos_cuad[c][0] != ciclos_cuad[c][2] and \
-                                ciclos_cuad[c][0] != ciclos_cuad[c][3] and \
-                                ciclos_cuad[c][1] != ciclos_cuad[c][2] and \
-                                ciclos_cuad[c][1] != ciclos_cuad[c][3] and \
-                                ciclos_cuad[c][2] != ciclos_cuad[c][3]:
-                    escribir = "{0} {1} {2} {3}\n".format(
-                        ciclos_cuad[c][0],
-                        ciclos_cuad[c][1],
-                        ciclos_cuad[c][2],
-                        ciclos_cuad[c][3])
-                    archivo_ciclos.write(escribir)
+                if ciclos_cuad[c][0] != ciclos_cuad[c][1]:
+                    if ciclos_cuad[c][0] != ciclos_cuad[c][2]:
+                        if ciclos_cuad[c][0] != ciclos_cuad[c][3]:
+                            if ciclos_cuad[c][1] != ciclos_cuad[c][2]:
+                                if ciclos_cuad[c][1] != ciclos_cuad[c][3]:
+                                    if ciclos_cuad[c][2] != ciclos_cuad[c][3]:
+                                        escribir = "{0} {1} {2} {3}\n".format(
+                                            ciclos_cuad[c][0],
+                                            ciclos_cuad[c][1],
+                                            ciclos_cuad[c][2],
+                                            ciclos_cuad[c][3])
+                                        archivo_ciclos.write(escribir)
 
             archivo_ciclos.close()
 
@@ -184,10 +193,15 @@ INFORMACION DE LA RED MODELADA:
 
             if not self.rutas_a_bummer:
                 print(" ---> BUSCANDO RUTAS A BUMMER")
-                self.rutas_a_bummer = encontrar_caminos(self.red_bummer.arcos, 0, self.sistema.puerto_final())
+                self.rutas_a_bummer = encontrar_caminos(
+                    self.red_bummer.arcos,
+                    0,
+                    self.sistema.puerto_final())
 
             print(" ---> BUSCANDO RUTA CON MAXIMA CAPACIDAD")
-            rutamax_capacidad = ruta_maxima(self.red_bummer.puertos, self.rutas_a_bummer)
+            rutamax_capacidad = ruta_maxima(
+                self.red_bummer.puertos,
+                self.rutas_a_bummer)
 
             rutamax = rutamax_capacidad[0]
             capacidadmax = rutamax_capacidad[1]
@@ -205,7 +219,33 @@ INFORMACION DE LA RED MODELADA:
             print("\n--- ERROR: LA RED NO ESTA CARGADA ---\n")
 
     def hackear_red(self):
-        pass
+        if self.red_bummer:
+
+            if len(self.pares_padre_destino) == 0:
+                print(" ---> ANALIZANDO CONEXIONES")
+                cargar_padres(self)
+
+            # 1. Se hackea la red.
+            nuevos_arcos = deepcopy(self.red_bummer.arcos)
+            nuevos_arcos = hackear_red(nuevos_arcos)
+            # 2. Escribimos primero todos los puertos.
+            archivo_nocycle = open("noCycle.txt", "w")
+            for arco in nuevos_arcos:
+                puerto = arco[0]
+                archivo_nocycle.write('PUERTO {0}\n'.format(puerto))
+            # 3. Escribimos las conexiones.
+            for arco in nuevos_arcos:
+                puerto_base = arco[0]
+                for conexion in arco[1]:
+                    escribir = 'CONEXION {0} {1}\n'.format(puerto_base,
+                                                           conexion)
+                    archivo_nocycle.write(escribir)
+            archivo_nocycle.close()
+            print('\n::: RED BUMMER HACKEADA ::: '
+                  'ARCHIVO noCycle.txt GENERADO :::\n')
+
+        else:
+            print("\n--- ERROR: LA RED NO ESTA CARGADA ---\n")
 
     @staticmethod
     def salir():

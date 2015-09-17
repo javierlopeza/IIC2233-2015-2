@@ -7,7 +7,8 @@ def writefile_red(red_bummer):
     for p in range(len(red_bummer.puertos)):
         for c in range(len(red_bummer.puertos[p].conexiones)):
             puerto_base = red_bummer.puertos[p].conexiones[c].puerto_base
-            for d in range(len(red_bummer.puertos[p].conexiones[c].puertos_destino)):
+            for d in range(len(
+                    red_bummer.puertos[p].conexiones[c].puertos_destino)):
                 puerto_destino = \
                     red_bummer.puertos[p].conexiones[c].puertos_destino[d]
                 tipo_conexion = red_bummer.puertos[p].conexiones[c].tipo

@@ -13,8 +13,13 @@ def cargar_padres(hacker):
             destinos = ListaLigada()
             arcos_s.append(id_padre)
         for c in range(len(hacker.red_bummer.puertos[p].conexiones)):
-            for d in range(len(hacker.red_bummer.puertos[p].conexiones[c].puertos_destino)):
-                id_destino = hacker.red_bummer.puertos[p].conexiones[c].puertos_destino[d]
+            for d in range(len(
+                    hacker.red_bummer.
+                            puertos[p].
+                            conexiones[c].
+                            puertos_destino)):
+                id_destino = \
+                    hacker.red_bummer.puertos[p].conexiones[c].puertos_destino[d]
                 par = ListaLigada()
                 par.append(id_padre)
                 par.append(id_destino)
