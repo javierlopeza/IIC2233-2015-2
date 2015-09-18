@@ -88,3 +88,47 @@ class ListaLigada:
         rep = rep[:-2]
         rep += ']'
         return rep
+
+mi_lista = ListaLigada()
+print(mi_lista) # []
+
+mi_lista.append('elemento A')
+print(mi_lista)     # ['elemento A']
+print(mi_lista[0])  # 'elemento A'
+
+mi_lista[0] = 'otro elemento'
+print(mi_lista)     # ['otro elemento']
+print(mi_lista[0])  # 'otro elemento'
+
+mi_lista.append('elemento B')
+mi_lista.append('elemento C')
+for elemento in mi_lista:
+    print(elemento)
+# 'otro elemento'
+# 'elemento B'
+# 'elemento C'
+
+print(len(mi_lista)) # 3
+
+otra_lista = ListaLigada()
+otra_lista.append('elemento otra lista')
+lista_suma = mi_lista + otra_lista
+print(lista_suma)  # ['otro elemento', 'elemento B', 'elemento C', 'elemento otra lista']
+
+ultimo_elemento = mi_lista.pop()
+print(ultimo_elemento)  # 'elemento C'
+print(mi_lista)         # ['otro elemento', 'elemento B']
+
+mi_lista.append(12345)
+mi_lista.remove('elemento B')
+print(mi_lista)  # ['otro elemento', 12345]
+
+lista123 = ListaLigada()
+lista123.append(1)
+lista123.append(2)
+lista123.append(3)
+mi_lista.extend(lista123)
+print(mi_lista)  # ['otro elemento', 12345, 1, 2, 3]
+
+print(mi_lista.contiene(12345)) # True
+print(mi_lista.contiene('hola')) # False

@@ -1,10 +1,54 @@
 ﻿## Tarea 02
 
 **1.** Se pide detallar cómo implementé las estructuras que utilicé en la Tarea 2.
-La estructura que construí fue ```ListaLigada```.
-Se construye de la siguiente manera:
+La estructura que construí fue ```ListaLigada```. Esta funciona añadiendo/removiendo elementos en atributos de la instancia.
+Por ejemplo:
+```python
+mi_lista = ListaLigada()
+print(mi_lista) # []
 
-XXXX ------------------XXXXXXXX-------------XXXXXXXX
+mi_lista.append('elemento A')
+print(mi_lista)     # ['elemento A']
+print(mi_lista[0])  # 'elemento A'
+
+mi_lista[0] = 'otro elemento'
+print(mi_lista)     # ['otro elemento']
+print(mi_lista[0])  # 'otro elemento'
+
+mi_lista.append('elemento B')
+mi_lista.append('elemento C')
+for elemento in mi_lista:
+    print(elemento)
+# 'otro elemento'
+# 'elemento B'
+# 'elemento C'
+
+print(len(mi_lista)) # 3
+
+otra_lista = ListaLigada()
+otra_lista.append('elemento otra lista')
+lista_suma = mi_lista + otra_lista
+print(lista_suma)  # ['otro elemento', 'elemento B', 'elemento C', 'elemento otra lista']
+
+ultimo_elemento = mi_lista.pop()
+print(ultimo_elemento)  # 'elemento C'
+print(mi_lista)         # ['otro elemento', 'elemento B']
+
+mi_lista.append(12345)
+mi_lista.remove('elemento B')
+print(mi_lista)  # ['otro elemento', 12345]
+
+lista123 = ListaLigada()
+lista123.append(1)
+lista123.append(2)
+lista123.append(3)
+mi_lista.extend(lista123)
+print(mi_lista)  # ['otro elemento', 12345, 1, 2, 3]
+
+print(mi_lista.contiene(12345)) # True
+print(mi_lista.contiene('hola')) # False
+```
+Donde ```__rep__(self)``` imprime la lista de igual manera que como son las listas de Python, para facilitar la programación.
 
 **2.** Debido a no poder saber la cantidad de puertos a los que llevan las conexiones aleatorias
 pasaré 10 veces por cada conexión para así poder clasificarlas correctamente. 
@@ -72,9 +116,9 @@ Luego, al usar el metodo ```hackear_red(mini_red)``` se retorna la mini_red con 
 print(es_fuertemente_conexo(mini_red)) 
 # True
 
-print(hackear_red(mini_red)) 
+mini_red_hackeada = hackear_red(mini_red)) 
 '''
-mini_red = [
+mini_red_hackeada = [
     [0, [3]],
     [1, [6]],
     [2, [5]],
@@ -88,4 +132,7 @@ mini_red = [
     [10, [8]]
 ]
 '''
+
+print(es_fuertemente_conexo(mini_red_hackeada)) 
+# True
 ```
