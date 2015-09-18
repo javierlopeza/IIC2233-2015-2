@@ -51,7 +51,7 @@ que se crea al momento de hacer ```cargar_padres(hacker)```. Consideré esto má
 al eliminar una dejaba de ser o no fuertemente conexo. De esta forma si al eliminar una conexión se mantenía 
 fuertemente conexo, eliminaba definitivamente dicha conexión de la red que se escribirá en el archivo *noCycle.txt*.
 Para testear el hackeo usé la siguiente mini_red (implementada con las ListaLigada obviamente, pero aquí la escribo como
-listas de python para facilitar comprensión del ejemplo):
+listas de Python para facilitar comprensión del ejemplo):
 ```
 mini_red = [
     [0, [2, 3]],
