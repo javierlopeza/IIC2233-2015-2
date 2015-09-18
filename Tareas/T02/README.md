@@ -47,3 +47,45 @@ detección de ciclos triangulares y cuadrados, y encontrar los caminos a Bummer.
 Para la detección de rutas bidireccionales, utilicé la 'lista' de todos los pares de padres-destinos
 que se crea al momento de hacer ```cargar_padres(hacker)```. Consideré esto más útil en esta parte de la tarea.
 
+**7.** Para la parte III donde se pide hackear la red, lo que hice fue ir revisando conexión a conexión, si
+al eliminar una dejaba de ser o no fuertemente conexo. De esta forma si al eliminar una conexión se mantenía 
+fuertemente conexo, eliminaba definitivamente dicha conexión de la red que se escribirá en el archivo *noCycle.txt*.
+Para testear el hackeo usé la siguiente mini_red (implementada con las ListaLigada obviamente, pero aquí la escribo como
+listas de python para facilitar comprensión del ejemplo):
+```
+mini_red = [
+    [0, [2, 3]],
+    [1, [0, 6]],
+    [2, [1, 5]],
+    [3, [5, 10]],
+    [4, [1, 2, 7]],
+    [5, [0, 4]],
+    [6, [8, 9]],
+    [7, [1, 6]],
+    [8, [3, 5]],
+    [9, [7, 10]],
+    [10, [5, 8]]
+]
+```
+Luego, al usar el metodo ```hackear_red(mini_red)``` se retorna la mini_red con menos conexiones manteniendose fuertemente conexa.
+```
+print(es_fuertemente_conexo(mini_red)) 
+# True
+
+print(hackear_red(mini_red)) 
+'''
+mini_red = [
+    [0, [3]],
+    [1, [6]],
+    [2, [5]],
+    [3, [10]],
+    [4, [2, 7]],
+    [5, [4, 0]],
+    [6, [9]],
+    [7, [6, 1]],
+    [8, [5]],
+    [9, [10]],
+    [10, [8]]
+]
+'''
+```
