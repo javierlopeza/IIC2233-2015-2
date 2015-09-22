@@ -22,9 +22,18 @@ class RestrictedAccess(type):
 
 
 class Singleton(type):
-    _instancias = {}
+    instancias = {}
 
     def __call__(cls, *args, **kwargs):
-        if cls not in cls._instancias:
-            cls._instancias[cls] = super(Singleton, cls).__call__(*args, **kwargs)
-        return cls._instancias[cls]
+        if cls not in cls.instancias:
+            cls.instancias[cls] = super().__call__(*args, **kwargs)
+        return cls.instancias[cls]
+
+class A(metaclass = Singleton):
+    def __init__(self, value):
+        self.val = value
+a = A(10) # Se crea una instancia de A
+b = A(20) # Se retorna la instancia que ya estaba creada
+print (a.val, b.val)
+## 10 10
+print (b is a)
