@@ -18,6 +18,7 @@ class BarcoPequeno(Vehiculo):
         self.vida = 30
         self.size = (3, 1)
         self.ataques = [Trident(), Minuteman()]
+        self.simbolo = 'B'
 
 
 class BuqueDeGuerra(Vehiculo):
@@ -29,6 +30,7 @@ class BuqueDeGuerra(Vehiculo):
         self.vida = 60
         self.size = (2, 3)
         self.ataques = [Trident(), Tomahawk()]
+        self.simbolo = 'G'
 
 
 class Lancha(Vehiculo):
@@ -41,6 +43,7 @@ class Lancha(Vehiculo):
         self.size = (2, 1)
         self.ataques = [Trident()]
         self.movimientos = float('infinity')
+        self.simbolo = 'L'
 
 
 class Puerto(Vehiculo):
@@ -53,6 +56,7 @@ class Puerto(Vehiculo):
         self.size = (4, 2)
         self.ataques = [Trident(), Kit()]
         self.movimientos = 0
+        self.simbolo = 'P'
 
 
 class AvionExplorador(Vehiculo):
@@ -63,6 +67,7 @@ class AvionExplorador(Vehiculo):
         self.size = (2, 2)
         self.ataques = [Trident()]
         self.turnos_paralizado = 0
+        self.simbolo = 'E'
 
 
 class KamikazeIXXI(Vehiculo):
@@ -72,6 +77,7 @@ class KamikazeIXXI(Vehiculo):
         self.tipo = 'aereo'
         self.size = (1, 1)
         self.ataques = [Kamikaze()]
+        self.simbolo = 'K'
 
 
 class AvionCaza(Vehiculo):
@@ -81,10 +87,4 @@ class AvionCaza(Vehiculo):
         self.tipo = 'aereo'
         self.size = (1, 1)
         self.ataques = [Trident(), Napalm()]
-
-
-
-barco = BarcoPequeno()
-barco.posicion_actual = [2, 2]
-a = barco.moverse(2,3, None)
-print(a)
+        self.simbolo = 'C'
