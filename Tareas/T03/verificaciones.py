@@ -3,14 +3,17 @@ from copy import deepcopy
 
 def verificar_movimiento(vehiculo, i, j):
     try:
+        if not i.isdigit() or not j.isdigit():
+            raise TypeError('El o los valores ingresados no son validos.')
+
+        i = int(i)
+        j = int(j)
+
         if not vehiculo.orientacion:
             raise Exception('La orientacion del vehiculo no esta seteada')
 
         if not vehiculo.nombre:
             raise Exception('No se ha instanciado el vehiculo en detalle')
-
-        if not (isinstance(i, int) and isinstance(j, int)):
-            raise TypeError('Revise las coordenadas entregadas')
 
         if i < 0 or j < 0:
             raise Exception('Coordenadas negativas')

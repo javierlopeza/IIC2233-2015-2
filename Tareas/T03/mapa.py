@@ -6,7 +6,7 @@ from verificaciones import \
 
 
 class Mapa:
-    def __init__(self, n):
+    def __init__(self, n=0):
         self.sector = {'aereo': [], 'maritimo': []}
         self.vehiculos_in = {}
         self.armado = False
@@ -23,10 +23,7 @@ class Mapa:
             if n <= 0:
                 raise Exception('Dimension n negativa o cero')
 
-        except TypeError as err:
-            print('Error: {}'.format(err))
-
-        except Exception as err:
+        except (Exception, TypeError) as err:
             print('Error: {}'.format(err))
 
         else:
@@ -39,26 +36,36 @@ class Mapa:
             self.n = n
             self.armado = True
 
-    def mover_vehiculo(self, i, j, vehiculo):
+    def mover_vehiculo(self, vehiculo):
         try:
             if not isinstance(vehiculo, Vehiculo):
                 raise TypeError('El vehiculo entregado no es una'
                                 ' instancia de la clase Vehiculo')
 
+            i = input('Ingrese la fila a la que desea mover el vehiculo {}: '.format(vehiculo.nombre))
+            j = input('Ingrese la columna a la que desea mover el vehiculo {}: '.format(vehiculo.nombre))
+
             if verificar_movimiento(vehiculo, i, j):
+                i = int(i)
+                j = int(j)
                 if verificar_limite_movimiento(vehiculo, i, j):
                     verificar_movimiento_mapa(vehiculo, i, j, self)
 
         except TypeError as err:
             print('Error: {}'.format(err))
 
-    def agregar_vehiculo(self, i, j, vehiculo):
+    def agregar_vehiculo(self, vehiculo):
         try:
             if not isinstance(vehiculo, Vehiculo):
                 raise TypeError('El vehiculo entregado no es una'
                                 ' instancia de la clase Vehiculo')
 
+            i = input('Ingrese la fila en la que desea posicionar el vehiculo {}: '.format(vehiculo.nombre))
+            j = input('Ingrese la columna en la que desea posicionar el vehiculo {}: '.format(vehiculo.nombre))
+
             if verificar_movimiento(vehiculo, i, j):
+                i = int(i)
+                j = int(j)
                 verificar_movimiento_mapa(vehiculo, i, j, self)
 
         except TypeError as err:

@@ -28,7 +28,7 @@ class Vehiculo:
         else:
             return self.casillas_usadas[0]
 
-    def setear_orientacion(self, orientacion):
+    def setear_orientacion(self):
         try:
             if not self.size:
                 raise Exception('No se ha instanciado el vehiculo en detalle')
@@ -37,12 +37,17 @@ class Vehiculo:
                 raise Exception('Ya esta seteada la orientacion, '
                                 'no se puede cambiar')
 
+            orientacion = input('Ingrese la orientacion (vertical u horizontal) '
+                                'que desea para el vehiculo {} [v/h]: '.
+                                format(self.nombre))
+
             if orientacion != 'h' and orientacion != 'v':
                 raise TypeError('No es el tipo de argumentos que'
                                 ' recibe como orientacion')
 
         except Exception as err:
             print('Error: {}'.format(err))
+            self.setear_orientacion()
 
         else:
             self.orientacion = orientacion
@@ -52,6 +57,3 @@ class Vehiculo:
             elif self.orientacion == 'v':
                 self.ancho = min(self.size)
                 self.alto = max(self.size)
-
-    def atacar(self):
-        pass

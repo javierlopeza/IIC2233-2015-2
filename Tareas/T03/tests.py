@@ -1,25 +1,24 @@
-
+import unittest
 from mapa import Mapa
-from vehiculos import BarcoPequeno, Lancha, AvionCaza, KamikazeIXXI
+from vehiculo import Vehiculo
+from ataque import Ataque
+from vehiculos import BarcoPequeno, BuqueDeGuerra, AvionCaza, AvionExplorador, KamikazeIXXI, Lancha, Puerto
+from ataques import Trident, Tomahawk, Napalm, Minuteman, Kamikaze, Kit
 
 map = Mapa(5)
 barco = BarcoPequeno()
 lancha = Lancha()
 avion = AvionCaza()
-avion2 = AvionCaza()
 kam = KamikazeIXXI()
 
-barco.setear_orientacion('v')
-lancha.setear_orientacion('h')
-avion.setear_orientacion('v')
-avion2.setear_orientacion('v')
-kam.setear_orientacion('v')
+barco.setear_orientacion()
+avion.setear_orientacion()
+kam.setear_orientacion()
 
-map.agregar_vehiculo(2,2, barco)
-map.agregar_vehiculo(3,3, avion)
-map.agregar_vehiculo(4,4, kam)
-map.mover_vehiculo(3, 4, kam)
-map.mover_vehiculo(3, 3, kam)
-map.mover_vehiculo(2, 3, avion)
-map.mover_vehiculo(3, 3, kam)
+map.agregar_vehiculo(barco)
+map.agregar_vehiculo(avion)
+map.agregar_vehiculo(kam)
+map.mover_vehiculo(avion)
+map.mover_vehiculo(kam)
+map.mover_vehiculo(barco)
 print(map)
