@@ -6,11 +6,11 @@ from verificaciones import \
 
 class Vehiculo:
     def __init__(self):
+        self.movimientos = 1
         self.nombre = None
         self.size = None
         self.tipo = ''
         self.simbolo = ''
-        self.movimientos = 1
         self.casillas_usadas = []
         self.orientacion = None
         self.ancho = 0
@@ -53,15 +53,5 @@ class Vehiculo:
                 self.ancho = min(self.size)
                 self.alto = max(self.size)
 
-    def mover(self, i, j, mapa):
-        """
-        Recibe las coordenadas i,j de la posicion a la que se quiere mover.
-        Y el mapa del usuario poseedor del vehiculo.
-        Verifica si la coordenada i,j esta disponible en el mapa,
-        de ser asi cambia la posicion del vehiculo
-        (restringido a sus posibles movimientos) retornando True,
-        de lo contrario retorna False.
-        """
-        if verificar_movimiento(self, i, j):
-            if verificar_limite_movimiento(self, i, j):
-                verificar_movimiento_mapa(self, i, j, mapa)
+    def atacar(self):
+        pass

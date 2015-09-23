@@ -1,12 +1,14 @@
 from vehiculo import Vehiculo
 from verificaciones import \
     verificar_movimiento, \
-    verificar_movimiento_mapa
+    verificar_movimiento_mapa, \
+    verificar_limite_movimiento
 
 
 class Mapa:
     def __init__(self, n):
         self.sector = {'aereo': [], 'maritimo': []}
+        self.vehiculos_in = {}
         self.armado = False
         self.armar_mapa(n)
 
@@ -37,6 +39,19 @@ class Mapa:
             self.n = n
             self.armado = True
 
+    def mover_vehiculo(self, i, j, vehiculo):
+        try:
+            if not isinstance(vehiculo, Vehiculo):
+                raise TypeError('El vehiculo entregado no es una'
+                                ' instancia de la clase Vehiculo')
+
+            if verificar_movimiento(vehiculo, i, j):
+                if verificar_limite_movimiento(vehiculo, i, j):
+                    verificar_movimiento_mapa(vehiculo, i, j, self)
+
+        except TypeError as err:
+            print('Error: {}'.format(err))
+
     def agregar_vehiculo(self, i, j, vehiculo):
         try:
             if not isinstance(vehiculo, Vehiculo):
@@ -48,6 +63,9 @@ class Mapa:
 
         except TypeError as err:
             print('Error: {}'.format(err))
+
+    def eliminar_vehiculo(self, nombre_vehiculo):
+        return self.vehiculos_in.pop(nombre_vehiculo)
 
     def __str__(self):
         try:
