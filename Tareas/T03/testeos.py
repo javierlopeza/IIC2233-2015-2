@@ -36,7 +36,7 @@ class TestearVehiculo(unittest.TestCase):
 
     def test_setear_orientacion(self):
         self.stats.size = [1,3]
-        self.stats.setear_orientacion('h')
+        self.stats.setear_orientacion()
         self.assertEqual(self.stats.orientacion, 'h')
         self.assertEqual(self.stats.alto, 1)
         self.assertEqual(self.stats.ancho, 3)

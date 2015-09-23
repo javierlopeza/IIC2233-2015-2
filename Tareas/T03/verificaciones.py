@@ -1,8 +1,21 @@
 from copy import deepcopy
 
 
-def verificar_movimiento(vehiculo, i, j):
+def verificar_movimiento(vehiculo, ij):
     try:
+        if not ',' in ij:
+            raise TypeError('Verifique la coordenada ingresada, '
+                            'debe ser de la forma: i,j')
+
+        l_ij = ij.split(',')
+
+        if not len(l_ij) == 2:
+            raise TypeError('Verifique la coordenada ingresada, '
+                            'debe ser de la forma: i,j')
+
+        i = l_ij[0]
+        j = l_ij[1]
+
         if not i.isdigit() or not j.isdigit():
             raise TypeError('El o los valores ingresados no son validos.')
 

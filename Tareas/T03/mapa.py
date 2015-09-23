@@ -42,12 +42,13 @@ class Mapa:
                 raise TypeError('El vehiculo entregado no es una'
                                 ' instancia de la clase Vehiculo')
 
-            i = input('Ingrese la fila a la que desea mover el vehiculo {}: '.format(vehiculo.nombre))
-            j = input('Ingrese la columna a la que desea mover el vehiculo {}: '.format(vehiculo.nombre))
+            ij = input('Ingrese las coordenadas (fila,columna) '
+                       'a la que desea mover el vehiculo {} [i,j]: '.
+                       format(vehiculo.nombre))
 
-            if verificar_movimiento(vehiculo, i, j):
-                i = int(i)
-                j = int(j)
+            if verificar_movimiento(vehiculo, ij):
+                i = int(ij.split(',')[0])
+                j = int(ij.split(',')[1])
                 if verificar_limite_movimiento(vehiculo, i, j):
                     verificar_movimiento_mapa(vehiculo, i, j, self)
 
@@ -60,13 +61,19 @@ class Mapa:
                 raise TypeError('El vehiculo entregado no es una'
                                 ' instancia de la clase Vehiculo')
 
-            i = input('Ingrese la fila en la que desea posicionar el vehiculo {}: '.format(vehiculo.nombre))
-            j = input('Ingrese la columna en la que desea posicionar el vehiculo {}: '.format(vehiculo.nombre))
+            ij = input('Ingrese las coordenadas (fila,columna) '
+                       'en la que desea posicionar el vehiculo {} [i,j]: '.
+                       format(vehiculo.nombre))
 
-            if verificar_movimiento(vehiculo, i, j):
-                i = int(i)
-                j = int(j)
+            if verificar_movimiento(vehiculo, ij):
+                i = int(ij.split(',')[0])
+                j = int(ij.split(',')[1])
                 verificar_movimiento_mapa(vehiculo, i, j, self)
+                if vehiculo.casillas_usadas:
+                    print('--- Vehiculo {0} agregado correctamente'
+                          ' en la casilla ({1}, {2}) ---'.format(vehiculo.nombre,
+                                                             i, j))
+                    return True
 
         except TypeError as err:
             print('Error: {}'.format(err))
