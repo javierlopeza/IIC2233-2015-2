@@ -71,15 +71,30 @@ class Mapa:
                 verificar_movimiento_mapa(vehiculo, i, j, self)
                 if vehiculo.casillas_usadas:
                     print('--- Vehiculo {0} agregado correctamente'
-                          ' en la casilla ({1}, {2}) ---'.format(vehiculo.nombre,
-                                                             i, j))
+                          ' en la casilla ({1}, {2}) ---'.
+                          format(vehiculo.nombre, i, j))
                     return True
 
         except TypeError as err:
             print('Error: {}'.format(err))
 
     def eliminar_vehiculo(self, nombre_vehiculo):
-        return self.vehiculos_in.pop(nombre_vehiculo)
+        try:
+            if not self.vehiculos_in:
+                raise Exception('No hay vehiculos en el mapa.')
+            return self.vehiculos_in.pop(nombre_vehiculo)
+
+        except Exception as err:
+            print('Error: {}'.format(err))
+
+    def marcar(self, sector_e, i, j, simbolo):
+        try:
+            if not self.sector[sector_e]:
+                raise Exception('No se han cargado los sectores del mapa.')
+            self.sector[sector_e][i][j] = simbolo
+
+        except Exception as err:
+            print('Error: {}'.format(err))
 
     def __str__(self):
         try:

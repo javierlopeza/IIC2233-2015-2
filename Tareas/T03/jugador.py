@@ -3,6 +3,8 @@ class Jugador:
         self.nombre = nombre
         self.id = id
         self.mapa = None
+        self.radar = None
         self.flota = None
         self.flota_activa = None
         self.flota_muerta = []
+
