@@ -77,11 +77,20 @@ def cargar_vehiculos(partida):
 
 
 def cargar_vehiculos_a_mapa(self):
-    for jugador in self.jugadores.values():
-        print('\nPLAYER {0}: {1}, proceda a '
-              'posicionar sus vehiculos en su mapa.'.
-              format(jugador.id, jugador.nombre))
-        for vehiculo in jugador.flota:
-            vehiculo.setear_orientacion()
-            while not vehiculo.casillas_usadas:
-                jugador.mapa.agregar_vehiculo(vehiculo)
+    try:
+        if not self.jugadores:
+            raise Exception('Los jugadores no estan cargados.')
+
+        for jugador in self.jugadores.values():
+            print('\nPLAYER {0}: {1}, proceda a '
+                  'posicionar sus vehiculos en su mapa.'.
+                  format(jugador.id, jugador.nombre))
+            for vehiculo in jugador.flota:
+                vehiculo.setear_orientacion()
+                while not vehiculo.casillas_usadas:
+                    jugador.mapa.agregar_vehiculo(vehiculo)
+
+        self.cargado = True
+
+    except Exception as err:
+        print('Error: {}'.format(err))

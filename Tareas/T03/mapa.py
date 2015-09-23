@@ -8,7 +8,6 @@ from verificaciones import \
 class Mapa:
     def __init__(self, n=0):
         self.sector = {'aereo': [], 'maritimo': []}
-        self.vehiculos_in = {}
         self.armado = False
         self.armar_mapa(n)
 
@@ -49,21 +48,21 @@ class Mapa:
             if verificar_movimiento(vehiculo, ij):
                 i = int(ij.split(',')[0])
                 j = int(ij.split(',')[1])
-                if verificar_limite_movimiento(vehiculo, i, j):
-                    verificar_movimiento_mapa(vehiculo, i, j, self)
+                return verificar_movimiento_mapa(vehiculo, i, j, self)
 
         except TypeError as err:
             print('Error: {}'.format(err))
 
-    def agregar_vehiculo(self, vehiculo):
+    def agregar_vehiculo(self, vehiculo, ij=None):
         try:
             if not isinstance(vehiculo, Vehiculo):
                 raise TypeError('El vehiculo entregado no es una'
                                 ' instancia de la clase Vehiculo')
 
-            ij = input('Ingrese las coordenadas (fila,columna) '
-                       'en la que desea posicionar el vehiculo {} [i,j]: '.
-                       format(vehiculo.nombre))
+            if not ij:
+                ij = input('Ingrese las coordenadas (fila,columna) '
+                           'en la que desea posicionar el vehiculo {} [i,j]: '.
+                           format(vehiculo.nombre))
 
             if verificar_movimiento(vehiculo, ij):
                 i = int(ij.split(',')[0])
@@ -78,11 +77,15 @@ class Mapa:
         except TypeError as err:
             print('Error: {}'.format(err))
 
-    def eliminar_vehiculo(self, nombre_vehiculo):
+    def eliminar_vehiculo(self, vehiculo, sector_e):
         try:
-            if not self.vehiculos_in:
-                raise Exception('No hay vehiculos en el mapa.')
-            return self.vehiculos_in.pop(nombre_vehiculo)
+            if not self.sector[sector_e]:
+                raise Exception('No hay vehiculos en sector {}'.
+                                format(sector_e))
+            for casilla in vehiculo.casillas_usadas:
+                i = casilla[0]
+                j = casilla[1]
+                self.sector[sector_e][i][j] = '~'
 
         except Exception as err:
             print('Error: {}'.format(err))

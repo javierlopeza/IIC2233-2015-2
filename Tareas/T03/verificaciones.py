@@ -81,14 +81,13 @@ def verificar_movimiento_mapa(vehiculo, i, j, mapa):
             else:
                 sector_aux[ii][jj] = vehiculo.simbolo
         mapa.sector[vehiculo.tipo] = sector_aux
-        mapa.vehiculos_in.update({vehiculo.nombre: vehiculo})
         vehiculo.casillas_usadas = casillas_nuevas_aux
 
     except Exception as err:
         print('Error: {}'.format(err))
 
     else:
-        return True
+        return i, j
 
 
 def verificar_limite_movimiento(vehiculo, i, j):

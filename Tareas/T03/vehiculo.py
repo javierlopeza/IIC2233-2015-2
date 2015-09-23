@@ -9,6 +9,7 @@ class Vehiculo:
         self.movimientos = 1
         self.nombre = None
         self.size = None
+        self.ataques = []
         self.tipo = ''
         self.simbolo = ''
         self.casillas_usadas = []
@@ -28,7 +29,7 @@ class Vehiculo:
         else:
             return self.casillas_usadas[0]
 
-    def setear_orientacion(self):
+    def setear_orientacion(self, orientacion=None):
         try:
             if not self.size:
                 raise Exception('No se ha instanciado el vehiculo en detalle')
@@ -36,10 +37,10 @@ class Vehiculo:
             if self.orientacion:
                 raise Exception('Ya esta seteada la orientacion, '
                                 'no se puede cambiar')
-
-            orientacion = input('Ingrese la orientacion (vertical u horizontal) '
-                                'que desea para el vehiculo {} [v/h]: '.
-                                format(self.nombre))
+            if not orientacion:
+                orientacion = input('Ingrese la orientacion (vertical u horizontal) '
+                                    'que desea para el vehiculo {} [v/h]: '.
+                                    format(self.nombre))
 
             if orientacion != 'h' and orientacion != 'v':
                 raise TypeError('No es el tipo de argumentos que'
@@ -57,3 +58,31 @@ class Vehiculo:
             elif self.orientacion == 'v':
                 self.ancho = min(self.size)
                 self.alto = max(self.size)
+
+    def mostrar_ataques_disponibles(self):
+        try:
+            if not self.ataques:
+                raise Exception('No se han cargado los ataques al vehiculo')
+
+            ret = ''
+            for ataque_disp in self.ataques_disponibles:
+                ret += '  [{0}]: {1}\n'.format(
+                    self.ataques_disponibles.index(ataque_disp),
+                    ataque_disp.nombre)
+
+            print(ret)
+
+        except Exception as err:
+            print('Error: {}'.format(err))
+
+    @property
+    def ataques_disponibles(self):
+        ret = []
+        for ataque in self.ataques:
+            if ataque.disponible \
+                    and ataque.nombre != 'GBU-43/B Massive ' \
+                                         'Ordnance Air Blast ' \
+                                         'Paralizer' \
+                    and ataque.nombre != 'Kit de Ingenieros':
+                ret.append(ataque)
+        return ret

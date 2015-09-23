@@ -12,8 +12,7 @@ class Tomahawk(Ataque):
     def __init__(self):
         super().__init__()
         self.nombre = 'Misil de crucrero BGM-109 Tomahawk'
-        self.area_atacada = (1, 15)
-        self.damage = 3
+        self.damage = 5
         self.disponibilidad = 3
 
 

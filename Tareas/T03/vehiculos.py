@@ -17,7 +17,7 @@ class BarcoPequeno(Vehiculo):
         self.resistencia = 30
         self.vida = 30
         self.size = (3, 1)
-        self.ataques = [Trident(), Minuteman()]
+        self.ataques = [Trident(), Minuteman(), Paralizer()]
         self.simbolo = 'B'
 
 
@@ -29,7 +29,7 @@ class BuqueDeGuerra(Vehiculo):
         self.resistencia = 60
         self.vida = 60
         self.size = (2, 3)
-        self.ataques = [Trident(), Tomahawk()]
+        self.ataques = [Trident(), Tomahawk(), Paralizer()]
         self.simbolo = 'G'
 
 
@@ -41,7 +41,7 @@ class Lancha(Vehiculo):
         self.resistencia = 1
         self.vida = 1
         self.size = (2, 1)
-        self.ataques = [Trident()]
+        self.ataques = [Trident(), Paralizer()]
         self.movimientos = float('infinity')
         self.simbolo = 'L'
 
@@ -54,7 +54,7 @@ class Puerto(Vehiculo):
         self.resistencia = 80
         self.vida = 80
         self.size = (4, 2)
-        self.ataques = [Trident(), Kit()]
+        self.ataques = [Trident(), Kit(), Paralizer()]
         self.movimientos = 0
         self.simbolo = 'P'
 
@@ -66,6 +66,7 @@ class AvionExplorador(Vehiculo):
         self.tipo = 'aereo'
         self.size = (2, 2)
         self.ataques = [Trident()]
+        self.movimientos = 0
         self.turnos_paralizado = 0
         self.simbolo = 'E'
 
@@ -76,7 +77,8 @@ class KamikazeIXXI(Vehiculo):
         self.nombre = 'Kamikaze IXXI'
         self.tipo = 'aereo'
         self.size = (1, 1)
-        self.ataques = [Kamikaze()]
+        self.ataques = [Trident(), Kamikaze()]
+        self.movimientos = 0
         self.simbolo = 'K'
 
 
@@ -87,4 +89,5 @@ class AvionCaza(Vehiculo):
         self.tipo = 'aereo'
         self.size = (1, 1)
         self.ataques = [Trident(), Napalm()]
+        self.movimientos = 0
         self.simbolo = 'C'
