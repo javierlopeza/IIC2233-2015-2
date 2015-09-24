@@ -70,6 +70,9 @@ class AvionExplorador(Vehiculo):
         self.turnos_paralizado = 0
         self.simbolo = 'E'
 
+    def paralizar(self):
+        self.turnos_paralizado = 5
+
 
 class KamikazeIXXI(Vehiculo):
     def __init__(self):

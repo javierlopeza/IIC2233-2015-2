@@ -1,3 +1,6 @@
+from random import randint, choice
+
+
 class Jugador:
     def __init__(self, nombre, ide):
         self.nombre = nombre
@@ -46,14 +49,26 @@ class Jugador:
                 opciones.update({str(proximo_indice): self.explorar})
                 menu_impreso += '  [{0}]: Explorar\n'. \
                     format(str(proximo_indice))
+                proximo_indice += 1
                 break
+
+        opciones.update({str(proximo_indice): self.paralizar})
+        menu_impreso += '  [{0}]: Paralizar Avion Explorador Enemigo\n'. \
+            format(str(proximo_indice))
+        proximo_indice += 1
+
+        opciones.update({str(proximo_indice): self.terminar_turno})
+        menu_impreso += '  [{0}]: Terminar Turno\n'. \
+            format(str(proximo_indice))
 
         print(menu_impreso)
 
         eleccion = input("Ingrese Opcion: ")
         accion = opciones.get(eleccion)
         if accion:
-            if accion.__name__ == 'atacar':
+            if accion.__name__ == 'atacar' \
+                    or accion.__name__ == 'explorar' \
+                    or accion.__name__ == 'paralizar':
                 accion(oponente)
             else:
                 accion()
@@ -73,7 +88,11 @@ class Jugador:
     def ver_radar(self):
         print('\n=== RADAR ===\n')
         print(self.radar)
-        print(' X: Ataque Efectivo  |  O: Ataque Fallado')
+        print('SIMBOLOGIA  ->  A: Vehiculo enemigo atacado  '
+              '|  X: Vehiculo enemigo muerto  '
+              '|  O: Disparo al agua  '
+              '|  F: Vehiculo encontrado con el explorador  '
+              '|  E: Coordenada explorador revelada por el enemigo')
 
     def mostrar_flota_activa(self):
         try:
@@ -124,6 +143,29 @@ class Jugador:
                         vehiculo.nombre)
             print(ret)
             return v_reparables
+
+        except Exception as err:
+            print('Error: {}'.format(err))
+
+    def mostrar_flota_paralizadora(self):
+        try:
+            if not self.flota_activa:
+                raise Exception('No se han cargado los vehiculos a la flota')
+
+            v_paralizadores = []
+            ret = ''
+            for vehiculo in self.flota_activa:
+                for ataque in vehiculo.ataques:
+                    if ataque.nombre == 'GBU-43/B Massive ' \
+                                        'Ordnance Air Blast ' \
+                                        'Paralizer':
+                        v_paralizadores.append(vehiculo)
+                        ret += '  [{0}]: {1}\n'.format(
+                            self.flota_activa.index(vehiculo),
+                            vehiculo.nombre)
+                        break
+            print(ret)
+            return v_paralizadores
 
         except Exception as err:
             print('Error: {}'.format(err))
@@ -274,7 +316,8 @@ class Jugador:
             ataque_elegido_inst.usadas += 1
             ataque_elegido_inst.usar()
 
-            exito = 'NO fue exitoso'
+            exito = False
+            n_piezas_afectadas = 0
             for casilla in casillas_atacadas:
                 ii = casilla[0]
                 jj = casilla[1]
@@ -292,7 +335,8 @@ class Jugador:
                     for vehiculo_oponente in oponente.flota_activa:
                         if vehiculo_oponente.simbolo == \
                                 simbolo_casilla_oponente:
-                            exito = 'fue exitoso'
+                            exito = True
+                            n_piezas_afectadas += 1
                             vehiculo_victima = vehiculo_oponente
                             vida_previa = vehiculo_victima.vida
                             # Le baja la vida al vehiculo oponente.
@@ -307,7 +351,9 @@ class Jugador:
                                 (vida_previa - vehiculo_victima.vida)
                             # Si el vehiculo se ha destruido se retorna
                             # el tipo y sus coordenadas.
+                            vehiculo_destruido = False
                             if vehiculo_victima.vida == 0:
+                                vehiculo_destruido = True
                                 retornar = 'el vehiculo {0} y lo destruyo'. \
                                     format(vehiculo_victima.nombre)
                                 oponente.flota_muerta.append(vehiculo_victima)
@@ -323,8 +369,8 @@ class Jugador:
                             # del ataque.
                             else:
                                 retornar = 'un vehiculo'
-                            if not es_tom:
-                                self.radar.marcar('maritimo', ii, jj, 'X')
+                            if not es_tom and not vehiculo_destruido:
+                                self.radar.marcar('maritimo', ii, jj, 'A')
                             break
 
             if not ataque_elegido_inst.nombre == 'Misil de crucrero' \
@@ -335,13 +381,18 @@ class Jugador:
                              ii,
                              jj))
             else:
-                print('\n--- El ataque {} ---'.format(exito))
+                if exito:
+                    print('\n--- El ataque fue exitoso '
+                          'y se afectaron {0} piezas enemigas ---'.
+                          format(n_piezas_afectadas))
+                else:
+                    print('\n--- El ataque NO fue exitoso')
 
-                if ataque_elegido_inst.nombre == 'Kamikaze':
-                    # El Kamikaze IXXI muere luego de atacar.
-                    self.mapa.eliminar_vehiculo(vehiculo_atacador_inst, 'aereo')
-                    self.flota_muerta.append(vehiculo_atacador_inst)
-                    self.flota_activa.remove(vehiculo_atacador_inst)
+            if ataque_elegido_inst.nombre == 'Kamikaze':
+                # El Kamikaze IXXI muere luego de atacar.
+                self.mapa.eliminar_vehiculo(vehiculo_atacador_inst, 'aereo')
+                self.flota_muerta.append(vehiculo_atacador_inst)
+                self.flota_activa.remove(vehiculo_atacador_inst)
 
         except (Exception, TypeError, IndexError) as err:
             print('Error: {}'.format(err))
@@ -377,11 +428,13 @@ class Jugador:
                                 'Quedan {} turnos para que vuelva a estar'
                                 'disponible.'.format(kit.turnos_pendientes))
 
-            print('\n=== VEHICULOS MARITIMOS REPARABLES CON EL KIT DE INGENIEROS ===')
+            print('\n=== VEHICULOS MARITIMOS REPARABLES CON '
+                  'EL KIT DE INGENIEROS ===')
             v_reparables = self.mostrar_flota_maritima_reparable()
 
             if len(v_reparables) == 0:
-                raise Exception('No hay ningun vehiculo maritimo que se pueda reparar.')
+                raise Exception('No hay ningun vehiculo maritimo'
+                                ' que se pueda reparar.')
 
             vehiculo_reparar = input('Ingrese el numero del vehiculo '
                                      'que desea reparar: ')
@@ -410,18 +463,232 @@ class Jugador:
 
             self.terminar_turno()
 
-        except Exception as err:
+        except (Exception, IndexError, TypeError) as err:
             print('Error: {}'.format(err))
 
-    def explorar(self):
-        self.terminar_turno()
+    def explorar(self, oponente):
+        try:
+            tiene_explorador = False
+            explorador = None
+            for vehiculo in self.flota_activa:
+                if vehiculo.nombre == 'Avion Explorador':
+                    tiene_explorador = True
+                    explorador = vehiculo
+                    break
+
+            if not tiene_explorador:
+                raise Exception('El jugador {0} no tiene Avion Explorador'.
+                                format(self.nombre))
+
+            if explorador.turnos_paralizado:
+                raise Exception('El Avion Explorador esta paralizado. '
+                                'Quedan {} turnos para que vuelva a estar'
+                                ' disponible.'.
+                                format(explorador.turnos_paralizado))
+
+            ij_explorar = input('Ingrese la coordenada central '
+                                'del area de 3x3 a explorar [i,j]: ')
+
+            if ',' not in ij_explorar:
+                raise TypeError('Formato invalido de coordenada, '
+                                'debe ser de la forma i,j')
+
+            ij_lista = ij_explorar.split(',')
+            if len(ij_lista) != 2:
+                raise TypeError('Formato invalido de coordenada, '
+                                'debe ser de la forma i,j')
+
+            icentral = ij_lista[0]
+            jcentral = ij_lista[1]
+            if not icentral.isdigit() or not jcentral.isdigit():
+                raise TypeError('Se deben ingreser numeros validos '
+                                'como coordenadas.')
+
+            icentral = int(icentral)
+            jcentral = int(jcentral)
+            if icentral >= self.mapa.n or jcentral >= self.mapa.n:
+                raise IndexError('La casilla ingresada no esta dentro de '
+                                 'las dimensiones del mapa.')
+
+            casillas_explorar = []
+            for n in range(2):
+                for m in range(2):
+                    c1 = [icentral + n, jcentral + m]
+                    if self.mapa.n > (icentral + n) >= 0:
+                        if self.mapa.n > jcentral + m >= 0:
+                            if c1 not in casillas_explorar:
+                                casillas_explorar.append(c1)
+                    c2 = [icentral - n, jcentral - m]
+                    if self.mapa.n > icentral - n >= 0:
+                        if self.mapa.n > jcentral - m >= 0:
+                            if c2 not in casillas_explorar:
+                                casillas_explorar.append(c2)
+                    c3 = [icentral - n, jcentral + m]
+                    if self.mapa.n > icentral - n >= 0:
+                        if self.mapa.n > jcentral + m >= 0:
+                            if c3 not in casillas_explorar:
+                                casillas_explorar.append(c3)
+                    c4 = [icentral + n, jcentral - m]
+                    if self.mapa.n > icentral + n >= 0:
+                        if self.mapa.n > jcentral - m >= 0:
+                            if c4 not in casillas_explorar:
+                                casillas_explorar.append(c4)
+
+            for casilla in casillas_explorar:
+                iexp = casilla[0]
+                jexp = casilla[1]
+                if oponente.mapa.sector['maritimo'][iexp][jexp] != '~':
+                    print('--- Se encontro una pieza de vehiculo enemigo'
+                          ' en la casilla ({0}, {1}) y '
+                          'se guardo en el radar como F ---'.
+                          format(iexp, jexp))
+                    self.radar.sector['maritimo'][iexp][jexp] = 'F'
+
+            revelar_coordenada = randint(0, 1)
+
+            if revelar_coordenada:
+                casilla_revelada = choice(explorador.casillas_usadas)
+                ir = casilla_revelada[0]
+                jr = casilla_revelada[1]
+                print('\n--- El Avion Explorador ha revelado la '
+                      'coordenada ({0}, {1}) a tu oponente, '
+                      'quedando esta registrada'
+                      ' en el radar enemigo como E ---\n'.
+                      format(ir, jr))
+                oponente.radar.sector['aereo'][ir][jr] = 'E'
+
+            else:
+                print('\n--- El Avion Explorador fue discreto '
+                      'y no revelo ninguna coordenada ---\n')
+
+            self.terminar_turno()
+
+        except (Exception, TypeError, IndexError) as err:
+            print('Error: {}'.format(err))
+
+    def paralizar(self, oponente):
+        try:
+            print('\n=== VEHICULOS MARITIMOS '
+                  'CON GBU-43/B Massive Ordnance '
+                  'Air Blast Paralizer ===')
+            v_paralizadores = self.mostrar_flota_paralizadora()
+
+            if len(v_paralizadores) == 0:
+                raise Exception('Ningun vehiculo tiene GBU-43/B '
+                                'Massive Ordnance Air Blast Paralizer')
+
+            vehiculo_paralizador = input('Ingrese el numero del '
+                                         'vehiculo con el que quiere '
+                                         'paralizar: ')
+
+            if not vehiculo_paralizador.isdigit():
+                raise TypeError('No es un numero valido')
+
+            vehiculo_paralizador = int(vehiculo_paralizador)
+            if vehiculo_paralizador >= len(v_paralizadores):
+                raise TypeError('No existe el numero {}'
+                                ' en las opciones'.
+                                format(vehiculo_paralizador))
+
+            vehiculo_paralizador_inst = v_paralizadores[vehiculo_paralizador]
+
+            paralizer_inst = None
+            for ataque in vehiculo_paralizador_inst.ataques:
+                if ataque.nombre == 'GBU-43/B Massive Ordnance ' \
+                                    'Air Blast Paralizer':
+                    paralizer_inst = ataque
+                    break
+
+            if not paralizer_inst:
+                raise Exception('Ningun vehiculo tiene el paralizador.')
+
+            cs = input('Ingrese las dos coordenadas a las que '
+                       'quiere enviar el paralizador [i,j h,k]: ')
+            if ' ' not in cs:
+                raise TypeError('Coordenadas invalidas')
+
+            cs_lista = cs.split(' ')
+            if len(cs_lista) != 2:
+                raise TypeError('Coordenadas invalidas')
+
+            cs1 = cs_lista[0]
+            cs2 = cs_lista[1]
+            if ',' not in cs1 or ',' not in cs2:
+                raise TypeError('Coordenadas invalidas')
+
+            cs1_lista = cs1.split(',')
+            cs2_lista = cs2.split(',')
+            if len(cs1_lista) != 2 or len(cs2_lista) != 2:
+                raise TypeError('Coordenadas invalidas')
+
+            c1i = cs1_lista[0]
+            c1j = cs1_lista[1]
+            c2i = cs2_lista[0]
+            c2j = cs2_lista[1]
+            if not (c1i.isdigit()
+                    and c1j.isdigit()
+                    and c2i.isdigit()
+                    and c2j.isdigit()):
+                raise TypeError('Coordenadas invalidas, '
+                                'deben ser numeros.')
+
+            c1i = int(c1i)
+            c1j = int(c1j)
+            c2i = int(c2i)
+            c2j = int(c2j)
+            if c1i >= self.mapa.n \
+                    or c1j >= self.mapa.n \
+                    or c2i >= self.mapa.n \
+                    or c2j >= self.mapa.n:
+                raise IndexError('Alguna coordenada no esta'
+                                 ' dentro de las dimensiones del '
+                                 'mapa')
+
+            aire_oponente = oponente.mapa.sector['aereo']
+
+            aciertos = 0
+            if aire_oponente[c1i][c1j] == 'E' \
+                    or aire_oponente[c1i][c1j] == 'e':
+                aciertos += 1
+            if aire_oponente[c2i][c2j] == 'E' \
+                    or aire_oponente[c2i][c2j] == 'e':
+                aciertos += 1
+
+            if aciertos < 2:
+                print('\n--- El ataque paralizador ha fallado. ---\n')
+
+            elif aciertos == 2:
+                avion_paralizado = None
+                for vehiculo in oponente.flota_activa:
+                    if vehiculo.nombre == 'Avion Explorador':
+                        avion_paralizado = vehiculo
+                        break
+                avion_paralizado.paralizar()
+                print('\n--- Se ha paralizado exitosamente '
+                      'por 5 turnos el Avion Explorador enemigo'
+                      ' ---\n')
+
+            paralizer_inst.usadas += 1
+            paralizer_inst.usar()
+
+            self.terminar_turno()
+
+
+        except (Exception, TypeError, IndexError) as err:
+            print('Error: {}'.format(err))
 
     def terminar_turno(self):
         # Se agrega un turno al jugador.
         self.turnos += 1
 
-        # Si hay ataques usados esperando turnos, se les disminuye un turno.
+        # Si hay ataques usados esperando turnos,
+        # se les disminuye un turno.
+        # Si el Avion Explorador esta paralizado,
+        # se disminuye un turno paralizado.
         for vehiculo in self.flota_activa:
             for ataque in vehiculo.ataques:
                 if ataque.turnos_pendientes:
                     ataque.turnos_pendientes -= 1
+            if vehiculo.nombre == 'Avion Explorador':
+                if vehiculo.turnos_paralizado:
+                    vehiculo.turnos_paralizado -= 1

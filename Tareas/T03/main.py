@@ -25,3 +25,4 @@ def mi_funcion_loca(a,b):
 a = mi_funcion_loca
 
 print(a.__name__)
+

@@ -14,7 +14,9 @@
 
 >Atacar oponente (ataca oponente y termina turno) LISTO
 
->Explorar (explora y termina turno)
+>Explorar (explora y termina turno) LISTO
+
+>Paralizar
 
 >Kit de Ingenieros
 
@@ -28,7 +30,7 @@ nada por el momento
 
 ###Pendiente:
 
-EXPLORAR
+PARALIZAR
 
 CARGAR MODO COMPUTADORA
 
@@ -57,6 +59,10 @@ de cada uno de ellos y luego la coordenada donde seran posicionados inicialmente
 * Luego por sorteo se elige el jugador que comienza la partida.
 
 
+* Agregué la opcion *Terminar Turno* para que los jugadores tengan la posibilidad de
+finalizar su turno sin realizar ninguna acción.
+
+
 * Los vehiculos mantendran para siempre su orientación impuesta inicialmente. Es decir, al moverse 
 entre las casillas del mapa estarán orientados siempre en la misma dirección.
 
@@ -79,9 +85,11 @@ Luego de atacar se imprime si el ataque fue efectivo o no, tambien se agrega dic
 marcando con una O si fue al agua y con una X si fue sobre un vehiculo.
 
 
-* El ataque Misil de crucrero BGM-109 Tomahawk ataca toda una fila oponente, la cual se debe indicar al 
+* El ataque Misil de crucrero BGM-109 Tomahawk ataca toda una fila o columna oponente, la cual se debe especificar al 
 usarlo. Retorna si el ataque fue exitoso (cayo sobre algun vehiculo enemigo) o no fue exitoso (todo el
-ataque cayo en el mar). No cambia nada en el radar pues no entrega coordenadas de los ataques exitosos o fallidos.
+ataque cayo en el mar). En caso de ser exitoso entrega la cantidad de piezas afectadas por el ataque.
+No cambia nada en el radar pues no entrega coordenadas de los ataques exitosos o fallidos, a excepcion de destruir un
+vehiculo donde marca en el radar, con una X, las casillas usadas por el vehiculo destruido. 
 
 
 * En caso de destruir un vehiculo enemigo, mi radar se marca con X en todas las casillas donde estaba el vehiculo destruido.
@@ -92,9 +100,7 @@ Esto debido a la condicion de que al destruir un vehiculo del oponente se entreg
 Sí se puede usar sobre el mismo Puerto.
 
 
-* Consideré que la disponibilidad que se menciona para los ataques, por ejemplo, para el Kit de Ingenieros
-(disponibilidad cada 2 turnos), significa que si se usa dicho ataque en un turno 1, el turno 2 siguiente no podré
-usarlo, pero en el turno 3 subsiguiente sí podre usarlo. Es analogo para todos los ataques.
+* Si el Avion Explorador se encuentra paralizado no puede Explorar, pero si puede usar el ataque Misil UGM-133 Trident II.
 
 
 * Al utilizar *explorar*, se debe ingresar la casilla central del area de 3x3 que se quiere explorar.
@@ -114,6 +120,20 @@ Es decir, si tengo el siguiente mapa de 10x10:
    9  ~    ~    ~    ~    ~    ~    ~    ~    ~    ~     
 ```
 y quiero explorar el area marcada con *E*, debo ingresar la casilla *7,4*
+
+
+* Si el explorador descubre que hay uno o varios barcos en el area explorada, se marcan en el radar del jugador
+las casillas donde existe un barco enemigo.
+
+
+* Si el explorador revela una de sus coordenadas (con 50% de probabilidad) se marca con una E en la casilla revelada 
+del sector aereo del radar enemigo.
+
+
+* Consideré que la disponibilidad que se menciona para los ataques, por ejemplo, para el Kit de Ingenieros
+(disponibilidad cada 2 turnos), significa que si se usa dicho ataque en un turno 1, el turno 2 siguiente no podré
+usarlo, pero en el turno 3 subsiguiente sí podre usarlo. Es analogo para todos los ataques.
+
 
 * La partida finaliza cuando un jugador tiene en su flota maritima solo la Lancha, o no tiene ningun vehiculo en dicha flota.
 (puede pasar que el oponente destruya la Lancha antes de destruir otros vehiculos maritimos).
@@ -159,3 +179,11 @@ lo que provocará que la posicion guia quede en la casilla (2,1):
    9  ~    ~    ~    ~    ~    ~    ~    ~    ~    ~     
 
 ```
+
+
+* Se calcula la eficiencia de un ataque como ```eficiencia = daño_causado/veces_usado```.
+
+
+* Como el ataque *GBU-43/B Massive Ordnance Air Blast Paralizer* no causa daño sobre el Avion Explorador paralizado,
+para el *ataque mas eficiente* este ataque no se considerara, ya que no podria calcular la eficiencia de este si no causa
+daños sobre oponentes.
