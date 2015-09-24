@@ -69,6 +69,8 @@ class AvionExplorador(Vehiculo):
         self.movilidad = 0
         self.turnos_paralizado = 0
         self.simbolo = 'E'
+        self.vida = '-'
+        self.resistencia = '-'
 
     def paralizar(self):
         self.turnos_paralizado = 5
@@ -83,6 +85,8 @@ class KamikazeIXXI(Vehiculo):
         self.ataques = [Trident(), Kamikaze()]
         self.movilidad = 0
         self.simbolo = 'K'
+        self.vida = '-'
+        self.resistencia = '-'
 
 
 class AvionCaza(Vehiculo):
@@ -94,3 +98,5 @@ class AvionCaza(Vehiculo):
         self.ataques = [Trident(), Napalm()]
         self.movilidad = 0
         self.simbolo = 'C'
+        self.vida = '-'
+        self.resistencia = '-'

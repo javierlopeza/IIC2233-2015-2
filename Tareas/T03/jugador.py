@@ -1,4 +1,5 @@
 from random import randint, choice
+from operator import itemgetter
 
 
 class Jugador:
@@ -11,6 +12,7 @@ class Jugador:
         self.flota_activa = []
         self.flota_muerta = []
         self.turnos = 0
+        self.loser = False
 
     def jugar(self, oponente):
         turno_actual = self.turnos
@@ -214,6 +216,7 @@ class Jugador:
                 print('--- El vehiculo {0} se movio '
                       'correctamente a la posicion ({1}, {2}) ---'.
                       format(vehiculo_mover_inst.nombre, mover[0], mover[1]))
+                vehiculo_mover_inst.movimientos += 1
                 self.terminar_turno()
 
         except (AttributeError, TypeError, IndexError) as err:
@@ -388,6 +391,8 @@ class Jugador:
                             if not es_tom and not vehiculo_destruido:
                                 self.radar.marcar('maritimo', ii, jj, 'A')
                             break
+            if exito:
+                ataque_elegido_inst.exitos += 1
 
             if not ataque_elegido_inst.nombre == 'Misil de crucrero' \
                                                  ' BGM-109 Tomahawk':
@@ -683,6 +688,7 @@ class Jugador:
                 print('\n--- Se ha paralizado exitosamente '
                       'por 5 turnos el Avion Explorador enemigo'
                       ' ---\n')
+                paralizer_inst.exitos += 1
 
             paralizer_inst.usadas += 1
             paralizer_inst.usar()
@@ -708,10 +714,200 @@ class Jugador:
                 if vehiculo.turnos_paralizado:
                     vehiculo.turnos_paralizado -= 1
 
+    @property
+    def damage_total_recibido(self):
+        dam = 0
+        for vehiculo in self.flota_activa:
+            if vehiculo.tipo == 'maritimo':
+                dam += vehiculo.damage_recibido
+        for vehiculo in self.flota_muerta:
+            if vehiculo.tipo == 'maritimo':
+                dam += vehiculo.damage_recibido
+        return dam
+
+    @property
+    def ataques_mas_utilizados(self):
+        ataques_contados = {}
+        for vehiculo in self.flota_activa:
+            for ataque in vehiculo.ataques:
+                if ataque.nombre not in ataques_contados:
+                    ataques_contados.update({ataque.nombre: ataque.usadas})
+                else:
+                    ataques_contados[ataque.nombre] += ataque.usadas
+        for vehiculo in self.flota_muerta:
+            for ataque in vehiculo.ataques:
+                if ataque.nombre not in ataques_contados:
+                    ataques_contados.update({ataque.nombre: ataque.usadas})
+                else:
+                    ataques_contados[ataque.nombre] += ataque.usadas
+
+        ataques_contados = ataques_contados.items()
+
+        maximos_usos = max(ataques_contados, key=itemgetter(1))[1]
+
+        mas_utilizados = []
+
+        for ataque in ataques_contados:
+            if ataque[1] == maximos_usos:
+                mas_utilizados.append(ataque[0])
+
+        return mas_utilizados, maximos_usos
+
+    @property
+    def barcos_mas_movidos(self):
+        vehiculos_contados = {}
+        for vehiculo in self.flota_activa:
+            if vehiculo.tipo == 'maritimo':
+                if vehiculo.nombre not in vehiculos_contados:
+                    vehiculos_contados.update({vehiculo.nombre: vehiculo.movimientos})
+                else:
+                    vehiculos_contados[vehiculo.nombre] += vehiculo.movimientos
+        for vehiculo in self.flota_muerta:
+            if vehiculo.tipo == 'maritimo':
+                if vehiculo.nombre not in vehiculos_contados:
+                    vehiculos_contados.update({vehiculo.nombre: vehiculo.movimientos})
+                else:
+                    vehiculos_contados[vehiculo.nombre] += vehiculo.movimientos
+
+        vehiculos_contados = vehiculos_contados.items()
+
+        maximos_movs = max(vehiculos_contados, key=itemgetter(1))[1]
+
+        mas_movidos = []
+
+        for vehiculo in vehiculos_contados:
+            if vehiculo[1] == maximos_movs:
+                mas_movidos.append(vehiculo[0])
+
+        return mas_movidos, maximos_movs
+
+    @property
+    def ataques_mas_eficientes(self):
+        ataques_usadas_damage = {}  # {nombre_ataque: [usadas, damage_efectivo]}
+        for vehiculo in self.flota_activa:
+            for ataque in vehiculo.ataques:
+                if ataque.nombre not in ataques_usadas_damage:
+                    ataques_usadas_damage.update({ataque.nombre: [ataque.usadas, ataque.damage_efectivo]})
+                else:
+                    ataques_usadas_damage[ataque.nombre][0] += ataque.usadas
+                    ataques_usadas_damage[ataque.nombre][1] += ataque.damage_efectivo
+        for vehiculo in self.flota_muerta:
+            for ataque in vehiculo.ataques:
+                if ataque.nombre not in ataques_usadas_damage:
+                    ataques_usadas_damage.update({ataque.nombre: [ataque.usadas, ataque.damage_efectivo]})
+                else:
+                    ataques_usadas_damage[ataque.nombre][0] += ataque.usadas
+                    ataques_usadas_damage[ataque.nombre][1] += ataque.damage_efectivo
+
+        for data in ataques_usadas_damage:
+            usadas = ataques_usadas_damage[data][0]
+            damage_efectivo = ataques_usadas_damage[data][1]
+            if usadas != 0:
+                efectividad = damage_efectivo / usadas
+                ataques_usadas_damage.update({data: efectividad})
+            else:
+                ataques_usadas_damage.update({data: 0})
+
+        ataques_efe =ataques_usadas_damage.items()
+
+        max_efe = max(ataques_efe, key=itemgetter(1))[1]
+
+        mas_efectivos = []
+
+        for ataque in ataques_efe:
+            if ataque[1] == max_efe:
+                mas_efectivos.append(ataque[0])
+
+        return mas_efectivos, max_efe
+
+    def mostrar_estadisticas(self, oponente):
+        # Datos Base:
+        n_ataques_totales = 0
+        n_ataques_exitosos = 0
+        for vehiculo in self.flota_activa:
+            for ataque in vehiculo.ataques:
+                n_ataques_totales += ataque.usadas
+                n_ataques_exitosos += ataque.exitos
+        for vehiculo in self.flota_muerta:
+            for ataque in vehiculo.ataques:
+                n_ataques_totales += ataque.usadas
+                n_ataques_exitosos += ataque.exitos
+
+        # 1. Porcentaje Ataques Exitosos:
+        if n_ataques_totales != 0:
+            p_ataques_exitosos = round((n_ataques_exitosos / n_ataques_totales) * 100, 2)
+            print('  (1) Porcentaje ataques exitosos: {}%'.format(p_ataques_exitosos))
+        else:
+            print('  (1) Porcentaje ataques exitosos: NO HUBO ATAQUES')
+
+        # 2. Porcentaje Ataques Exitosos por barco y avion:
+        print('  (2) Porcentaje de ataques exitosos por barco y avion:')
+        for vehiculo in self.flota_activa:
+            print('    ->  {0}: {1}'.
+                  format(vehiculo.nombre,
+                         vehiculo.ptje_ataques_exitosos))
+        for vehiculo in self.flota_muerta:
+            print('    ->  {0}: {1}'.
+                  format(vehiculo.nombre,
+                         vehiculo.ptje_ataques_exitosos))
+
+        # 3. Damage recibido por cada barco:
+        print('  (3) Damage recibido por cada barco:')
+        for vehiculo in self.flota_activa:
+            if vehiculo.tipo == 'maritimo':
+                print('    ->  {0}: {1}'.
+                      format(vehiculo.nombre,
+                             vehiculo.damage_recibido))
+        for vehiculo in self.flota_muerta:
+            if vehiculo.tipo == 'maritimo':
+                print('    ->  {0}: {1}'.
+                      format(vehiculo.nombre,
+                             vehiculo.damage_recibido))
+
+        # 4. Damage total causado:
+        damage_total_causado = oponente.damage_total_recibido
+        print('  (4) Damage total causado: {0}'.
+              format(damage_total_causado))
+
+        # 5. Damage total recibido:
+        damage_total_recibido = self.damage_total_recibido
+        print('  (5) Damage total recibido: {0}'.
+              format(damage_total_recibido))
+
+        # 6. Ataques mas utilizados:
+        ataques_mas_utilizados = self.ataques_mas_utilizados[0]
+        max_usos = self.ataques_mas_utilizados[1]
+        print('  (6) Ataques mas utilizados:')
+        for ataque in ataques_mas_utilizados:
+            print('    -> {0}: {1} usadas'.
+                  format(ataque, max_usos))
+
+        # 7. Barco con mas movimientos:
+        barcos_mas_movidos = self.barcos_mas_movidos[0]
+        max_movs = self.barcos_mas_movidos[1]
+        print('  (7) Barcos con mas movimientos:')
+        for barco in barcos_mas_movidos:
+            print('    -> {0}: {1} movimientos'.
+                  format(barco, max_movs))
+
+        # 8. Cantidad de turnos:
+        print('  (8) Cantidad de turnos: {}'.
+              format(self.turnos))
+
+        # 9. Ataque mas eficiente:
+        mas_eficientes = self.ataques_mas_eficientes[0]
+        max_efe = self.ataques_mas_eficientes[1]
+        print('  (9) Ataques mas eficientes:')
+        for ataque in mas_eficientes:
+            print('    -> {0}: {1} puntos de eficiencia'.
+                  format(ataque, round(max_efe,2)))
+
     def verificar_fracaso(self):
         if len(self.flota_activa_maritima) == 0:
+            self.loser = True
             return True
         if len(self.flota_activa_maritima) == 1:
             if self.flota_activa_maritima[0].nombre == 'Lancha':
+                self.loser = True
                 return True
         return False

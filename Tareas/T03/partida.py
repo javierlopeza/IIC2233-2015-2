@@ -26,7 +26,6 @@ class Partida:
     def run(self):
         try:
             if not self.cargado:
-                # Es una excepcion
                 raise AttributeError('El juego no se ha cargado todavia')
             turno_jugador = choice(['player1', 'player2'])
 
@@ -47,17 +46,31 @@ class Partida:
 
                 turno_jugador = prox_turno
 
-            self.terminar_juego()
+            for jugador in self.jugadores.values():
+                if jugador.loser == False:
+                    ganador = jugador
+                    break
+
+            self.terminar_juego(ganador)
 
         except AttributeError as err:
             print('Error: {}'.format(err))
 
-    def mostrar_estadisticas(self):
-        pass
+    def estadisticas(self):
+        print('\n     === ESTADISTICAS DE LA PARTIDA ===')
+        print('\n=== ESTADISTICAS PLAYER 1: {0} ==='.
+              format(self.jugadores['player1'].nombre))
+        self.jugadores['player1'].mostrar_estadisticas(
+            self.jugadores['player2'])
+        print('\n=== ESTADISTICAS PLAYER 2: {0} ==='.
+              format(self.jugadores['player2'].nombre))
+        self.jugadores['player2'].mostrar_estadisticas(
+            self.jugadores['player1'])
 
-    def terminar_juego(self):
-        self.mostrar_estadisticas()
-        print('JUEGO FINALIZADO')
+    def terminar_juego(self, ganador):
+        print('\n\n   === JUEGO FINALIZADO  ->  '
+              'GANADOR: {} ===\n'.format(ganador.nombre))
+        self.estadisticas()
         sys.exit()
 
 

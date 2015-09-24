@@ -26,3 +26,11 @@ a = mi_funcion_loca
 
 print(a.__name__)
 
+d = {'hola': [45,5], 'javier': [45,9], 'caca': [78,78]}
+
+for data in d:
+    a = d[data][0]
+    b = d[data][1]
+    d.update({data: a/b})
+
+print(d)

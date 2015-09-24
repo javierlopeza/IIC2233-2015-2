@@ -168,9 +168,20 @@ lo que provocará que la posicion guia quede en la casilla (2,1):
 ```
 
 
-* Se calcula la eficiencia de un ataque como ```eficiencia = daño_causado/veces_usado```.
+* Se calculan los puntos de eficiencia de un ataque como ```eficiencia = daño_causado/veces_usado```.
 
 
 * Como el ataque *GBU-43/B Massive Ordnance Air Blast Paralizer* no causa daño sobre el Avion Explorador paralizado,
-para el *ataque mas eficiente* este ataque no se considerara, ya que no podria calcular la eficiencia de este si no causa
+para el *ataque más eficiente* este ataque no se considerara, ya que no podria calcular la eficiencia de este si no causa
 daños sobre oponentes.
+
+
+* Para los *ataques exitosos* se consideran todos los ataques menos el Kit de Ingenieros.
+
+
+* Para el *Misil de crucrero BGM-109 Tomahawk* se considera un ataque exitoso si alcanzó al menos una pieza enemiga.
+Si alcanzó una o más piezas enemigas, sus éxitos aumentan en 1 unidad.
+
+
+* Para el *ataque mas utilizado*, *el barco con mas movimientos* y *el ataque mas eficiente* si es que hay mas de un ataque/barco
+que cumple con la condicion, se muestran todos los que la cumplen. 

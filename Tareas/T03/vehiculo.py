@@ -11,6 +11,8 @@ class Vehiculo:
         self.orientacion = None
         self.ancho = 0
         self.alto = 0
+        self.resistencia = None
+        self.vida = None
 
     @property
     def posicion_guia(self):
@@ -81,3 +83,24 @@ class Vehiculo:
                     and ataque.nombre != 'Kit de Ingenieros':
                 ret.append(ataque)
         return ret
+
+    @property
+    def ptje_ataques_exitosos(self):
+        n_ataques_veh = 0
+        n_ataques_exitosos_veh = 0
+        for ataque in self.ataques:
+            n_ataques_veh += ataque.usadas
+            n_ataques_exitosos_veh += ataque.exitos
+        if n_ataques_veh != 0:
+            p = round((n_ataques_exitosos_veh / n_ataques_veh) * 100, 2)
+            ptje = '{}%'.format(p)
+        else:
+            ptje = 'NO REALIZO ATAQUES'
+        return ptje
+
+    @property
+    def damage_recibido(self):
+        if isinstance(self.resistencia, int) \
+                and isinstance(self.vida, int):
+            damage_rec = self.resistencia - self.vida
+            return damage_rec

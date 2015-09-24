@@ -3,6 +3,7 @@ class Ataque:
         self.disponibilidad = 1
         self.turnos_pendientes = 0
         self.usadas = 0
+        self.exitos = 0
         self.damage_efectivo = 0
 
     @property
