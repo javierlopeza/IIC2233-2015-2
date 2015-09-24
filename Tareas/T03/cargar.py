@@ -1,13 +1,14 @@
 from copy import deepcopy
 from jugador import Jugador
+from computadora import Computadora
 from mapa import Mapa
 from vehiculos import BarcoPequeno, BuqueDeGuerra, Lancha, Puerto, AvionExplorador, KamikazeIXXI, AvionCaza
 
 
 def cargar_jugadores(partida):
     try:
-        pc_persona = input('Desea jugar con otra PERSONA o '
-                           'con la COMPUTADORA? [p/c]: ')
+        pc_persona = input('Desea jugar contra otra PERSONA o '
+                           'contra la COMPUTADORA? [p/c]: ')
 
         if pc_persona != 'p' and pc_persona != 'c':
             raise TypeError('La opcion elegida no es valida')
@@ -21,7 +22,11 @@ def cargar_jugadores(partida):
             jugador2 = Jugador(nombre2, 2)
             partida.jugadores.update({'player1': jugador1, 'player2': jugador2})
 
-            # ----------- else modo == c
+        if partida.modo_oponente == 'c':
+            nombre = input('Ingrese su nombre: ')
+            jugador = Jugador(nombre, 1)
+            computadora = Computadora()
+            partida.jugadores.update({'player1': jugador, 'computadora': computadora})
 
     except TypeError as err:
         print('Error: {}'.format(err))
@@ -33,7 +38,7 @@ def cargar_mapas(partida):
         if not partida.jugadores:
             raise AttributeError('Los jugadores no estan cargados.')
 
-        size_mapas = input('Ingrese la dimension n que desea para sus mapas (n x n): ')
+        size_mapas = input('Ingrese la dimension n que desea para los mapas (n x n): ')
 
         if not size_mapas.isdigit():
             raise TypeError('La dimension ingresada no es valida')
@@ -82,13 +87,17 @@ def cargar_vehiculos_a_mapa(self):
             raise AttributeError('Los jugadores no estan cargados.')
 
         for jugador in self.jugadores.values():
-            print('\nPLAYER {0}: {1}, proceda a '
-                  'posicionar sus vehiculos en su mapa.'.
-                  format(jugador.id, jugador.nombre))
-            for vehiculo in jugador.flota:
-                vehiculo.setear_orientacion()
-                while not vehiculo.casillas_usadas:
-                    jugador.mapa.agregar_vehiculo(vehiculo)
+            if jugador.nombre != 'Computadora':
+                print('\nPLAYER {0}: {1}, proceda a '
+                      'posicionar sus vehiculos en su mapa.'.
+                      format(jugador.id, jugador.nombre))
+                for vehiculo in jugador.flota:
+                    vehiculo.setear_orientacion()
+                    while not vehiculo.casillas_usadas:
+                        jugador.mapa.agregar_vehiculo(vehiculo)
+
+            elif jugador.nombre == 'Computadora':
+                jugador.posicionar_vehiculos()
 
         self.cargado = True
 

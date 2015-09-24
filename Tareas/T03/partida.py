@@ -7,19 +7,27 @@ import sys
 from random import choice
 
 from cargar_test import cargar_test
+from cargar_test2 import cargar_test2
 
 
 class Partida:
     def __init__(self):
         self.cargado = False
         self.jugadores = {}
-        # Para testeo solamente
+        # Para testeo contra persona:
         cargar_test(self)
+        # Para testeo contra computadora:
+        # cargar_test2(self)
         '''
         cargar_jugadores(self)
         cargar_mapas(self)
         cargar_vehiculos(self)
-        cargar_vehiculos_a_mapa(self)
+        '''
+        '''
+        if self.modo_oponente == 'p':
+            cargar_vehiculos_a_mapa(self)
+        elif self.modo_oponente == 'c':
+            bla bla ...
         '''
         self.run()
 
@@ -27,31 +35,36 @@ class Partida:
         try:
             if not self.cargado:
                 raise AttributeError('El juego no se ha cargado todavia')
-            turno_jugador = choice(['player1', 'player2'])
 
-            print('\n---> Por sorteo comienza jugando Player {0}: {1} <---\n'.
-                  format(self.jugadores[turno_jugador].id,
-                         self.jugadores[turno_jugador].nombre))
+            if self.modo_oponente == 'p':
+                turno_jugador = choice(['player1', 'player2'])
 
-            while not self.jugadores[turno_jugador].verificar_fracaso():
-                jugador_actual = self.jugadores[turno_jugador]
-                if jugador_actual.id == 1:
-                    oponente = self.jugadores['player2']
-                    prox_turno = 'player2'
-                else:
-                    oponente = self.jugadores['player1']
-                    prox_turno = 'player1'
+                print('\n---> Por sorteo comienza jugando Player {0}: {1} <---\n'.
+                      format(self.jugadores[turno_jugador].id,
+                             self.jugadores[turno_jugador].nombre))
 
-                jugador_actual.jugar(oponente)
+                while not self.jugadores[turno_jugador].verificar_fracaso():
+                    jugador_actual = self.jugadores[turno_jugador]
+                    if jugador_actual.id == 1:
+                        oponente = self.jugadores['player2']
+                        prox_turno = 'player2'
+                    else:
+                        oponente = self.jugadores['player1']
+                        prox_turno = 'player1'
 
-                turno_jugador = prox_turno
+                    jugador_actual.jugar(oponente)
 
-            for jugador in self.jugadores.values():
-                if jugador.loser == False:
-                    ganador = jugador
-                    break
+                    turno_jugador = prox_turno
 
-            self.terminar_juego(ganador)
+                for jugador in self.jugadores.values():
+                    if jugador.loser == False:
+                        ganador = jugador
+                        break
+
+                self.terminar_juego(ganador)
+
+            elif self.modo_oponente == 'c':
+                print(self.jugadores['computadora'].mapa)
 
         except AttributeError as err:
             print('Error: {}'.format(err))

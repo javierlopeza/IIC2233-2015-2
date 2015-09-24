@@ -66,7 +66,7 @@ class AvionExplorador(Vehiculo):
         self.tipo = 'aereo'
         self.size = (2, 2)
         self.ataques = [Trident()]
-        self.movilidad = 0
+        self.movilidad = float('infinity')
         self.turnos_paralizado = 0
         self.simbolo = 'E'
         self.vida = '-'
@@ -83,7 +83,7 @@ class KamikazeIXXI(Vehiculo):
         self.tipo = 'aereo'
         self.size = (1, 1)
         self.ataques = [Trident(), Kamikaze()]
-        self.movilidad = 0
+        self.movilidad = float('infinity')
         self.simbolo = 'K'
         self.vida = '-'
         self.resistencia = '-'
@@ -96,7 +96,7 @@ class AvionCaza(Vehiculo):
         self.tipo = 'aereo'
         self.size = (1, 1)
         self.ataques = [Trident(), Napalm()]
-        self.movilidad = 0
+        self.movilidad = float('infinity')
         self.simbolo = 'C'
         self.vida = '-'
         self.resistencia = '-'

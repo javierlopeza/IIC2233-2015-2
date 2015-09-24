@@ -1,7 +1,7 @@
 from copy import deepcopy
 
 
-def verificar_movimiento(vehiculo, ij):
+def verificar_movimiento(vehiculo, ij, mapa):
     try:
         if ',' not in ij:
             raise TypeError('Verifique la coordenada ingresada, '
@@ -32,7 +32,8 @@ def verificar_movimiento(vehiculo, ij):
             raise IndexError('Coordenadas negativas')
 
     except (TypeError, AttributeError, IndexError) as err:
-        print('Error: {}'.format(err))
+        if mapa.owner == 'p':
+            print('Error: {}'.format(err))
 
     else:
         return True
@@ -84,13 +85,14 @@ def verificar_movimiento_mapa(vehiculo, i, j, mapa):
         vehiculo.casillas_usadas = casillas_nuevas_aux
 
     except (AttributeError, IndexError, ValueError) as err:
-        print('Error: {}'.format(err))
+        if mapa.owner == 'p':
+            print('Error: {}'.format(err))
 
     else:
         return i, j
 
 
-def verificar_limite_movimiento(vehiculo, i, j):
+def verificar_limite_movimiento(vehiculo, i, j, mapa):
     """
     Retorna el bool de si es capaz de avanzar a dicha coordenada
     dado sus movimientos maximos y su posicion guia actual.
@@ -111,7 +113,8 @@ def verificar_limite_movimiento(vehiculo, i, j):
                                  format(vehiculo.nombre))
 
     except (ValueError, AttributeError) as err:
-        print('Error: {}'.format(err))
+        if mapa.owner == 'p':
+            print('Error: {}'.format(err))
 
     else:
         if vehiculo.movilidad == float('infinity'):
@@ -120,9 +123,9 @@ def verificar_limite_movimiento(vehiculo, i, j):
             return True
         if (j == posy + 1 or j == posy - 1) and i == posx:
             return True
-
-        print('Error: El vehiculo {0} no puede moverse hasta la posicion '
-              '({1}, {2}) por su limite de movimientos.'.
-              format(vehiculo.nombre,
-                     i,
-                     j))
+        if mapa.owner == 'p':
+            print('Error: El vehiculo {0} no puede moverse hasta la posicion '
+                  '({1}, {2}) por su limite de movimientos.'.
+                  format(vehiculo.nombre,
+                         i,
+                         j))

@@ -7,10 +7,11 @@ from copy import deepcopy
 
 
 class Mapa:
-    def __init__(self, n=0):
+    def __init__(self, n=0, owner='p'):
         self.sector = {'aereo': [], 'maritimo': []}
         self.armado = False
         self.armar_mapa(n)
+        self.owner = owner
 
     def armar_mapa(self, n):
         try:
@@ -47,7 +48,7 @@ class Mapa:
                        'a la que desea mover el vehiculo {} [i,j]: '.
                        format(vehiculo.nombre))
 
-            if verificar_movimiento(vehiculo, ij):
+            if verificar_movimiento(vehiculo, ij, self):
                 i = int(ij.split(',')[0])
                 j = int(ij.split(',')[1])
                 return verificar_movimiento_mapa(vehiculo, i, j, self)
@@ -66,14 +67,15 @@ class Mapa:
                            'en la que desea posicionar el vehiculo {} [i,j]: '.
                            format(vehiculo.nombre))
 
-            if verificar_movimiento(vehiculo, ij):
+            if verificar_movimiento(vehiculo, ij, self):
                 i = int(ij.split(',')[0])
                 j = int(ij.split(',')[1])
                 verificar_movimiento_mapa(vehiculo, i, j, self)
                 if vehiculo.casillas_usadas:
-                    print('--- Vehiculo {0} agregado correctamente'
-                          ' en la casilla ({1}, {2}) ---'.
-                          format(vehiculo.nombre, i, j))
+                    if self.owner == 'p':
+                        print('--- Vehiculo {0} agregado correctamente'
+                              ' en la casilla ({1}, {2}) ---'.
+                              format(vehiculo.nombre, i, j))
                     return True
 
         except TypeError as err:

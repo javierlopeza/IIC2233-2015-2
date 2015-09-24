@@ -34,3 +34,6 @@ for data in d:
     d.update({data: a/b})
 
 print(d)
+
+if not []:
+    print('hola12345654321')

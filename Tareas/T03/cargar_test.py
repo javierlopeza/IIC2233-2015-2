@@ -50,3 +50,4 @@ def cargar_test(partida):
     jugadores['player2'].mapa.agregar_vehiculo(jugadores['player2'].flota_activa[6], '4,7')
 
     partida.cargado = True
+    partida.modo_oponente = 'p'

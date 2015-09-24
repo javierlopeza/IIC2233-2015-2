@@ -3,12 +3,13 @@ from operator import itemgetter
 
 
 class Jugador:
-    def __init__(self, nombre, ide):
+    def __init__(self, nombre='', ide=0):
         self.nombre = nombre
         self.id = ide
         self.mapa = None
         self.radar = None
         self.radares = []
+        self.casillas_espiadas = []
         self.flota = None
         self.flota_activa = []
         self.flota_muerta = []
@@ -30,22 +31,24 @@ class Jugador:
         opciones = {'1': self.ver_mapa,
                     '2': self.ver_radar,
                     '3': self.revisar_historial_radar,
-                    '4': self.mover_vehiculo,
-                    '5': self.atacar
+                    '4': self.revisar_casillas_espiadas,
+                    '5': self.mover_vehiculo,
+                    '6': self.atacar
                     }
 
         menu_impreso = '  [1]: Ver Mi Mapa\n' \
                        '  [2]: Ver Radar\n' \
                        '  [3]: Revisar Historial Radar\n' \
-                       '  [4]: Mover Vehiculo\n' \
-                       '  [5]: Atacar Oponente\n'
+                       '  [4]: Revisar Casillas Espiadas\n' \
+                       '  [5]: Mover Vehiculo\n' \
+                       '  [6]: Atacar Oponente\n'
 
-        proximo_indice = 6
+        proximo_indice = 7
 
         for vehiculo in self.flota_activa:
             if vehiculo.nombre == 'Puerto':
-                opciones.update({'6': self.kit_ingenieros})
-                menu_impreso += '  [6]: Usar Kit de Ingenieros\n'
+                opciones.update({'7': self.kit_ingenieros})
+                menu_impreso += '  [7]: Usar Kit de Ingenieros\n'
                 proximo_indice += 1
                 break
 
@@ -122,13 +125,28 @@ class Jugador:
             print('\n  --- ESTADO DEL RADAR EN EL TURNO {} ---\n'.format(turno))
             print(radar)
             print('SIMBOLOGIA  ->  A: Vehiculo enemigo atacado  '
-              '|  X: Vehiculo enemigo muerto  '
-              '|  O: Disparo al agua  '
-              '|  F: Vehiculo encontrado con el explorador  '
-              '|  E: Coordenada explorador revelada por el enemigo')
+                  '|  X: Vehiculo enemigo muerto  '
+                  '|  O: Disparo al agua  '
+                  '|  F: Vehiculo encontrado con el explorador  '
+                  '|  E: Coordenada explorador revelada por el enemigo')
 
 
         except (AttributeError, TypeError, IndexError) as err:
+            print('Error: {}'.format(err))
+
+    def revisar_casillas_espiadas(self):
+        try:
+            if not self.casillas_espiadas:
+                raise AttributeError('El enemigo no ha '
+                                     'descubierto ningun vehiculo.')
+
+            print('\n=== CASILLAS ESPIADAS POR EL ENEMIGO ===\n')
+            for casilla in self.casillas_espiadas:
+                ie = casilla[0]
+                je = casilla[1]
+                print('   ->  Casilla ({0}, {1})'.format(ie, je))
+
+        except AttributeError as err:
             print('Error: {}'.format(err))
 
     def mostrar_flota_activa(self):
@@ -151,16 +169,18 @@ class Jugador:
             if not self.flota_activa:
                 raise AttributeError('No se han cargado los vehiculos a la flota')
 
-            n_movibles = 0
+            movibles = []
             ret = ''
+            indice = 0
             for vehiculo in self.flota_activa:
                 if vehiculo.movilidad != 0:
-                    n_movibles += 1
+                    movibles.append(vehiculo)
                     ret += '  [{0}]: {1}\n'.format(
-                        self.flota_activa.index(vehiculo),
+                        indice,
                         vehiculo.nombre)
+                    indice += 1
             print(ret)
-            self.n_movibles = n_movibles
+            self.movibles = movibles
 
         except AttributeError as err:
             print('Error: {}'.format(err))
@@ -239,12 +259,12 @@ class Jugador:
                                 format(vehiculo_mover))
 
             vehiculo_mover = int(vehiculo_mover)
-            if not vehiculo_mover < self.n_movibles:
+            if not vehiculo_mover < len(self.movibles):
                 raise IndexError('El numero {} no esta '
                                  'dentro de las opciones'.
                                  format(vehiculo_mover))
 
-            vehiculo_mover_inst = self.flota_activa[vehiculo_mover]
+            vehiculo_mover_inst = self.movibles[vehiculo_mover]
             mover = self.mapa.mover_vehiculo(
                 vehiculo_mover_inst)
             if mover:
@@ -596,6 +616,7 @@ class Jugador:
                 jexp = casilla[1]
                 if oponente.mapa.sector['maritimo'][iexp][jexp] != '~':
                     algo_encontrado = True
+                    oponente.casillas_espiadas.append([iexp, jexp])
                     print('--- Se encontro una pieza de vehiculo enemigo'
                           ' en la casilla ({0}, {1}) y '
                           'se guardo en el radar como F ---'.
