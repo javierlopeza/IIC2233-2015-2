@@ -58,7 +58,7 @@ entre las casillas del mapa estarán orientados siempre en la misma dirección.
 * Solo los vehiculos maritimos tienen el ataque *GBU-43/B Massive Ordnance Air Blast Paralizer*.
 
 
-* La Lancha si tiene el ataque Misil UGM-133 Trident II.
+* La Lancha NO tiene ningún ataque, solo puede moverse libremente para distraer al enemigo.
 
 
 * Para atacar al oponente, primero se debe seleccionar el vehiculo disponible que se quiere usar, luego

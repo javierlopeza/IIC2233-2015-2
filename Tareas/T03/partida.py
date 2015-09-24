@@ -26,7 +26,8 @@ class Partida:
     def run(self):
         try:
             if not self.cargado:
-                raise Exception('El juego no se ha cargado todavia')
+                # Es una excepcion
+                raise AttributeError('El juego no se ha cargado todavia')
             turno_jugador = choice(['player1', 'player2'])
 
             print('\n---> Por sorteo comienza jugando Player {0}: {1} <---\n'.
@@ -48,7 +49,7 @@ class Partida:
 
             self.terminar_juego()
 
-        except Exception as err:
+        except AttributeError as err:
             print('Error: {}'.format(err))
 
     def mostrar_estadisticas(self):

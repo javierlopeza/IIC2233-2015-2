@@ -31,7 +31,7 @@ def cargar_jugadores(partida):
 def cargar_mapas(partida):
     try:
         if not partida.jugadores:
-            raise Exception('Los jugadores no estan cargados.')
+            raise AttributeError('Los jugadores no estan cargados.')
 
         size_mapas = input('Ingrese la dimension n que desea para sus mapas (n x n): ')
 
@@ -41,7 +41,7 @@ def cargar_mapas(partida):
         size_mapas = int(size_mapas)
 
         if size_mapas == 0:
-            raise Exception('La dimension ingresada no puede ser nula')
+            raise ValueError('La dimension ingresada no puede ser nula')
 
         partida.size_mapas = size_mapas
 
@@ -52,7 +52,7 @@ def cargar_mapas(partida):
 
         return True
 
-    except (TypeError, Exception) as err:
+    except (TypeError, AttributeError, ValueError) as err:
         print('Error: {}'.format(err))
         partida.cargar_mapas()
 
@@ -60,26 +60,26 @@ def cargar_mapas(partida):
 def cargar_vehiculos(partida):
     try:
         if not partida.jugadores:
-            raise Exception('Los jugadores no estan cargados.')
+            raise AttributeError('Los jugadores no estan cargados.')
 
         for jugador in partida.jugadores.values():
             if jugador.flota:
-                raise Exception('Un jugador ya tiene cargados '
-                                'sus vehiculos')
+                raise AttributeError('Un jugador ya tiene cargados '
+                                     'sus vehiculos')
             vehiculos_jugador = [BarcoPequeno(), BuqueDeGuerra(),
                                  Lancha(), Puerto(), AvionExplorador(),
                                  KamikazeIXXI(), AvionCaza()]
             jugador.flota = vehiculos_jugador
             jugador.flota_activa = jugador.flota[:]
 
-    except Exception as err:
+    except AttributeError as err:
         print('Error: {}'.format(err))
 
 
 def cargar_vehiculos_a_mapa(self):
     try:
         if not self.jugadores:
-            raise Exception('Los jugadores no estan cargados.')
+            raise AttributeError('Los jugadores no estan cargados.')
 
         for jugador in self.jugadores.values():
             print('\nPLAYER {0}: {1}, proceda a '
@@ -92,5 +92,5 @@ def cargar_vehiculos_a_mapa(self):
 
         self.cargado = True
 
-    except Exception as err:
+    except AttributeError as err:
         print('Error: {}'.format(err))

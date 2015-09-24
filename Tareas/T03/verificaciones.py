@@ -3,7 +3,7 @@ from copy import deepcopy
 
 def verificar_movimiento(vehiculo, ij):
     try:
-        if not ',' in ij:
+        if ',' not in ij:
             raise TypeError('Verifique la coordenada ingresada, '
                             'debe ser de la forma: i,j')
 
@@ -23,15 +23,15 @@ def verificar_movimiento(vehiculo, ij):
         j = int(j)
 
         if not vehiculo.orientacion:
-            raise Exception('La orientacion del vehiculo no esta seteada')
+            raise AttributeError('La orientacion del vehiculo no esta seteada')
 
         if not vehiculo.nombre:
-            raise Exception('No se ha instanciado el vehiculo en detalle')
+            raise AttributeError('No se ha instanciado el vehiculo en detalle')
 
         if i < 0 or j < 0:
-            raise Exception('Coordenadas negativas')
+            raise IndexError('Coordenadas negativas')
 
-    except (TypeError, Exception) as err:
+    except (TypeError, AttributeError, IndexError) as err:
         print('Error: {}'.format(err))
 
     else:
@@ -41,7 +41,7 @@ def verificar_movimiento(vehiculo, ij):
 def verificar_movimiento_mapa(vehiculo, i, j, mapa):
     try:
         if not mapa.armado:
-            raise Exception('El mapa no esta armado.')
+            raise AttributeError('El mapa no esta armado.')
 
         sector_aux = deepcopy(mapa.sector[vehiculo.tipo])
         if vehiculo.casillas_usadas:
@@ -68,10 +68,10 @@ def verificar_movimiento_mapa(vehiculo, i, j, mapa):
                     or c_aux_j > (mapa.n - 1) \
                     or c_aux_i < 0 \
                     or c_aux_j < 0:
-                raise Exception('El posicionamiento no es valido.')
+                raise IndexError('El posicionamiento no es valido.')
             if sector_aux[c_aux_i][c_aux_j] != '~':
-                raise Exception('La posicion esta ocupada'
-                                ' en el mapa presente.')
+                raise ValueError('La posicion esta ocupada'
+                                 ' en el mapa presente.')
 
         for p in range(len(casillas_nuevas_aux)):
             ii = casillas_nuevas_aux[p][0]
@@ -83,7 +83,7 @@ def verificar_movimiento_mapa(vehiculo, i, j, mapa):
         mapa.sector[vehiculo.tipo] = sector_aux
         vehiculo.casillas_usadas = casillas_nuevas_aux
 
-    except Exception as err:
+    except (AttributeError, IndexError, ValueError) as err:
         print('Error: {}'.format(err))
 
     else:
@@ -99,22 +99,22 @@ def verificar_limite_movimiento(vehiculo, i, j):
         posx = vehiculo.posicion_guia[0]
         posy = vehiculo.posicion_guia[1]
         if posx == i and posy == j:
-            raise Exception('El vehiculo {0} no puede moverse a '
-                            'la posicion en la que se encuentra ({1}, {2}), '
-                            'seria una jugada sin sentido.'.
-                            format(vehiculo.nombre,
-                                   i,
-                                   j))
+            raise ValueError('El vehiculo {0} no puede moverse a '
+                             'la posicion en la que se encuentra ({1}, {2}), '
+                             'seria una jugada sin sentido.'.
+                             format(vehiculo.nombre,
+                                    i,
+                                    j))
 
-        if not vehiculo.movimientos:
-            raise Exception('El vehiculo {0} no puede moverse.'.
-                            format(vehiculo.nombre))
+        if not vehiculo.movilidad:
+            raise AttributeError('El vehiculo {0} no puede moverse.'.
+                                 format(vehiculo.nombre))
 
-    except (TypeError, Exception) as err:
+    except (ValueError, AttributeError) as err:
         print('Error: {}'.format(err))
 
     else:
-        if vehiculo.movimientos == float('infinity'):
+        if vehiculo.movilidad == float('infinity'):
             return True
         if (i == posx + 1 or i == posx - 1) and j == posy:
             return True

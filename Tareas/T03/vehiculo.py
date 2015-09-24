@@ -1,12 +1,7 @@
-from verificaciones import \
-    verificar_movimiento, \
-    verificar_movimiento_mapa, \
-    verificar_limite_movimiento
-
-
 class Vehiculo:
     def __init__(self):
-        self.movimientos = 1
+        self.movimientos = 0
+        self.movilidad = 1
         self.nombre = None
         self.size = None
         self.ataques = []
@@ -32,11 +27,11 @@ class Vehiculo:
     def setear_orientacion(self, orientacion=None):
         try:
             if not self.size:
-                raise Exception('No se ha instanciado el vehiculo en detalle')
+                raise AttributeError('No se ha instanciado el vehiculo en detalle')
 
             if self.orientacion:
-                raise Exception('Ya esta seteada la orientacion, '
-                                'no se puede cambiar')
+                raise AttributeError('Ya esta seteada la orientacion, '
+                                     'no se puede cambiar')
             if not orientacion:
                 orientacion = input('Ingrese la orientacion (vertical u horizontal) '
                                     'que desea para el vehiculo {} [v/h]: '.
@@ -46,7 +41,7 @@ class Vehiculo:
                 raise TypeError('No es el tipo de argumentos que'
                                 ' recibe como orientacion')
 
-        except Exception as err:
+        except AttributeError as err:
             print('Error: {}'.format(err))
             self.setear_orientacion()
 
@@ -62,7 +57,7 @@ class Vehiculo:
     def mostrar_ataques_disponibles(self):
         try:
             if not self.ataques:
-                raise Exception('No se han cargado los ataques al vehiculo')
+                raise AttributeError('No se han cargado los ataques al vehiculo')
 
             ret = ''
             for ataque_disp in self.ataques_disponibles:
@@ -72,7 +67,7 @@ class Vehiculo:
 
             print(ret)
 
-        except Exception as err:
+        except AttributeError as err:
             print('Error: {}'.format(err))
 
     @property

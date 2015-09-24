@@ -97,7 +97,7 @@ class Jugador:
     def mostrar_flota_activa(self):
         try:
             if not self.flota_activa:
-                raise Exception('No se han cargado los vehiculos a la flota')
+                raise AttributeError('No se han cargado los vehiculos a la flota')
 
             ret = ''
             for vehiculo in self.flota_activa:
@@ -106,18 +106,18 @@ class Jugador:
                     vehiculo.nombre)
             print(ret)
 
-        except Exception as err:
+        except AttributeError as err:
             print('Error: {}'.format(err))
 
     def mostrar_flota_movible(self):
         try:
             if not self.flota_activa:
-                raise Exception('No se han cargado los vehiculos a la flota')
+                raise AttributeError('No se han cargado los vehiculos a la flota')
 
             n_movibles = 0
             ret = ''
             for vehiculo in self.flota_activa:
-                if vehiculo.movimientos != 0:
+                if vehiculo.movilidad != 0:
                     n_movibles += 1
                     ret += '  [{0}]: {1}\n'.format(
                         self.flota_activa.index(vehiculo),
@@ -125,13 +125,13 @@ class Jugador:
             print(ret)
             self.n_movibles = n_movibles
 
-        except Exception as err:
+        except AttributeError as err:
             print('Error: {}'.format(err))
 
     def mostrar_flota_maritima_reparable(self):
         try:
             if not self.flota_activa:
-                raise Exception('No se han cargado los vehiculos a la flota')
+                raise AttributeError('No se han cargado los vehiculos a la flota')
 
             v_reparables = []
             ret = ''
@@ -144,13 +144,13 @@ class Jugador:
             print(ret)
             return v_reparables
 
-        except Exception as err:
+        except AttributeError as err:
             print('Error: {}'.format(err))
 
     def mostrar_flota_paralizadora(self):
         try:
             if not self.flota_activa:
-                raise Exception('No se han cargado los vehiculos a la flota')
+                raise AttributeError('No se han cargado los vehiculos a la flota')
 
             v_paralizadores = []
             ret = ''
@@ -161,20 +161,20 @@ class Jugador:
                                         'Paralizer':
                         v_paralizadores.append(vehiculo)
                         ret += '  [{0}]: {1}\n'.format(
-                            self.flota_activa.index(vehiculo),
+                            v_paralizadores.index(vehiculo),
                             vehiculo.nombre)
                         break
             print(ret)
             return v_paralizadores
 
-        except Exception as err:
+        except AttributeError as err:
             print('Error: {}'.format(err))
 
     @property
     def flota_activa_maritima(self):
         try:
             if not self.flota_activa:
-                raise Exception('La flota esta vacia')
+                raise AttributeError('La flota esta vacia')
 
             v_maritimos = []
             for vehiculo in self.flota_activa:
@@ -183,13 +183,13 @@ class Jugador:
 
             return v_maritimos
 
-        except Exception as err:
+        except AttributeError as err:
             print('Error: {}'.format(err))
 
     def mover_vehiculo(self):
         try:
             if not self.flota_activa:
-                raise Exception('La flota no esta cargada.')
+                raise AttributeError('La flota no esta cargada.')
 
             print('\n=== VEHICULOS QUE SE PUEDEN MOVER ===')
             self.mostrar_flota_movible()
@@ -216,13 +216,13 @@ class Jugador:
                       format(vehiculo_mover_inst.nombre, mover[0], mover[1]))
                 self.terminar_turno()
 
-        except (Exception, TypeError, IndexError) as err:
+        except (AttributeError, TypeError, IndexError) as err:
             print('Error: {}'.format(err))
 
     def atacar(self, oponente):
         try:
             if not self.flota_activa:
-                raise Exception('La flota no esta cargada.')
+                raise AttributeError('La flota no esta cargada.')
 
             print('\n=== VEHICULOS QUE PUEDEN ATACAR ===')
             self.mostrar_flota_activa()
@@ -286,8 +286,8 @@ class Jugador:
                 ii = int(ii)
                 jj = int(jj)
                 if ii >= self.mapa.n or jj >= self.mapa.n:
-                    raise Exception('La casilla no se encuentra '
-                                    'en el mapa oponente.')
+                    raise AttributeError('La casilla no se encuentra '
+                                         'en el mapa oponente.')
                 casillas_atacadas = [[ii, jj]]
 
             else:
@@ -377,9 +377,9 @@ class Jugador:
                                 oponente.mapa.eliminar_vehiculo(
                                     vehiculo_victima,
                                     'maritimo')
-                                for casilla in vehiculo_victima.casillas_usadas:
-                                    iii = casilla[0]
-                                    jjj = casilla[1]
+                                for cas in vehiculo_victima.casillas_usadas:
+                                    iii = cas[0]
+                                    jjj = cas[1]
                                     self.radar.marcar('maritimo', iii, jjj, 'X')
                             # Si sigue con vida se retorna el exito
                             # del ataque.
@@ -410,7 +410,7 @@ class Jugador:
                 self.flota_muerta.append(vehiculo_atacador_inst)
                 self.flota_activa.remove(vehiculo_atacador_inst)
 
-        except (Exception, TypeError, IndexError) as err:
+        except (AttributeError, TypeError, IndexError) as err:
             print('Error: {}'.format(err))
 
         else:
@@ -426,8 +426,8 @@ class Jugador:
                     puerto = vehiculo
                     break
             if not tiene_puerto:
-                raise Exception('El jugador {0} no tiene Puerto'.
-                                format(self.nombre))
+                raise AttributeError('El jugador {0} no tiene Puerto'.
+                                     format(self.nombre))
 
             kit = None
             for ataque in puerto.ataques:
@@ -436,21 +436,21 @@ class Jugador:
                     break
 
             if not kit:
-                raise Exception('El Puerto no posee Kit de Ingenieros')
+                raise AttributeError('El Puerto no posee Kit de Ingenieros')
 
             if not kit.disponible:
-                raise Exception('El Kit de Ingenieros no esta disponible'
-                                ' para ser usado este turno. '
-                                'Quedan {} turnos para que vuelva a estar'
-                                'disponible.'.format(kit.turnos_pendientes))
+                raise AttributeError('El Kit de Ingenieros no esta disponible'
+                                     ' para ser usado este turno. '
+                                     'Quedan {} turnos para que vuelva a estar'
+                                     'disponible.'.format(kit.turnos_pendientes))
 
             print('\n=== VEHICULOS MARITIMOS REPARABLES CON '
                   'EL KIT DE INGENIEROS ===')
             v_reparables = self.mostrar_flota_maritima_reparable()
 
             if len(v_reparables) == 0:
-                raise Exception('No hay ningun vehiculo maritimo'
-                                ' que se pueda reparar.')
+                raise ValueError('No hay ningun vehiculo maritimo'
+                                 ' que se pueda reparar.')
 
             vehiculo_reparar = input('Ingrese el numero del vehiculo '
                                      'que desea reparar: ')
@@ -479,7 +479,7 @@ class Jugador:
 
             self.terminar_turno()
 
-        except (Exception, IndexError, TypeError) as err:
+        except (AttributeError, IndexError, TypeError, ValueError) as err:
             print('Error: {}'.format(err))
 
     def explorar(self, oponente):
@@ -493,14 +493,14 @@ class Jugador:
                     break
 
             if not tiene_explorador:
-                raise Exception('El jugador {0} no tiene Avion Explorador'.
-                                format(self.nombre))
+                raise AttributeError('El jugador {0} no tiene Avion Explorador'.
+                                     format(self.nombre))
 
             if explorador.turnos_paralizado:
-                raise Exception('El Avion Explorador esta paralizado. '
-                                'Quedan {} turnos para que vuelva a estar'
-                                ' disponible.'.
-                                format(explorador.turnos_paralizado))
+                raise AttributeError('El Avion Explorador esta paralizado. '
+                                     'Quedan {} turnos para que vuelva a estar'
+                                     ' disponible.'.
+                                     format(explorador.turnos_paralizado))
 
             ij_explorar = input('Ingrese la coordenada central '
                                 'del area de 3x3 a explorar [i,j]: ')
@@ -579,7 +579,7 @@ class Jugador:
 
             self.terminar_turno()
 
-        except (Exception, TypeError, IndexError) as err:
+        except (AttributeError, TypeError, IndexError) as err:
             print('Error: {}'.format(err))
 
     def paralizar(self, oponente):
@@ -590,8 +590,8 @@ class Jugador:
             v_paralizadores = self.mostrar_flota_paralizadora()
 
             if len(v_paralizadores) == 0:
-                raise Exception('Ningun vehiculo tiene GBU-43/B '
-                                'Massive Ordnance Air Blast Paralizer')
+                raise AttributeError('Ningun vehiculo tiene GBU-43/B '
+                                     'Massive Ordnance Air Blast Paralizer')
 
             vehiculo_paralizador = input('Ingrese el numero del '
                                          'vehiculo con el que quiere '
@@ -616,7 +616,7 @@ class Jugador:
                     break
 
             if not paralizer_inst:
-                raise Exception('Ningun vehiculo tiene el paralizador.')
+                raise AttributeError('Ningun vehiculo tiene el paralizador.')
 
             cs = input('Ingrese las dos coordenadas a las que '
                        'quiere enviar el paralizador [i,j h,k]: ')
@@ -689,8 +689,7 @@ class Jugador:
 
             self.terminar_turno()
 
-
-        except (Exception, TypeError, IndexError) as err:
+        except (AttributeError, TypeError, IndexError) as err:
             print('Error: {}'.format(err))
 
     def terminar_turno(self):
