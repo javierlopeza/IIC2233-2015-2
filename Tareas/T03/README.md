@@ -12,10 +12,6 @@ nada por el momento
 
 ###Pendiente:
 
-ESTADISTICAS
-
-HISTORIAL RADAR
-
 CARGAR MODO COMPUTADORA
 
 TESTEAR FUNCIONES
@@ -43,6 +39,10 @@ de cada uno de ellos y luego la coordenada donde seran posicionados inicialmente
 
 * Agregué la opcion *Terminar Turno* para que los jugadores tengan la posibilidad de
 finalizar su turno sin realizar ninguna acción.
+
+
+* Para consultar un estado del radar en un turno pasado, se debe elegir la opcion *Ver Historial Radar* e ingresar
+el turno donde se quiere revisar el estador del radar. Se permite revisar el historial todas las veces que quiera en un turno.
 
 
 * Los vehiculos mantendran para siempre su orientación impuesta inicialmente. Es decir, al moverse 

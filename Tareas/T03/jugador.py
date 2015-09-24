@@ -8,6 +8,7 @@ class Jugador:
         self.id = ide
         self.mapa = None
         self.radar = None
+        self.radares = []
         self.flota = None
         self.flota_activa = []
         self.flota_muerta = []
@@ -28,21 +29,23 @@ class Jugador:
     def display_menu(self, oponente):
         opciones = {'1': self.ver_mapa,
                     '2': self.ver_radar,
-                    '3': self.mover_vehiculo,
-                    '4': self.atacar
+                    '3': self.revisar_historial_radar,
+                    '4': self.mover_vehiculo,
+                    '5': self.atacar
                     }
 
         menu_impreso = '  [1]: Ver Mi Mapa\n' \
                        '  [2]: Ver Radar\n' \
-                       '  [3]: Mover Vehiculo\n' \
-                       '  [4]: Atacar Oponente\n'
+                       '  [3]: Revisar Historial Radar\n' \
+                       '  [4]: Mover Vehiculo\n' \
+                       '  [5]: Atacar Oponente\n'
 
-        proximo_indice = 5
+        proximo_indice = 6
 
         for vehiculo in self.flota_activa:
             if vehiculo.nombre == 'Puerto':
-                opciones.update({'5': self.kit_ingenieros})
-                menu_impreso += '  [5]: Usar Kit de Ingenieros\n'
+                opciones.update({'6': self.kit_ingenieros})
+                menu_impreso += '  [6]: Usar Kit de Ingenieros\n'
                 proximo_indice += 1
                 break
 
@@ -95,6 +98,38 @@ class Jugador:
               '|  O: Disparo al agua  '
               '|  F: Vehiculo encontrado con el explorador  '
               '|  E: Coordenada explorador revelada por el enemigo')
+
+    def revisar_historial_radar(self):
+        print('\n=== REVISAR HISTORIAL RADAR ===\n')
+        try:
+            if len(self.radares) == 0:
+                raise AttributeError('No hay radares en el historial.')
+
+            print('   -> Estan disponibles los estados del radar hasta el turno {}.\n'.format(len(self.radares)))
+            turno = input('Ingrese el turno del cual '
+                          'quiere revisar el estado del Radar: ')
+
+            if not turno.isdigit():
+                raise TypeError('El turno ingresado debe ser un numero.')
+
+            turno = int(turno)
+            if not (len(self.radares) >= turno >= 1):
+                raise IndexError('Solo estan disponibles los estados del radar'
+                                 ' hasta el turno {}'.
+                                 format(len(self.radares)))
+
+            radar = self.radares[turno - 1]
+            print('\n  --- ESTADO DEL RADAR EN EL TURNO {} ---\n'.format(turno))
+            print(radar)
+            print('SIMBOLOGIA  ->  A: Vehiculo enemigo atacado  '
+              '|  X: Vehiculo enemigo muerto  '
+              '|  O: Disparo al agua  '
+              '|  F: Vehiculo encontrado con el explorador  '
+              '|  E: Coordenada explorador revelada por el enemigo')
+
+
+        except (AttributeError, TypeError, IndexError) as err:
+            print('Error: {}'.format(err))
 
     def mostrar_flota_activa(self):
         try:
@@ -555,15 +590,20 @@ class Jugador:
                             if c4 not in casillas_explorar:
                                 casillas_explorar.append(c4)
 
+            algo_encontrado = False
             for casilla in casillas_explorar:
                 iexp = casilla[0]
                 jexp = casilla[1]
                 if oponente.mapa.sector['maritimo'][iexp][jexp] != '~':
+                    algo_encontrado = True
                     print('--- Se encontro una pieza de vehiculo enemigo'
                           ' en la casilla ({0}, {1}) y '
                           'se guardo en el radar como F ---'.
                           format(iexp, jexp))
                     self.radar.sector['maritimo'][iexp][jexp] = 'F'
+
+            if not algo_encontrado:
+                print('--- No se encontro ninguna pieza enemiga. ---')
 
             revelar_coordenada = randint(0, 1)
 
@@ -699,9 +739,6 @@ class Jugador:
             print('Error: {}'.format(err))
 
     def terminar_turno(self):
-        # Se agrega un turno al jugador.
-        self.turnos += 1
-
         # Si hay ataques usados esperando turnos,
         # se les disminuye un turno.
         # Si el Avion Explorador esta paralizado,
@@ -713,6 +750,12 @@ class Jugador:
             if vehiculo.nombre == 'Avion Explorador':
                 if vehiculo.turnos_paralizado:
                     vehiculo.turnos_paralizado -= 1
+
+        # Se agrega el estado del radar al historial de radares.
+        self.radares.append(self.radar)
+
+        # Se agrega un turno al jugador.
+        self.turnos += 1
 
     @property
     def damage_total_recibido(self):
@@ -808,7 +851,7 @@ class Jugador:
             else:
                 ataques_usadas_damage.update({data: 0})
 
-        ataques_efe =ataques_usadas_damage.items()
+        ataques_efe = ataques_usadas_damage.items()
 
         max_efe = max(ataques_efe, key=itemgetter(1))[1]
 
@@ -900,7 +943,7 @@ class Jugador:
         print('  (9) Ataques mas eficientes:')
         for ataque in mas_eficientes:
             print('    -> {0}: {1} puntos de eficiencia'.
-                  format(ataque, round(max_efe,2)))
+                  format(ataque, round(max_efe, 2)))
 
     def verificar_fracaso(self):
         if len(self.flota_activa_maritima) == 0:
