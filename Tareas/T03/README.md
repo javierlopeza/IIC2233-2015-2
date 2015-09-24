@@ -2,25 +2,7 @@
 
 ###Borrador
 
-(para el menu que le aparece al jugador cuando le toca jugar)
-
->Ver mi mapa
-
->Ver radar (printea radar y vuelve al menu >) LISTO
-
->Consultar historial radar
-
->Mover vehiculo (mueve vehiculo y termina turno) LISTO
-
->Atacar oponente (ataca oponente y termina turno) LISTO
-
->Explorar (explora y termina turno) LISTO
-
->Paralizar
-
->Kit de Ingenieros
-
-
+vacio
 
 ###Dudas:
 
@@ -30,11 +12,11 @@ nada por el momento
 
 ###Pendiente:
 
-PARALIZAR
-
-CARGAR MODO COMPUTADORA
+ESTADISTICAS
 
 HISTORIAL RADAR
+
+CARGAR MODO COMPUTADORA
 
 TESTEAR FUNCIONES
 
@@ -45,7 +27,7 @@ TESTEAR FUNCIONES
 Se debe ingresar *p* para la primera opcion o *c* para la segunda opcion.
 
 
-* Luego de elegir el tipo de oponente, se inscriben el o los nombre de los participantes.
+* Luego de elegir el tipo de oponente, se inscriben el o los nombres de los participantes.
 
 
 * Luego de inscribir los nombres, se pide ingresar el tamaño de los mapas que se van a usar en la partida.
@@ -130,18 +112,23 @@ las casillas donde existe un barco enemigo.
 del sector aereo del radar enemigo.
 
 
-* Consideré que la disponibilidad que se menciona para los ataques, por ejemplo, para el Kit de Ingenieros
+* Para intentar paralizar el Avion Explorador enemigo, se debe elegir dicha opcion he ingresar las coordenadas
+en el formato ```i,j h,k```, por ejemplo: ```2,3 2,4```. Estas coordenadas corresponden a las que se deben acertar (ambas)
+para poder efectivamente paralizar el Avion Explorador enemigo.
+
+
+* Consideré que la **disponibilidad** que se menciona para los ataques, por ejemplo, para el Kit de Ingenieros
 (disponibilidad cada 2 turnos), significa que si se usa dicho ataque en un turno 1, el turno 2 siguiente no podré
 usarlo, pero en el turno 3 subsiguiente sí podre usarlo. Es analogo para todos los ataques.
 
 
-* La partida finaliza cuando un jugador tiene en su flota maritima solo la Lancha, o no tiene ningun vehiculo en dicha flota.
+* **La partida finaliza** cuando un jugador tiene en su flota maritima solo la Lancha, o no tiene ningun vehiculo en dicha flota.
 (puede pasar que el oponente destruya la Lancha antes de destruir otros vehiculos maritimos).
 
 
-* Para mover un vehículo de dimensiones, por ejemplo, de 2x3, este tendrá una property
+* Para **mover un vehículo** de dimensiones, por ejemplo, de 2x3, este tendrá una property
 ```posicion_guia->list``` donde ```posicion_guia[0]->int``` indica la fila y ```posicion_guia[1]->int``` 
-indica la columna de la casilla donde se encuentra la *parte guía* del vehículo. 
+indica la columna de la casilla donde se encuentra la **parte guía** del vehículo. 
 Por ejemplo en un mapa de 10x10:
 ```
                          SECTOR MARITIMO

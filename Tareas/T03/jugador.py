@@ -170,6 +170,22 @@ class Jugador:
         except Exception as err:
             print('Error: {}'.format(err))
 
+    @property
+    def flota_activa_maritima(self):
+        try:
+            if not self.flota_activa:
+                raise Exception('La flota esta vacia')
+
+            v_maritimos = []
+            for vehiculo in self.flota_activa:
+                if vehiculo.tipo == 'maritimo':
+                    v_maritimos.append(vehiculo)
+
+            return v_maritimos
+
+        except Exception as err:
+            print('Error: {}'.format(err))
+
     def mover_vehiculo(self):
         try:
             if not self.flota_activa:
@@ -692,3 +708,11 @@ class Jugador:
             if vehiculo.nombre == 'Avion Explorador':
                 if vehiculo.turnos_paralizado:
                     vehiculo.turnos_paralizado -= 1
+
+    def verificar_fracaso(self):
+        if len(self.flota_activa_maritima) == 0:
+            return True
+        if len(self.flota_activa_maritima) == 1:
+            if self.flota_activa_maritima[0].nombre == 'Lancha':
+                return True
+        return False

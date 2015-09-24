@@ -33,7 +33,7 @@ class Partida:
                   format(self.jugadores[turno_jugador].id,
                          self.jugadores[turno_jugador].nombre))
 
-            while True:
+            while not self.jugadores[turno_jugador].verificar_fracaso():
                 jugador_actual = self.jugadores[turno_jugador]
                 if jugador_actual.id == 1:
                     oponente = self.jugadores['player2']
@@ -46,6 +46,8 @@ class Partida:
 
                 turno_jugador = prox_turno
 
+            self.terminar_juego()
+
         except Exception as err:
             print('Error: {}'.format(err))
 
@@ -54,6 +56,7 @@ class Partida:
 
     def terminar_juego(self):
         self.mostrar_estadisticas()
+        print('JUEGO FINALIZADO')
         sys.exit()
 
 
