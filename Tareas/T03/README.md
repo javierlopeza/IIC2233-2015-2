@@ -20,9 +20,6 @@
 
 
 
-
-
-
 ###Dudas:
 
 nada por el momento
@@ -30,6 +27,8 @@ nada por el momento
 
 
 ###Pendiente:
+
+EXPLORAR
 
 CARGAR MODO COMPUTADORA
 
@@ -87,6 +86,10 @@ ataque cayo en el mar). No cambia nada en el radar pues no entrega coordenadas d
 
 * En caso de destruir un vehiculo enemigo, mi radar se marca con X en todas las casillas donde estaba el vehiculo destruido.
 Esto debido a la condicion de que al destruir un vehiculo del oponente se entreguen las coordenadas donde se encontraba.
+
+
+* El Kit de Ingenieros solo se usará sobre vehículos marítimos. Un vehiculo sin daños no puede recibir el Kit de Ingenieros.
+Sí se puede usar sobre el mismo Puerto.
 
 
 * Consideré que la disponibilidad que se menciona para los ataques, por ejemplo, para el Kit de Ingenieros

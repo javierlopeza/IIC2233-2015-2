@@ -5,6 +5,11 @@ class Animal:
 gato = Animal('gato')
 perro = Animal('perro')
 
+gato2 = gato
+
+gato2.nombre = 'le cambie'
+print(gato.nombre)
+
 lista = [gato, perro]
 
 lista2 = []

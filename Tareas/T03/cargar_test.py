@@ -10,8 +10,10 @@ def cargar_test(partida):
     partida.jugadores = jugadores
 
     for jugador in partida.jugadores.values():
-        jugador.mapa = Mapa(10)
-        jugador.radar = Mapa(10)
+        mapa = Mapa(10)
+        radar = Mapa(10)
+        jugador.mapa = mapa
+        jugador.radar = radar
 
     cargar_vehiculos(partida)
 

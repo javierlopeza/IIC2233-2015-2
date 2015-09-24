@@ -3,6 +3,7 @@ from verificaciones import \
     verificar_movimiento, \
     verificar_movimiento_mapa, \
     verificar_limite_movimiento
+from copy import deepcopy
 
 
 class Mapa:
@@ -30,8 +31,9 @@ class Mapa:
                 fila = []
                 for j in range(n):
                     fila.append('~')
+                fila_copia = deepcopy(fila)
                 self.sector['aereo'].append(fila)
-                self.sector['maritimo'].append(fila)
+                self.sector['maritimo'].append(fila_copia)
             self.n = n
             self.armado = True
 

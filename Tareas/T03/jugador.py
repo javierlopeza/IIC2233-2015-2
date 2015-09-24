@@ -17,7 +17,7 @@ class Jugador:
         # explorar o usar el Kit.
         while self.turnos == turno_actual:
             print('\n === TURNO {2} PLAYER {0}: {1} -> JUEGUE ==='.format(
-                self.id, self.nombre, self.turnos+1))
+                self.id, self.nombre, self.turnos + 1))
             self.display_menu(oponente)
 
     def display_menu(self, oponente):
@@ -105,6 +105,25 @@ class Jugador:
                         vehiculo.nombre)
             print(ret)
             self.n_movibles = n_movibles
+
+        except Exception as err:
+            print('Error: {}'.format(err))
+
+    def mostrar_flota_maritima_reparable(self):
+        try:
+            if not self.flota_activa:
+                raise Exception('No se han cargado los vehiculos a la flota')
+
+            v_reparables = []
+            ret = ''
+            for vehiculo in self.flota_activa:
+                if vehiculo.tipo == 'maritimo' and vehiculo.vida < vehiculo.resistencia:
+                    v_reparables.append(vehiculo)
+                    ret += '  [{0}]: {1}\n'.format(
+                        self.flota_activa.index(vehiculo),
+                        vehiculo.nombre)
+            print(ret)
+            return v_reparables
 
         except Exception as err:
             print('Error: {}'.format(err))
@@ -300,7 +319,7 @@ class Jugador:
                                     iii = casilla[0]
                                     jjj = casilla[1]
                                     self.radar.marcar('maritimo', iii, jjj, 'X')
-                            # Si sigue con vida se retorna la efectividad
+                            # Si sigue con vida se retorna el exito
                             # del ataque.
                             else:
                                 retornar = 'un vehiculo'
@@ -310,7 +329,7 @@ class Jugador:
 
             if not ataque_elegido_inst.nombre == 'Misil de crucrero' \
                                                  ' BGM-109 Tomahawk':
-                print('--- El ataque cayo en {0} '
+                print('\n--- El ataque cayo en {0} '
                       'en las coordenadas ({1}, {2}) ---'.
                       format(retornar,
                              ii,
@@ -331,7 +350,68 @@ class Jugador:
             self.terminar_turno()
 
     def kit_ingenieros(self):
-        pass
+        try:
+            tiene_puerto = False
+            puerto = None
+            for vehiculo in self.flota_activa:
+                if vehiculo.nombre == 'Puerto':
+                    tiene_puerto = True
+                    puerto = vehiculo
+                    break
+            if not tiene_puerto:
+                raise Exception('El jugador {0} no tiene Puerto'.
+                                format(self.nombre))
+
+            kit = None
+            for ataque in puerto.ataques:
+                if ataque.nombre == 'Kit de Ingenieros':
+                    kit = ataque
+                    break
+
+            if not kit:
+                raise Exception('El Puerto no posee Kit de Ingenieros')
+
+            if not kit.disponible:
+                raise Exception('El Kit de Ingenieros no esta disponible'
+                                ' para ser usado este turno. '
+                                'Quedan {} turnos para que vuelva a estar'
+                                'disponible.'.format(kit.turnos_pendientes))
+
+            print('\n=== VEHICULOS MARITIMOS REPARABLES CON EL KIT DE INGENIEROS ===')
+            v_reparables = self.mostrar_flota_maritima_reparable()
+
+            if len(v_reparables) == 0:
+                raise Exception('No hay ningun vehiculo maritimo que se pueda reparar.')
+
+            vehiculo_reparar = input('Ingrese el numero del vehiculo '
+                                     'que desea reparar: ')
+            if not vehiculo_reparar.isdigit():
+                raise TypeError('La opcion {} '
+                                'no es un numero'.
+                                format(vehiculo_reparar))
+
+            vehiculo_reparar = int(vehiculo_reparar)
+            if not vehiculo_reparar < len(v_reparables):
+                raise IndexError('El numero {} no esta '
+                                 'dentro de las opciones'.
+                                 format(vehiculo_reparar))
+
+            vehiculo_reparar_inst = v_reparables[vehiculo_reparar]
+
+            vida_previa = vehiculo_reparar_inst.vida
+            kit.usar()
+            vehiculo_reparar_inst.vida += 1
+
+            print('\n--- El vehiculo {0} aumento su vida '
+                  'de {1} a {2} gracias al Kit de Ingenieros ---'.
+                  format(vehiculo_reparar_inst.nombre,
+                         vida_previa,
+                         vehiculo_reparar_inst.vida))
+
+            self.terminar_turno()
+
+        except Exception as err:
+            print('Error: {}'.format(err))
 
     def explorar(self):
         self.terminar_turno()
