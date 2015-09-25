@@ -185,10 +185,10 @@ lo que provocará que la posición guia quede en la casilla (2,1):
 
 
 * **Al atacar, la computadora tiene las siguientes prioridades de ataques (por severidad):**
-1. Kamikaze
-2. Misil Balístico Intercontinental Minuteman III 
-3. Misil de crucero BGM-109 Tomahawk (en un eje aleatorio que cruce la casilla objetivo)
-4. Misil UGM-133 Trident II
-5. Napalm
+	1. Kamikaze
+	2. Misil Balístico Intercontinental Minuteman III 
+	3. Misil de crucero BGM-109 Tomahawk (en un eje aleatorio que cruce la casilla objetivo)
+	4. Misil UGM-133 Trident II
+	5. Napalm
 
 * Con este metodo la computadora de todas maneras tiene probabilidades de ganar la partida (lo probé y logra ganarme :unamused:).
