@@ -193,8 +193,8 @@ que cumple con la condicion, se muestran todos los que la cumplen.
 
 **Se detallarán en esta sección las características que determinan la inteligencia de la computadora cuando jugamos contra ella.**
 
-* En general a las clases les di el atributo ```owner``` para que la computadora no revele informacion secreta a la persona
-(sino seria muy facil ganarle).
+* La computadora no revelará informacion secreta de sus acciones a la persona contrincante
+(sino seria obvio ganarle).
 
 
 * Para **posicionar vehiculos**, pienso que no existe una estrategia inteligente para ubicarlos, asi que simplemente 
@@ -204,38 +204,40 @@ la computadora los ubicará todos libremente en su mapa (aleatoriamente) y en or
 * En este modo de juego, siempre comienza jugando la persona.
 
 
-* Cuando le toca jugar a la Computadora, se genera invisiblemente un menu de opciones entre las que puede elegir.
+* Cuando le toca jugar a la Computadora, se genera invisiblemente un menu de opciones entre las que puede elegir ciertas acciones.
 
 
 * Las prioridades de sus acciones se ordenan así:
--> Al atacar, la computadora tiene las siguientes prioridades de ataques (por severidad):
+
+	1. Si en su radar hay alguna letra A, significa que en esa casilla hay un vehiculo que ha atacado pero no ha muerto. Por lo tanto
+ataca en dicha casilla.
+
+	2. Si en su radar hay alguna letra F, significa que ha explorado antes y encontrado un vehiculo en esa casilla. Por lo tanto ataca
+dicha casilla.
+
+	3. Si tiene casillas espiadas y hay algun vehiculo en ellas, mueve inmediatamente un vehiculo fuera de dichas casillas.
+Esto porque significa que el enemigo ha descubierto dicho vehiculo y pretenderá atacarlo en su próximo turno. Luego de mover dicho
+vehiculo elimina la casilla de casillas espiadas, pues ya no es una preocupacion.
+
+	4. Si el Avion Explorador esta paralizado y le queda 1 turno para volver a la normalidad,
+se mueve a cualquier casilla (sí, puede moverse aunque esté paralizado) para escapar
+de volver a ser paralizado en otra instancia.
+
+	5. Se elige aleatoriamente una de las siguientes opciones (de las disponibles):
+
+		5.1. Explorar una zona aleatoria del mapa enemigo.
+
+		5.2. Si el Avion Explorador enemigo no esta paralizado:
+			- Si es que en su radar hay una E significa que el Avion Explorador enemigo le revelo una coordenada. Se dispara el Paralizador
+a esa coordenada y a una contigua elegida aleatoriamente. El vehiculo que dispara el Paralizador se elige aleatoriamente entre los que poseen dicho ataque.
+			- O en el caso de que ya tenga las dos coordenadas claves descubiertas, disparo el Paralizador directo a dichas dos coordenadas.
+
+		5.3. Si algun vehiculo de la flota propia esta dañado, se usa el Kit de Ingenieros sobre él.
+
+
+* **Al atacar, la computadora tiene las siguientes prioridades de ataques (por severidad):**
 	I. Kamikaze
 	II. Misil Balístico Intercontinental Minuteman III 
 	III. Misil de crucero BGM-109 Tomahawk (en un eje aleatorio que cruce la casilla con la letra A)
 	IV. Misil UGM-133 Trident II
 	V. Napalm
-
-1. Si en su radar hay alguna letra A, significa que en esa casilla hay un vehiculo que ha atacado pero no ha muerto. Por lo tanto
-ataca en dicha casilla.
-
-2. Si en su radar hay alguna letra F, significa que ha explorado antes y encontrado un vehiculo en esa casilla. Por lo tanto ataca
-dicha casilla.
-
-3. Si tiene casillas espiadas y hay algun vehiculo en ellas, mueve inmediatamente un vehiculo fuera de dichas casillas.
-Esto porque significa que el enemigo ha descubierto dicho vehiculo y pretenderá atacarlo en su próximo turno. Luego de mover dicho
-vehiculo elimina la casilla de casillas espiadas, pues ya no es una preocupacion.
-
-4. Si el Avion Explorador esta paralizado y le queda 1 turno para volver a la normalidad,
-se mueve a cualquier casilla (sí, puede moverse aunque esté paralizado) para escapar
-de volver a ser paralizado en otra instancia.
-
-5. Se elige aleatoriamente una de las siguientes opciones (de las disponibles):
-
-5.1. Explorar una zona aleatoria del mapa enemigo.
-
-5.2. Si el Avion Explorador enemigo no esta paralizado:
-- Si es que en su radar hay una E significa que el Avion Explorador enemigo le revelo una coordenada. Se dispara el Paralizador
-a esa coordenada y a una contigua elegida aleatoriamente. El vehiculo que dispara el Paralizador se elige aleatoriamente entre los que poseen dicho ataque.
-- O en el caso de que ya tenga las dos coordenadas claves descubiertas, disparo el Paralizador directo a dichas dos coordenadas.
-
-5.3. Si algun vehiculo de la flota propia esta dañado, se usa el Kit de Ingenieros sobre él.
