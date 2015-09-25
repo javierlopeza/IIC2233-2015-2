@@ -15,9 +15,9 @@ class Partida:
         self.cargado = False
         self.jugadores = {}
         # Para testeo contra persona:
-        cargar_test(self)
+        # cargar_test(self)
         # Para testeo contra computadora:
-        # cargar_test2(self)
+        cargar_test2(self)
         '''
         cargar_jugadores(self)
         cargar_mapas(self)
@@ -64,7 +64,28 @@ class Partida:
                 self.terminar_juego(ganador)
 
             elif self.modo_oponente == 'c':
-                print(self.jugadores['computadora'].mapa)
+                turno_jugador = 'player1'
+
+                while not self.jugadores[turno_jugador].verificar_fracaso():
+                    jugador_actual = self.jugadores[turno_jugador]
+                    if jugador_actual.id == 1:
+                        oponente = self.jugadores['computadora']
+                        prox_turno = 'computadora'
+                    else:
+                        oponente = self.jugadores['player1']
+                        prox_turno = 'player1'
+
+                    jugador_actual.jugar(oponente)
+
+                    turno_jugador = prox_turno
+
+                for jugador in self.jugadores.values():
+                    if jugador.loser == False:
+                        ganador = jugador
+                        break
+
+                self.terminar_juego(ganador)
+
 
         except AttributeError as err:
             print('Error: {}'.format(err))

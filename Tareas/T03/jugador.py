@@ -198,7 +198,8 @@ class Jugador:
                     ret += '  [{0}]: {1}\n'.format(
                         self.flota_activa.index(vehiculo),
                         vehiculo.nombre)
-            print(ret)
+            if self.nombre != 'Computadora':
+                print(ret)
             return v_reparables
 
         except AttributeError as err:
@@ -221,7 +222,8 @@ class Jugador:
                             v_paralizadores.index(vehiculo),
                             vehiculo.nombre)
                         break
-            print(ret)
+            if self.nombre != 'Computadora':
+                print(ret)
             return v_paralizadores
 
         except AttributeError as err:
@@ -277,114 +279,117 @@ class Jugador:
         except (AttributeError, TypeError, IndexError) as err:
             print('Error: {}'.format(err))
 
-    def atacar(self, oponente):
+    def atacar(self, oponente, vehiculo_atacador_inst=None, ataque_elegido_inst=None, casillas_atacadas=None):
         try:
             if not self.flota_activa:
                 raise AttributeError('La flota no esta cargada.')
 
-            print('\n=== VEHICULOS QUE PUEDEN ATACAR ===')
-            self.mostrar_flota_activa()
+            if not vehiculo_atacador_inst:
+                print('\n=== VEHICULOS QUE PUEDEN ATACAR ===')
+                self.mostrar_flota_activa()
 
-            vehiculo_atacador = input('Ingrese el numero del vehiculo '
-                                      'con el que desea atacar: ')
-            if not vehiculo_atacador.isdigit():
-                raise TypeError('La opcion {} '
-                                'no es un numero'.
-                                format(vehiculo_atacador))
+                vehiculo_atacador = input('Ingrese el numero del vehiculo '
+                                          'con el que desea atacar: ')
+                if not vehiculo_atacador.isdigit():
+                    raise TypeError('La opcion {} '
+                                    'no es un numero'.
+                                    format(vehiculo_atacador))
 
-            vehiculo_atacador = int(vehiculo_atacador)
-            if not vehiculo_atacador < len(self.flota_activa):
-                raise IndexError('El numero {} no esta '
-                                 'dentro de las opciones'.
-                                 format(vehiculo_atacador))
+                vehiculo_atacador = int(vehiculo_atacador)
+                if not vehiculo_atacador < len(self.flota_activa):
+                    raise IndexError('El numero {} no esta '
+                                     'dentro de las opciones'.
+                                     format(vehiculo_atacador))
 
-            vehiculo_atacador_inst = self.flota_activa[vehiculo_atacador]
+                vehiculo_atacador_inst = self.flota_activa[vehiculo_atacador]
 
-            print('\n=== ATAQUES DISPONIBLES PARA EL VEHICULO {} ==='.
-                  format(vehiculo_atacador_inst.nombre))
+            if not ataque_elegido_inst:
+                print('\n=== ATAQUES DISPONIBLES PARA EL VEHICULO {} ==='.
+                      format(vehiculo_atacador_inst.nombre))
 
-            vehiculo_atacador_inst.mostrar_ataques_disponibles()
+                vehiculo_atacador_inst.mostrar_ataques_disponibles()
 
-            ataque_elegido = input('Ingrese el numero del ataque '
-                                   'que quiere utilizar: ')
+                ataque_elegido = input('Ingrese el numero del ataque '
+                                       'que quiere utilizar: ')
 
-            if not ataque_elegido.isdigit():
-                raise TypeError('La opcion {} '
-                                'no es un numero'.
-                                format(vehiculo_atacador))
+                if not ataque_elegido.isdigit():
+                    raise TypeError('La opcion {} '
+                                    'no es un numero'.
+                                    format(vehiculo_atacador))
 
-            ataque_elegido = int(ataque_elegido)
-            if not ataque_elegido < \
-                    len(vehiculo_atacador_inst.ataques_disponibles):
-                raise IndexError('El numero {} no esta '
-                                 'dentro de las opciones'.
-                                 format(vehiculo_atacador))
+                ataque_elegido = int(ataque_elegido)
+                if not ataque_elegido < \
+                        len(vehiculo_atacador_inst.ataques_disponibles):
+                    raise IndexError('El numero {} no esta '
+                                     'dentro de las opciones'.
+                                     format(vehiculo_atacador))
 
-            ataque_elegido_inst = \
-                vehiculo_atacador_inst.ataques_disponibles[ataque_elegido]
+                ataque_elegido_inst = \
+                    vehiculo_atacador_inst.ataques_disponibles[ataque_elegido]
 
             if not ataque_elegido_inst.nombre == 'Misil de crucrero ' \
                                                  'BGM-109 Tomahawk':
                 es_tom = False
+                if not casillas_atacadas:
+                    casilla_ataque = input('Ingrese la casilla oponente '
+                                           'a la que quiere atacar [i,j]: ')
+                    if ',' not in casilla_ataque:
+                        raise TypeError('El formato de casilla no es valido.')
 
-                casilla_ataque = input('Ingrese la casilla oponente '
-                                       'a la que quiere atacar [i,j]: ')
-                if ',' not in casilla_ataque:
-                    raise TypeError('El formato de casilla no es valido.')
+                    l_ij = casilla_ataque.split(',')
+                    if len(l_ij) != 2:
+                        raise TypeError('El formato de casilla no es valido.')
 
-                l_ij = casilla_ataque.split(',')
-                if len(l_ij) != 2:
-                    raise TypeError('El formato de casilla no es valido.')
+                    ii = l_ij[0]
+                    jj = l_ij[1]
+                    if not ii.isdigit() or not jj.isdigit():
+                        raise TypeError('El formato de casilla no es valido.')
 
-                ii = l_ij[0]
-                jj = l_ij[1]
-                if not ii.isdigit() or not jj.isdigit():
-                    raise TypeError('El formato de casilla no es valido.')
-
-                ii = int(ii)
-                jj = int(jj)
-                if ii >= self.mapa.n or jj >= self.mapa.n:
-                    raise AttributeError('La casilla no se encuentra '
-                                         'en el mapa oponente.')
-                casillas_atacadas = [[ii, jj]]
+                    ii = int(ii)
+                    jj = int(jj)
+                    if ii >= self.mapa.n or jj >= self.mapa.n:
+                        raise AttributeError('La casilla no se encuentra '
+                                             'en el mapa oponente.')
+                    casillas_atacadas = [[ii, jj]]
 
             else:
                 es_tom = True
-                fila_columna = input('Ingrese si desea '
-                                     'atacar una fila o columna [f/c]: ')
+                if not casillas_atacadas:
+                    fila_columna = input('Ingrese si desea '
+                                         'atacar una fila o columna [f/c]: ')
 
-                if not fila_columna == 'c' and not fila_columna == 'f':
-                    raise TypeError('Opcion invalida.')
+                    if not fila_columna == 'c' and not fila_columna == 'f':
+                        raise TypeError('Opcion invalida.')
 
-                if fila_columna == 'f':
-                    fila_ataque = input('Ingrese la fila oponente '
-                                        'a la que quiere atacar [i]: ')
-                    if not fila_ataque.isdigit():
-                        raise TypeError('El formato de fila no es valido.')
+                    if fila_columna == 'f':
+                        fila_ataque = input('Ingrese la fila oponente '
+                                            'a la que quiere atacar [i]: ')
+                        if not fila_ataque.isdigit():
+                            raise TypeError('El formato de fila no es valido.')
 
-                    fila_ataque = int(fila_ataque)
-                    if not fila_ataque < self.mapa.n:
-                        raise IndexError('La fila no existe '
-                                         'en el mapa oponente.')
+                        fila_ataque = int(fila_ataque)
+                        if not fila_ataque < self.mapa.n:
+                            raise IndexError('La fila no existe '
+                                             'en el mapa oponente.')
 
-                    casillas_atacadas = []
-                    for k in range(self.mapa.n):
-                        casillas_atacadas.append([fila_ataque, k])
+                        casillas_atacadas = []
+                        for k in range(self.mapa.n):
+                            casillas_atacadas.append([fila_ataque, k])
 
-                else:
-                    columna_ataque = input('Ingrese la columna oponente '
-                                           'a la que quiere atacar [j]: ')
-                    if not columna_ataque.isdigit():
-                        raise TypeError('El formato de fila no es valido.')
+                    else:
+                        columna_ataque = input('Ingrese la columna oponente '
+                                               'a la que quiere atacar [j]: ')
+                        if not columna_ataque.isdigit():
+                            raise TypeError('El formato de fila no es valido.')
 
-                    columna_ataque = int(columna_ataque)
-                    if not columna_ataque < self.mapa.n:
-                        raise IndexError('La columna no existe '
-                                         'en el mapa oponente.')
+                        columna_ataque = int(columna_ataque)
+                        if not columna_ataque < self.mapa.n:
+                            raise IndexError('La columna no existe '
+                                             'en el mapa oponente.')
 
-                    casillas_atacadas = []
-                    for k in range(self.mapa.n):
-                        casillas_atacadas.append([k, columna_ataque])
+                        casillas_atacadas = []
+                        for k in range(self.mapa.n):
+                            casillas_atacadas.append([k, columna_ataque])
 
             # Se agrega una usada al ataque elegido y se usa.
             ataque_elegido_inst.usadas += 1
@@ -451,21 +456,23 @@ class Jugador:
 
             if not ataque_elegido_inst.nombre == 'Misil de crucrero' \
                                                  ' BGM-109 Tomahawk':
-                print('\n--- El ataque cayo en {0} '
-                      'en las coordenadas ({1}, {2}) ---'.
-                      format(retornar,
+                print('\n--- El ataque hecho por {0} cayo en {1} '
+                      'en las coordenadas ({2}, {3}) ---'.
+                      format(self.nombre,
+                             retornar,
                              ii,
                              jj))
             else:
                 if exito:
-                    print('\n--- El ataque fue exitoso '
-                          'y se afectaron {0} piezas enemigas ---'.
-                          format(n_piezas_afectadas))
+                    print('\n--- El ataque hecho por {0} fue exitoso '
+                          'y se afectaron {1} piezas enemigas ---'.
+                          format(self.nombre, n_piezas_afectadas))
                 else:
                     print('\n--- El ataque NO fue exitoso')
 
             if ataque_elegido_inst.nombre == 'Kamikaze':
                 # El Kamikaze IXXI muere luego de atacar.
+                print('El ataque fue un Kamikaze!')
                 self.mapa.eliminar_vehiculo(vehiculo_atacador_inst, 'aereo')
                 self.flota_muerta.append(vehiculo_atacador_inst)
                 self.flota_activa.remove(vehiculo_atacador_inst)

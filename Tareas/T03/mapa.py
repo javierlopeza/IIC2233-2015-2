@@ -38,15 +38,15 @@ class Mapa:
             self.n = n
             self.armado = True
 
-    def mover_vehiculo(self, vehiculo):
+    def mover_vehiculo(self, vehiculo, ij=None):
         try:
             if not isinstance(vehiculo, Vehiculo):
                 raise TypeError('El vehiculo entregado no es una'
                                 ' instancia de la clase Vehiculo')
-
-            ij = input('Ingrese las coordenadas (fila,columna) '
-                       'a la que desea mover el vehiculo {} [i,j]: '.
-                       format(vehiculo.nombre))
+            if not ij:
+                ij = input('Ingrese las coordenadas (fila,columna) '
+                           'a la que desea mover el vehiculo {} [i,j]: '.
+                           format(vehiculo.nombre))
 
             if verificar_movimiento(vehiculo, ij, self):
                 i = int(ij.split(',')[0])

@@ -4,15 +4,13 @@
 
 vacio
 
+
 ###Dudas:
 
 nada por el momento
 
 
-
 ###Pendiente:
-
-CARGAR MODO COMPUTADORA
 
 TESTEAR FUNCIONES
 
@@ -107,10 +105,11 @@ es algo asi como que 'va a explorar y vuelve' o como si lanzara un 'ataque explo
 
 
 * Si el explorador descubre que hay uno o varios barcos en el area explorada, se marcan en el radar del jugador
-las casillas donde existe un barco enemigo con una F.
+las casillas donde existe un barco enemigo con una F. Tambien, siempre se le notifica al jugador espiado las casillas en que el
+Avion Explorador enemigo encontro vehiculos (Casillas Espiadas).
 
 
-* Si el explorador revela una de sus coordenadas (con 50% de probabilidad) se marca con una E en la casilla revelada 
+* Si el explorador revela una de sus coordenadas de su ubicacion (con 50% de probabilidad) se marca con una E en la casilla revelada 
 del sector aereo del radar enemigo.
 
 
@@ -236,8 +235,7 @@ de volver a ser paralizado en otra instancia.
 
 5.2. Si el Avion Explorador enemigo no esta paralizado:
 - Si es que en su radar hay una E significa que el Avion Explorador enemigo le revelo una coordenada. Se dispara el Paralizador
-a esa coordenada y a una contigua elegida aleatoriamente. Si el Paralizador es exitoso, se guardan las coordenadas claves. El vehiculo
-que dispara el Paralizador se elige aleatoriamente entre los que poseen dicho ataque.
+a esa coordenada y a una contigua elegida aleatoriamente. El vehiculo que dispara el Paralizador se elige aleatoriamente entre los que poseen dicho ataque.
 - O en el caso de que ya tenga las dos coordenadas claves descubiertas, disparo el Paralizador directo a dichas dos coordenadas.
 
 5.3. Si algun vehiculo de la flota propia esta dañado, se usa el Kit de Ingenieros sobre él.
