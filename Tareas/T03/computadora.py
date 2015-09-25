@@ -95,13 +95,13 @@ class Computadora(Jugador):
         for i in range(self.mapa.n):
             for j in range(self.mapa.n):
                 if self.radar.sector['maritimo'][i][j] == 'A':
-                    casilla_destino = [i, j]
+                    casilla_destino = [[i, j]]
 
         if not casilla_destino:
             for i in range(self.mapa.n):
                 for j in range(self.mapa.n):
                     if self.radar.sector['maritimo'][i][j] == 'F':
-                        casilla_destino = [i, j]
+                        casilla_destino = [[i, j]]
 
         if not casilla_destino:
             return False
@@ -138,10 +138,10 @@ class Computadora(Jugador):
             foc = choice(['f', 'c'])
             if foc == 'c':
                 for j in range(self.mapa.n):
-                    casillas_dest.append([casilla_destino[0], j])
+                    casillas_dest.append([casilla_destino[0][0], j])
             elif foc == 'f':
                 for i in range(self.mapa.n):
-                    casillas_dest.append([i, casilla_destino[1]])
+                    casillas_dest.append([i, casilla_destino[0][1]])
 
         self.atacar(oponente, vehiculo_usar, ataque_usar, casillas_dest)
 

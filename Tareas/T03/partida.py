@@ -94,12 +94,19 @@ class Partida:
         print('\n     === ESTADISTICAS DE LA PARTIDA ===')
         print('\n=== ESTADISTICAS PLAYER 1: {0} ==='.
               format(self.jugadores['player1'].nombre))
-        self.jugadores['player1'].mostrar_estadisticas(
-            self.jugadores['player2'])
-        print('\n=== ESTADISTICAS PLAYER 2: {0} ==='.
-              format(self.jugadores['player2'].nombre))
-        self.jugadores['player2'].mostrar_estadisticas(
-            self.jugadores['player1'])
+        if self.modo_oponente == 'p':
+            self.jugadores['player1'].mostrar_estadisticas(
+                self.jugadores['player2'])
+            print('\n=== ESTADISTICAS PLAYER 2: {0} ==='.
+                  format(self.jugadores['player2'].nombre))
+            self.jugadores['player2'].mostrar_estadisticas(
+                self.jugadores['player1'])
+        elif self.modo_oponente == 'c':
+            self.jugadores['player1'].mostrar_estadisticas(
+                self.jugadores['computadora'])
+            print('\n=== ESTADISTICAS COMPUTADORA: ===')
+            self.jugadores['computadora'].mostrar_estadisticas(
+                self.jugadores['player1'])
 
     def terminar_juego(self, ganador):
         print('\n\n   === JUEGO FINALIZADO  ->  '

@@ -477,7 +477,7 @@ class Jugador:
                 self.flota_muerta.append(vehiculo_atacador_inst)
                 self.flota_activa.remove(vehiculo_atacador_inst)
 
-        except (AttributeError, TypeError, IndexError) as err:
+        except ZeroDivisionError as err:
             print('Error: {}'.format(err))
 
         else:
