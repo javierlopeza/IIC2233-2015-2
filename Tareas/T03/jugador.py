@@ -155,9 +155,10 @@ class Jugador:
 
             ret = ''
             for vehiculo in self.flota_activa:
-                ret += '  [{0}]: {1}\n'.format(
-                    self.flota_activa.index(vehiculo),
-                    vehiculo.nombre)
+                if vehiculo.nombre != 'Lancha':
+                    ret += '  [{0}]: {1}\n'.format(
+                        self.flota_activa.index(vehiculo),
+                        vehiculo.nombre)
             print(ret)
 
         except AttributeError as err:
@@ -278,7 +279,10 @@ class Jugador:
         except (AttributeError, TypeError, IndexError) as err:
             print('Error: {}'.format(err))
 
-    def atacar(self, oponente, vehiculo_atacador_inst=None, ataque_elegido_inst=None, casillas_atacadas=None):
+    def atacar(self, oponente,
+               vehiculo_atacador_inst=None,
+               ataque_elegido_inst=None,
+               casillas_atacadas=None):
         try:
             if not self.flota_activa:
                 raise AttributeError('La flota no esta cargada.')
@@ -301,6 +305,11 @@ class Jugador:
                                      format(vehiculo_atacador))
 
                 vehiculo_atacador_inst = self.flota_activa[vehiculo_atacador]
+
+                if vehiculo_atacador_inst.nombre == 'Lancha':
+                    raise IndexError('El numero {} no esta '
+                                     'dentro de las opciones'.
+                                     format(vehiculo_atacador))
 
             if not ataque_elegido_inst:
                 print('\n=== ATAQUES DISPONIBLES PARA EL VEHICULO {} ==='.
@@ -455,15 +464,17 @@ class Jugador:
 
             if not ataque_elegido_inst.nombre == 'Misil de crucrero' \
                                                  ' BGM-109 Tomahawk':
-                print('\n--- El ataque hecho por {0} cayo en {1} '
-                      'en las coordenadas ({2}, {3}) ---'.
-                      format(self.nombre,
+                print('\n--- El ataque {0} hecho por {1} cayo en {2} '
+                      'en las coordenadas ({3}, {4}) ---'.
+                      format(ataque_elegido_inst.nombre,
+                             self.nombre,
                              retornar,
                              ii,
                              jj))
             else:
                 if exito:
-                    print('\n--- El ataque hecho por {0} fue exitoso '
+                    print('\n--- El ataque Misil de crucrero'
+                          ' BGM-109 Tomahawk hecho por {0} fue exitoso '
                           'y se afectaron {1} piezas enemigas ---'.
                           format(self.nombre, n_piezas_afectadas))
                 else:
@@ -471,7 +482,6 @@ class Jugador:
 
             if ataque_elegido_inst.nombre == 'Kamikaze':
                 # El Kamikaze IXXI muere luego de atacar.
-                print('El ataque fue un Kamikaze!')
                 self.mapa.eliminar_vehiculo(vehiculo_atacador_inst, 'aereo')
                 self.flota_muerta.append(vehiculo_atacador_inst)
                 self.flota_activa.remove(vehiculo_atacador_inst)

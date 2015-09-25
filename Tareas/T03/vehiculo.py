@@ -43,7 +43,7 @@ class Vehiculo:
                 raise TypeError('No es el tipo de argumentos que'
                                 ' recibe como orientacion')
 
-        except AttributeError as err:
+        except (AttributeError, TypeError) as err:
             print('Error: {}'.format(err))
             self.setear_orientacion()
 

@@ -50,10 +50,19 @@ def cargar_mapas(partida):
 
         partida.size_mapas = size_mapas
 
-        for jugador in partida.jugadores.values():
+        if partida.modo_oponente == 'p':
+            for jugador in partida.jugadores.values():
+                mapa_jugador = Mapa(partida.size_mapas)
+                jugador.mapa = deepcopy(mapa_jugador)
+                jugador.radar = deepcopy(mapa_jugador)
+
+        elif partida.modo_oponente == 'c':
             mapa_jugador = Mapa(partida.size_mapas)
-            jugador.mapa = deepcopy(mapa_jugador)
-            jugador.radar = deepcopy(mapa_jugador)
+            partida.jugadores['player1'].mapa = deepcopy(mapa_jugador)
+            partida.jugadores['player1'].radar = deepcopy(mapa_jugador)
+            mapa_computadora = Mapa(partida.size_mapas, 'c')
+            partida.jugadores['computadora'].mapa = deepcopy(mapa_computadora)
+            partida.jugadores['computadora'].radar = deepcopy(mapa_computadora)
 
         return True
 

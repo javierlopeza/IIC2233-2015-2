@@ -191,4 +191,4 @@ lo que provocará que la posición guia quede en la casilla (2,1):
 	4. Misil UGM-133 Trident II
 	5. Napalm
 
-* Con este metodo la computadora de todas maneras tiene probabilidades de ganar la partida (lo probé y logra ganarme :unamused:).
+* Con este metodo la computadora de todas maneras tiene probabilidades de ganar la partida (lo probé y logra ganarme :unamused:, aunque yo también pude ganarle :sunglasses:).

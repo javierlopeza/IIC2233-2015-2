@@ -14,22 +14,22 @@ class Partida:
     def __init__(self):
         self.cargado = False
         self.jugadores = {}
+
         # Para testeo contra persona:
         # cargar_test(self)
         # Para testeo contra computadora:
-        cargar_test2(self)
-        '''
+        # cargar_test2(self)
+
+        # Real
         cargar_jugadores(self)
         cargar_mapas(self)
         cargar_vehiculos(self)
-        '''
-        '''
+
         if self.modo_oponente == 'p':
             cargar_vehiculos_a_mapa(self)
         elif self.modo_oponente == 'c':
-            bla bla ...
-        '''
-        self.run()
+            cargar_vehiculos_a_mapa(self)
+        # Real
 
     def run(self):
         try:
@@ -113,6 +113,3 @@ class Partida:
               'GANADOR: {} ===\n'.format(ganador.nombre))
         self.estadisticas()
         sys.exit()
-
-
-p = Partida()
