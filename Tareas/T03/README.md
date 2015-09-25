@@ -176,11 +176,12 @@ lo que provocará que la posición guia quede en la casilla (2,1):
 	4. Si el Avión Explorador esta paralizado y le queda 1 turno para volver a la normalidad, se mueve a cualquier casilla (sí, puede moverse aunque esté paralizado) para escapar de volver a ser paralizado en otra instancia.
 
 	5. Se elige aleatoriamente una de las siguientes opciones (de las disponibles):
-	* Explorar una zona aleatoria del mapa enemigo.
+
+		* Explorar una zona aleatoria del mapa enemigo.
 	
-	* Si el Avión Explorador enemigo no esta paralizado, si es que en su radar hay una E significa que el Avión Explorador enemigo le revelo una coordenada. Se dispara el Paralizador a esa coordenada y a una contigua elegida aleatoriamente. El vehículo que dispara el Paralizador se elige aleatoriamente entre los que poseen dicho ataque.
+		* Si el Avión Explorador enemigo no esta paralizado, si es que en su radar hay una E significa que el Avión Explorador enemigo le revelo una coordenada. Se dispara el Paralizador a esa coordenada y a una contigua elegida aleatoriamente. El vehículo que dispara el Paralizador se elige aleatoriamente entre los que poseen dicho ataque.
 	
-	* Si algun vehículo de la flota propia esta dañado, se usa el Kit de Ingenieros sobre él.
+		* Si algún vehículo de la flota propia esta dañado, se usa el Kit de Ingenieros sobre él.
 
 
 * **Al atacar, la computadora tiene las siguientes prioridades de ataques (por severidad):**
@@ -190,4 +191,4 @@ lo que provocará que la posición guia quede en la casilla (2,1):
 4. Misil UGM-133 Trident II
 5. Napalm
 
-* Con este metodo la computadora de todas maneras tiene probabilidades de ganar (lo probé y logra ganarme).
+* Con este metodo la computadora de todas maneras tiene probabilidades de ganar la partida (lo probé y logra ganarme :unamused:).
