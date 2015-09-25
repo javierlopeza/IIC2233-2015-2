@@ -49,28 +49,11 @@ class Computadora(Jugador):
                     proximo_indice += 1
             break
 
-        for vehiculo in self.flota_activa:
-            if vehiculo.nombre == 'Avion Explorador':
-                if vehiculo.turnos_paralizado == 0:
-                    opciones.update({str(proximo_indice): self.explorar})
-                    proximo_indice += 1
-                break
+        last_option = self.ultima_opcion(oponente)
 
-        opciones.update({str(proximo_indice): self.paralizar})
-        proximo_indice += 1
-
-        for vehiculo in self.flota_activa:
-            if vehiculo.nombre == 'Puerto':
-                for ataque in vehiculo.ataques:
-                    if ataque.nombre == 'Kit de Ingenieros':
-                        if ataque.disponible:
-                            for veh in self.flota_activa:
-                                if veh.vida < veh.resistencia:
-                                    opciones.update({str(proximo_indice): self.kit_ingenieros})
-                                    proximo_indice += 1
-                                    break
-                    break
-                break
+        if last_option is not None:
+            opciones.update({str(proximo_indice): last_option})
+            proximo_indice += 1
 
         opciones.update({str(proximo_indice): self.terminar_turno})
 
@@ -82,13 +65,50 @@ class Computadora(Jugador):
                         or accion.__name__ == 'explorar' \
                         or accion.__name__ == 'paralizar':
                     if accion(oponente):
+                        print('\n--- La computadora ya realizo una accion. ---\n')
                         break
                 else:
                     if accion():
+                        print('\n--- La computadora ya realizo una accion. ---\n')
                         break
-            else:
-                print("\n--- {0} no es una opcion valida ---\n".format(
-                    eleccion))
+
+    def ultima_opcion(self, oponente):
+        mini_opciones = []
+
+        for vehiculo in self.flota_activa:
+            if vehiculo.nombre == 'Avion Explorador':
+                if vehiculo.turnos_paralizado == 0:
+                    mini_opciones.append(self.explorar)
+                break
+
+        for vehiculo in oponente.flota_activa:
+            if vehiculo.nombre == 'Avion Explorador':
+                if vehiculo.turnos_paralizado == 0:
+                    listo = False
+                    for fila in self.radar.sector['aereo']:
+                        for casilla in fila:
+                            if casilla == 'E' or casilla == 'e':
+                                mini_opciones.append(self.paralizar)
+                                break
+                        if listo:
+                            break
+                break
+
+        for vehiculo in self.flota_activa:
+            if vehiculo.nombre == 'Puerto':
+                for ataque in vehiculo.ataques:
+                    if ataque.nombre == 'Kit de Ingenieros':
+                        if ataque.disponible:
+                            for veh in self.flota_activa:
+                                if veh.vida < veh.resistencia:
+                                    mini_opciones.append(self.kit_ingenieros)
+                                    break
+                    break
+                break
+
+        if mini_opciones:
+            ultima_opcion = choice(mini_opciones)
+            return ultima_opcion
 
     def puede_atacar(self, oponente):
         casilla_destino = None
@@ -175,8 +195,6 @@ class Computadora(Jugador):
         self.casillas_espiadas = []
 
         self.terminar_turno()
-
-        print('\n--- La computadora ya realizo una accion. ---\n')
 
         return True
 
@@ -277,10 +295,10 @@ class Computadora(Jugador):
             if not paralizer_inst:
                 raise AttributeError('Ningun vehiculo tiene el paralizador.')
 
-            for fila in self.mapa.sector['aereo']:
+            for fila in self.radar.sector['aereo']:
                 for casilla in fila:
                     if casilla == 'E' or casilla == 'e':
-                        c1i = self.mapa.sector['aereo'].index(fila)
+                        c1i = self.radar.sector['aereo'].index(fila)
                         c1j = fila.index(casilla)
                         break
 
@@ -304,7 +322,7 @@ class Computadora(Jugador):
                     or aire_oponente[c2i][c2j] == 'e':
                 aciertos += 1
 
-            elif aciertos == 2:
+            if aciertos == 2:
                 for vehiculo in oponente.flota_activa:
                     if vehiculo.nombre == 'Avion Explorador':
                         avion_paralizado = vehiculo
@@ -314,6 +332,10 @@ class Computadora(Jugador):
                       'por 5 turnos el Avion Explorador de {}'
                       ' ---\n'.format(oponente.nombre))
                 paralizer_inst.exitos += 1
+
+            elif aciertos < 2:
+                print('\n--- El ataque paralizador hecho por'
+                      ' la computadora ha fallado. ---\n')
 
             paralizer_inst.usadas += 1
             paralizer_inst.usar()

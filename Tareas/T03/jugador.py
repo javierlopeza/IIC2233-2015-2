@@ -130,7 +130,6 @@ class Jugador:
                   '|  F: Vehiculo encontrado con el explorador  '
                   '|  E: Coordenada explorador revelada por el enemigo')
 
-
         except (AttributeError, TypeError, IndexError) as err:
             print('Error: {}'.format(err))
 
@@ -196,7 +195,7 @@ class Jugador:
                 if vehiculo.tipo == 'maritimo' and vehiculo.vida < vehiculo.resistencia:
                     v_reparables.append(vehiculo)
                     ret += '  [{0}]: {1}\n'.format(
-                        self.flota_activa.index(vehiculo),
+                        v_reparables.index(vehiculo),
                         vehiculo.nombre)
             if self.nombre != 'Computadora':
                 print(ret)
@@ -477,7 +476,7 @@ class Jugador:
                 self.flota_muerta.append(vehiculo_atacador_inst)
                 self.flota_activa.remove(vehiculo_atacador_inst)
 
-        except ZeroDivisionError as err:
+        except (IndexError, TypeError, AttributeError) as err:
             print('Error: {}'.format(err))
 
         else:

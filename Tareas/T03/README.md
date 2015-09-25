@@ -184,7 +184,7 @@ lo que provocará que la posición guia quede en la casilla (2,1):
 		* Si algún vehículo de la flota propia esta dañado, se usa el Kit de Ingenieros sobre él.
 
 
-* **Al atacar, la computadora tiene las siguientes prioridades de ataques (por severidad):**
+* **Al atacar, la computadora tiene las siguientes prioridades de ataques (por severidad y disponibilidad):**
 	1. Kamikaze
 	2. Misil Balístico Intercontinental Minuteman III 
 	3. Misil de crucero BGM-109 Tomahawk (en un eje aleatorio que cruce la casilla objetivo)

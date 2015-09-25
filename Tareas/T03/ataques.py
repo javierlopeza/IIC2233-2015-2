@@ -5,7 +5,7 @@ class Trident(Ataque):
     def __init__(self):
         super().__init__()
         self.nombre = 'Misil UGM-133 Trident II'
-        self.damage = 500
+        self.damage = 5
 
 
 class Tomahawk(Ataque):
