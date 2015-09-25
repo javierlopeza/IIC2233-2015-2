@@ -207,7 +207,7 @@ la computadora los ubicará todos libremente en su mapa (aleatoriamente) y en or
 * Cuando le toca jugar a la Computadora, se genera invisiblemente un menu de opciones entre las que puede elegir ciertas acciones.
 
 
-* Las prioridades de sus acciones se ordenan así:
+* **Las prioridades de sus acciones se ordenan así**:
 
 	1. Si en su radar hay alguna letra A, significa que en esa casilla hay un vehiculo que ha atacado pero no ha muerto. Por lo tanto
 ataca en dicha casilla.
@@ -225,14 +225,14 @@ de volver a ser paralizado en otra instancia.
 
 	5. Se elige aleatoriamente una de las siguientes opciones (de las disponibles):
 
-		5.1. Explorar una zona aleatoria del mapa enemigo.
+		a. Explorar una zona aleatoria del mapa enemigo.
 
-		5.2. Si el Avion Explorador enemigo no esta paralizado:
+		b. Si el Avion Explorador enemigo no esta paralizado:
 			- Si es que en su radar hay una E significa que el Avion Explorador enemigo le revelo una coordenada. Se dispara el Paralizador
 a esa coordenada y a una contigua elegida aleatoriamente. El vehiculo que dispara el Paralizador se elige aleatoriamente entre los que poseen dicho ataque.
 			- O en el caso de que ya tenga las dos coordenadas claves descubiertas, disparo el Paralizador directo a dichas dos coordenadas.
 
-		5.3. Si algun vehiculo de la flota propia esta dañado, se usa el Kit de Ingenieros sobre él.
+		c. Si algun vehiculo de la flota propia esta dañado, se usa el Kit de Ingenieros sobre él.
 
 
 * **Al atacar, la computadora tiene las siguientes prioridades de ataques (por severidad):**
