@@ -64,7 +64,7 @@ class AvionExplorador(Vehiculo):
         super().__init__()
         self.nombre = 'Avion Explorador'
         self.tipo = 'aereo'
-        self.size = (2, 2)
+        self.size = (3, 3)
         self.ataques = [Trident()]
         self.movilidad = float('infinity')
         self.turnos_paralizado = 0

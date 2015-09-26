@@ -26,8 +26,9 @@ TESTEAR FUNCIONES
 * Luego de inscribir los nombres, se pide **ingresar el tamaño de los mapas** que se van a usar en la partida. Solo se pide ingresar la dimensión *n* ya que **cada sector del mapa es cuadrado de n x n**.
 
 
-* Luego se **cargan en la flota de cada jugador un vehículo de cada tipo** existente. Se pide **setear la orientación** de cada uno de ellos y luego la coordenada donde serán **posiciónados inicialmente**.
+* Luego se **cargan en la flota de cada jugador un vehículo de cada tipo** existente. Se pide **setear la orientación** de cada uno de ellos y luego la coordenada donde serán **posicionados inicialmente**.
 
+* Los vehículos **mantendrán para siempre su orientación impuesta inicialmente**. Es decir, al moverse entre las casillas del mapa estarán orientados siempre en la misma dirección.
 
 * Luego **por sorteo** se elige el jugador que comienza la partida.
 
@@ -39,11 +40,7 @@ finalizar su turno sin realizar ninguna acción.
 * Para **consultar un estado del radar** en un turno pasado, se debe elegir la opción *Ver Historial Radar* e ingresar el turno donde se quiere revisar el estado del radar. Se permite revisar el historial todas las veces que quiera en un turno.
 
 
-* Los vehículos **mantendrán para siempre su orientación impuesta inicialmente**. Es decir, al moverse entre las casillas del mapa estarán orientados siempre en la misma dirección.
-
-
-* Los **vehículos aéreos no se pueden destruir**. Solo el explorador puede ser paralizado. Los vehículos aéreos se pueden mover a cualquier casilla
-de su sector.
+* Los **vehículos aéreos no se pueden destruir**. Solo el explorador puede ser paralizado. Los vehículos aéreos se pueden mover a cualquier casilla de su sector.
 
 
 * Al **destruir un vehículo este desaparece**, es decir, *se hunde*.
@@ -52,10 +49,10 @@ de su sector.
 * Los vehículos se pueden **mover en los ejes verticales y horizontales**, no en diagonal.
 
 
-* Solo los vehículos marítimos tienen el ataque *GBU-43/B Massive Ordnance Air Blast Paralizer*.
+* Solo los vehículos marítimos (menos la Lancha) tienen el ataque *GBU-43/B Massive Ordnance Air Blast Paralizer*.
 
 
-* La **Lancha NO tiene ningún ataque**, solo puede moverse libremente para distraer al enemigo. Por ejemplo, si mi enemigo descubrió un vehículo mío (la Lancha) al explorar, yo sabré que el me espió en ciertas casillas y podré mover, en este caso la Lancha, rápidamente a cualquier casilla.
+* La **Lancha NO tiene ningún ataque**, solo puede moverse libremente para distraer al enemigo. Por ejemplo, si mi enemigo descubrió la Lancha al explorar, y me reveló que el me espió en cierta casilla de la Lancha, podré moverla rápidamente a cualquier casilla.
 
 
 * Para **atacar al oponente**, primero se debe seleccionar el vehículo disponible que se quiere usar, luego seleccionar un ataque disponible que tenga y luego ingresar la casilla *i,j* oponente destino del ataque. Luego de atacar se imprime si el ataque fue efectivo o no, también se agrega dicha efectividad al radar marcando con una O si fue al agua y con una A si fue sobre un vehículo.
@@ -66,35 +63,30 @@ de su sector.
 
 * El **Kit de Ingenieros** solo se usará sobre vehículos marítimos. Un vehículo sin daños no puede recibir el Kit de Ingenieros. Sí se puede usar sobre el mismo Puerto. Aumenta la vida del vehículo reparado en 1 unidad (sin poder sobrepasar su resistencia inicial).
 
+* Si el **Avión Explorador** se encuentra paralizado no puede Explorar, *pero* sí puede **usar el ataque** Misil UGM-133 Trident II y **moverse**. Por arreglo de enunciado el Avión Explorador usa un área de 3x3 (la misma área que explora).
 
-* Si el **Avión Explorador** se encuentra paralizado no puede Explorar, *pero* si puede usar el ataque Misil UGM-133 Trident II y moverse.
-
-
-* Al utilizar **explorar**, se debe ingresar la casilla central del area de 3x3 que se quiere explorar.
-Es decir, si tengo el siguiente mapa de 10x10 y quiero explorar el area marcada con *E*:
+* Al utilizar **explorar**, se debe ingresar la casilla de la posición guía del área de 3x3 que se quiere explorar. Es decir, si tengo el siguiente mapa de 10x10 con mi Avion Explorador posicionado en *eE*, y quiero explorar el área enemiga marcada con *yY* (que obviamente son las casillas correspondientes en el **sector marítimo enemigo**), debo ingresar la casilla *1,7* correspondiente a la posición guía *y*: 
 	```python
-                         SECTOR MARITIMO
+                         SECTOR AEREO
        0    1    2    3    4    5    6    7    8    9  
    0  ~    ~    ~    ~    ~    ~    ~    ~    ~    ~     
-   1  ~    ~    ~    ~    ~    ~    ~    ~    ~    ~     
-   2  ~    ~    ~    ~    ~    ~    ~    ~    ~    ~     
-   3  ~    ~    ~    ~    ~    ~    ~    ~    ~    ~     
+   1  ~    ~    ~    ~    ~    ~    ~    y    Y    Y     
+   2  ~    ~    ~    ~    ~    ~    ~    Y    Y    Y     
+   3  ~    ~    ~    ~    ~    ~    ~    Y    Y    Y     
    4  ~    ~    ~    ~    ~    ~    ~    ~    ~    ~     
    5  ~    ~    ~    ~    ~    ~    ~    ~    ~    ~     
-   6  ~    ~    ~    E    E    E    ~    ~    ~    ~     
+   6  ~    ~    ~    e    E    E    ~    ~    ~    ~     
    7  ~    ~    ~    E    E    E    ~    ~    ~    ~     
    8  ~    ~    ~    E    E    E    ~    ~    ~    ~     
    9  ~    ~    ~    ~    ~    ~    ~    ~    ~    ~     
 	```
-	debo ingresar la casilla *7,4*. 
+	
 
-* El **Avión Explorador no se mueve de su posición al explorar**, es algo así como que *va a explorar y vuelve* o como si lanzara un *ataque explorador* a dicha área de 3x3, como se entienda mejor.
+* El **Avión Explorador se mueve de su posición al explorar**, es algo así como que se mueve a la posición definida (*yY*) y explora todas las casillas que usa ahí (en el sector marítimo enemigo).
 
 * Si el **explorador descubre** alguna pieza enemiga en el área explorada, se marcarán en el radar con una F las casillas de dichas piezas descubiertas. 
 
-* También, siempre se le notificará al jugador espiado las casillas en que el Avión Explorador enemigo encontró piezas de sus vehículos (en Casillas Espiadas).
-
-* Si el explorador **revela una de las coordenadas** de su ubicación (con 50% de probabilidad) se marca con una E la casilla revelada del sector aéreo del radar enemigo.
+* Si el explorador **revela una de las coordenadas** de su ubicación (con 50% de probabilidad) se marca con una E la casilla revelada del sector aéreo del radar enemigo. También, si revela una de sus coordenadas **y** descubrió un vehículo al explorar, le revelará al enemigo la coordenada donde espió dicho vehículo (quedando guardada en Casillas Espiadas), de modo que el enemigo pueda en un próximo turno mover ese vehículo espiado.
 
 * Para intentar **paralizar el Avión Explorador enemigo**, se debe elegir dicha opción he ingresar las coordenadas en el formato ```i,j h,k```, por ejemplo: ```2,3 2,4```. Estas coordenadas corresponden a las que se deben acertar (ambas) para poder efectivamente paralizar el Avión Explorador enemigo por 5 turnos.
 
@@ -177,9 +169,9 @@ lo que provocará que la posición guia quede en la casilla (2,1):
 
 	5. Se elige aleatoriamente una de las siguientes opciones (de las disponibles):
 
-		* Explorar una zona aleatoria del mapa enemigo.
+		* Mover Avion Explorador y explorar una zona aleatoria del mapa enemigo.
 	
-		* Si el Avión Explorador enemigo no esta paralizado, si es que en su radar hay una E significa que el Avión Explorador enemigo le revelo una coordenada. Se dispara el Paralizador a esa coordenada y a una contigua elegida aleatoriamente. El vehículo que dispara el Paralizador se elige aleatoriamente entre los que poseen dicho ataque.
+		* Si el Avión Explorador enemigo no esta paralizado, si es que en el radar hay una E significa que el Avión Explorador enemigo le revelo una coordenada. Se dispara el Paralizador a esa coordenada y a una contigua elegida aleatoriamente. El vehículo que dispara el Paralizador se elige aleatoriamente entre los que poseen dicho ataque.
 	
 		* Si algún vehículo de la flota propia esta dañado, se usa el Kit de Ingenieros sobre él.
 

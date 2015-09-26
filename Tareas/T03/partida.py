@@ -29,7 +29,7 @@ class Partida:
             cargar_vehiculos_a_mapa(self)
         elif self.modo_oponente == 'c':
             cargar_vehiculos_a_mapa(self)
-        # Real
+            # Real
 
     def run(self):
         try:

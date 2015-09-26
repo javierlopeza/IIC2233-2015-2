@@ -305,10 +305,7 @@ class Computadora(Jugador):
             c2i = c1i + randint(0, 1)
             c2j = c1j + randint(0, 1)
 
-            while c1i >= self.mapa.n \
-                    or c1j >= self.mapa.n \
-                    or c2i >= self.mapa.n \
-                    or c2j >= self.mapa.n:
+            while c2i >= self.mapa.n or c2j >= self.mapa.n:
                 c2i = c1i + randint(0, 1)
                 c2j = c1j + randint(0, 1)
 
@@ -367,32 +364,15 @@ class Computadora(Jugador):
                                      ' disponible.'.
                                      format(explorador.turnos_paralizado))
 
-            icentral = randint(0, self.mapa.n - 1)
-            jcentral = randint(0, self.mapa.n - 1)
+            casillas_prev = explorador.casillas_usadas
 
-            casillas_explorar = []
-            for n in range(2):
-                for m in range(2):
-                    c1 = [icentral + n, jcentral + m]
-                    if self.mapa.n > (icentral + n) >= 0:
-                        if self.mapa.n > jcentral + m >= 0:
-                            if c1 not in casillas_explorar:
-                                casillas_explorar.append(c1)
-                    c2 = [icentral - n, jcentral - m]
-                    if self.mapa.n > icentral - n >= 0:
-                        if self.mapa.n > jcentral - m >= 0:
-                            if c2 not in casillas_explorar:
-                                casillas_explorar.append(c2)
-                    c3 = [icentral - n, jcentral + m]
-                    if self.mapa.n > icentral - n >= 0:
-                        if self.mapa.n > jcentral + m >= 0:
-                            if c3 not in casillas_explorar:
-                                casillas_explorar.append(c3)
-                    c4 = [icentral + n, jcentral - m]
-                    if self.mapa.n > icentral + n >= 0:
-                        if self.mapa.n > jcentral - m >= 0:
-                            if c4 not in casillas_explorar:
-                                casillas_explorar.append(c4)
+            while casillas_prev == explorador.casillas_usadas:
+                imov = randint(0, self.mapa.n - 1)
+                jmov = randint(0, self.mapa.n - 1)
+                ij = '{0},{1}'.format(imov, jmov)
+                self.mapa.mover_vehiculo(explorador, ij)
+
+            casillas_explorar = explorador.casillas_usadas
 
             algo_encontrado = False
             for casilla in casillas_explorar:
@@ -400,11 +380,6 @@ class Computadora(Jugador):
                 jexp = casilla[1]
                 if oponente.mapa.sector['maritimo'][iexp][jexp] != '~':
                     algo_encontrado = True
-                    oponente.casillas_espiadas.append([iexp, jexp])
-                    print('--- La Computadora encontro una pieza de un vehiculo tuyo'
-                          ' en la casilla ({0}, {1}) y '
-                          'se guardo en tus Casillas Espiadas ---'.
-                          format(iexp, jexp))
                     self.radar.sector['maritimo'][iexp][jexp] = 'F'
 
             if not algo_encontrado:
@@ -416,13 +391,20 @@ class Computadora(Jugador):
                 casilla_revelada = choice(explorador.casillas_usadas)
                 ir = casilla_revelada[0]
                 jr = casilla_revelada[1]
+                oponente.radar.sector['aereo'][ir][jr] = 'E'
                 print('\n--- El Avion Explorador de la Computadora '
-                      'ha revelado la '
+                      'ha revelado su '
                       'coordenada ({0}, {1}), '
                       'quedando esta registrada'
-                      ' en el tu radar como E ---\n'.
+                      ' en tu radar como E ---\n'.
                       format(ir, jr))
-                oponente.radar.sector['aereo'][ir][jr] = 'E'
+                if algo_encontrado:
+                    oponente.casillas_espiadas.append([ir, jr])
+                    print('--- La Computadora revelo haber encontrado'
+                          ' una pieza de un vehiculo tuyo'
+                          ' en la casilla ({0}, {1}) y '
+                          'se guardo en tus Casillas Espiadas ---'.
+                          format(ir, jr))
 
             else:
                 print('\n--- El Avion Explorador de la Computadora fue discreto '

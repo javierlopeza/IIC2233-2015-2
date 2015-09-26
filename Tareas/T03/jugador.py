@@ -1,5 +1,6 @@
 from random import randint, choice
 from operator import itemgetter
+from copy import deepcopy
 
 
 class Jugador:
@@ -569,7 +570,8 @@ class Jugador:
                     break
 
             if not tiene_explorador:
-                raise AttributeError('El jugador {0} no tiene Avion Explorador'.
+                raise AttributeError('El jugador {0} no tiene '
+                                     'Avion Explorador'.
                                      format(self.nombre))
 
             if explorador.turnos_paralizado:
@@ -578,8 +580,9 @@ class Jugador:
                                      ' disponible.'.
                                      format(explorador.turnos_paralizado))
 
-            ij_explorar = input('Ingrese la coordenada central '
-                                'del area de 3x3 a explorar [i,j]: ')
+            ij_explorar = input('Ingrese la coordenada de la posicion guia '
+                                'del area de 3x3 donde quiere mover el'
+                                ' Avion Explorador para que explore [i,j]: ')
 
             if ',' not in ij_explorar:
                 raise TypeError('Formato invalido de coordenada, '
@@ -602,29 +605,11 @@ class Jugador:
                 raise IndexError('La casilla ingresada no esta dentro de '
                                  'las dimensiones del mapa.')
 
-            casillas_explorar = []
-            for n in range(2):
-                for m in range(2):
-                    c1 = [icentral + n, jcentral + m]
-                    if self.mapa.n > (icentral + n) >= 0:
-                        if self.mapa.n > jcentral + m >= 0:
-                            if c1 not in casillas_explorar:
-                                casillas_explorar.append(c1)
-                    c2 = [icentral - n, jcentral - m]
-                    if self.mapa.n > icentral - n >= 0:
-                        if self.mapa.n > jcentral - m >= 0:
-                            if c2 not in casillas_explorar:
-                                casillas_explorar.append(c2)
-                    c3 = [icentral - n, jcentral + m]
-                    if self.mapa.n > icentral - n >= 0:
-                        if self.mapa.n > jcentral + m >= 0:
-                            if c3 not in casillas_explorar:
-                                casillas_explorar.append(c3)
-                    c4 = [icentral + n, jcentral - m]
-                    if self.mapa.n > icentral + n >= 0:
-                        if self.mapa.n > jcentral - m >= 0:
-                            if c4 not in casillas_explorar:
-                                casillas_explorar.append(c4)
+            if self.mapa.mover_vehiculo(explorador, ij_explorar):
+                casillas_explorar = explorador.casillas_usadas
+
+            else:
+                raise AttributeError('No se pudo mover el Avion Explorador')
 
             algo_encontrado = False
             for casilla in casillas_explorar:
@@ -632,7 +617,6 @@ class Jugador:
                 jexp = casilla[1]
                 if oponente.mapa.sector['maritimo'][iexp][jexp] != '~':
                     algo_encontrado = True
-                    oponente.casillas_espiadas.append([iexp, jexp])
                     print('--- Se encontro una pieza de vehiculo enemigo'
                           ' en la casilla ({0}, {1}) y '
                           'se guardo en el radar como F ---'.
@@ -648,12 +632,20 @@ class Jugador:
                 casilla_revelada = choice(explorador.casillas_usadas)
                 ir = casilla_revelada[0]
                 jr = casilla_revelada[1]
+                oponente.radar.sector['aereo'][ir][jr] = 'E'
                 print('\n--- El Avion Explorador ha revelado la '
                       'coordenada ({0}, {1}) a tu oponente, '
                       'quedando esta registrada'
                       ' en el radar enemigo como E ---\n'.
                       format(ir, jr))
-                oponente.radar.sector['aereo'][ir][jr] = 'E'
+                if algo_encontrado:
+                    oponente.casillas_espiadas.append([ir, jr])
+                    print('--- Ahora el enemigo sabe que '
+                          'descubriste un vehiculo suyo '
+                          'en la coordenada ({0}, {1}). '
+                          'Se guardo esta coordenada '
+                          'en sus Casillas Espiadas ---\n'.
+                          format(ir, jr))
 
             else:
                 print('\n--- El Avion Explorador fue discreto '
@@ -789,7 +781,7 @@ class Jugador:
                     vehiculo.turnos_paralizado -= 1
 
         # Se agrega el estado del radar al historial de radares.
-        self.radares.append(self.radar)
+        self.radares.append(deepcopy(self.radar))
 
         # Se agrega un turno al jugador.
         self.turnos += 1
