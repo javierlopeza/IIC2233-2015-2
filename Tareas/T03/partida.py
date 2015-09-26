@@ -19,8 +19,7 @@ class Partida:
         # cargar_test(self)
         # Para testeo contra computadora:
         # cargar_test2(self)
-
-        # Real
+        # Real --- V
         cargar_jugadores(self)
         cargar_mapas(self)
         cargar_vehiculos(self)
@@ -29,8 +28,7 @@ class Partida:
             cargar_vehiculos_a_mapa(self)
         elif self.modo_oponente == 'c':
             cargar_vehiculos_a_mapa(self)
-            # Real
-
+        # Real --- ^
     def run(self):
         try:
             if not self.cargado:

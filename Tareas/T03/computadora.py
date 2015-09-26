@@ -33,6 +33,7 @@ class Computadora(Jugador):
         # Mientras no termine el turno, que juegue.
         while self.turnos == turno_actual:
             print('\n === TURNO {} COMPUTADORA -> JUGANDO... ==='.format(self.turnos + 1))
+            self.enviar_napalm_pendiente(oponente)
             self.display_menu(oponente)
 
     def display_menu(self, oponente):
@@ -145,12 +146,12 @@ class Computadora(Jugador):
             elif 'Misil de crucero BGM-109 Tomahawk' in ataques_disponibles:
                 ataque_usar = ataques_disponibles['Misil de crucero BGM-109 Tomahawk'][0]
                 vehiculo_usar = ataques_disponibles['Misil de crucero BGM-109 Tomahawk'][1]
-            elif 'Misil UGM-133 Trident II' in ataques_disponibles:
-                ataque_usar = ataques_disponibles['Misil UGM-133 Trident II'][0]
-                vehiculo_usar = ataques_disponibles['Misil UGM-133 Trident II'][1]
             elif 'Napalm' in ataques_disponibles:
                 ataque_usar = ataques_disponibles['Napalm'][0]
                 vehiculo_usar = ataques_disponibles['Napalm'][1]
+            elif 'Misil UGM-133 Trident II' in ataques_disponibles:
+                ataque_usar = ataques_disponibles['Misil UGM-133 Trident II'][0]
+                vehiculo_usar = ataques_disponibles['Misil UGM-133 Trident II'][1]
 
         casillas_dest = casilla_destino
         if ataque_usar.nombre == 'Misil de crucero BGM-109 Tomahawk':

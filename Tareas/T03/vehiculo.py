@@ -13,6 +13,7 @@ class Vehiculo:
         self.alto = 0
         self.resistencia = None
         self.vida = None
+        self.napalm_pendiente = False
 
     @property
     def posicion_guia(self):

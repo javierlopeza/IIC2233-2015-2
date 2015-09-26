@@ -23,10 +23,35 @@ class Jugador:
         # Mientras no termine el turno, que juegue.
         # El turno termina al atacar, mover vehiculo,
         # explorar o usar el Kit.
+
         while self.turnos == turno_actual:
             print('\n === TURNO {2} PLAYER {0}: {1} -> JUEGUE ==='.format(
                 self.id, self.nombre, self.turnos + 1))
+            self.enviar_napalm_pendiente(oponente)
             self.display_menu(oponente)
+
+    def enviar_napalm_pendiente(self, oponente):
+        for vehiculo in oponente.flota_activa:
+            if vehiculo.napalm_pendiente:
+                vehiculo.napalm_pendiente = False
+                vehiculo.vida -= 5
+                if vehiculo.vida <= 0:
+                    vehiculo.vida = 0
+                    print(' --> Por un ataque Napalm en el turno pasado, '
+                          'el vehiculo {0} ha sido destruido.'.
+                          format(vehiculo.nombre))
+                    oponente.flota_muerta.append(vehiculo)
+                    oponente.flota_activa.remove(vehiculo)
+                    oponente.mapa.eliminar_vehiculo(vehiculo,
+                                                    'maritimo')
+                    for cas in vehiculo.casillas_usadas:
+                        iii = cas[0]
+                        jjj = cas[1]
+                        self.radar.marcar('maritimo', iii, jjj, 'X')
+                else:
+                    print(' --> Por un ataque Napalm en el turno pasado, '
+                          'el vehiculo {0} ha recibido 5 extra de damage.'.
+                          format(vehiculo.nombre))
 
     def display_menu(self, oponente):
         opciones = {'1': self.ver_mapa,
@@ -462,6 +487,14 @@ class Jugador:
                             break
             if exito:
                 ataque_elegido_inst.exitos += 1
+
+                if ataque_elegido_inst.nombre == 'Napalm':
+                    vehiculo_victima.napalm_pendiente = True
+                    if (vehiculo_victima.vida - 5) < 0:
+                        damage_extra_efectivo = 5 - abs(vehiculo_victima.vida - 5)
+                    else:
+                        damage_extra_efectivo = 5
+                    ataque_elegido_inst.damage_efectivo += damage_extra_efectivo
 
             if not ataque_elegido_inst.nombre == 'Misil de crucrero' \
                                                  ' BGM-109 Tomahawk':

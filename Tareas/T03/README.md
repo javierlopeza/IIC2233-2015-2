@@ -180,7 +180,7 @@ lo que provocará que la posición guia quede en la casilla (2,1):
 	1. Kamikaze
 	2. Misil Balístico Intercontinental Minuteman III 
 	3. Misil de crucero BGM-109 Tomahawk (en un eje aleatorio que cruce la casilla objetivo)
-	4. Misil UGM-133 Trident II
-	5. Napalm
+	4. Napalm
+	5. Misil UGM-133 Trident II
 
 * Con este metodo la computadora de todas maneras tiene probabilidades de ganar la partida (lo probé y logra ganarme :unamused:, aunque yo también pude ganarle :sunglasses:).
