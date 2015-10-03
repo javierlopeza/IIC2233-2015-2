@@ -83,9 +83,14 @@ class Mapa:
 
     def eliminar_vehiculo(self, vehiculo, sector_e):
         try:
+            if sector_e != 'aereo' or sector_e != 'maritimo':
+                raise AttributeError('No existe el sector {}'.
+                                     format(sector_e))
+
             if not self.sector[sector_e]:
                 raise AttributeError('No hay vehiculos en sector {}'.
                                      format(sector_e))
+
             for casilla in vehiculo.casillas_usadas:
                 i = casilla[0]
                 j = casilla[1]

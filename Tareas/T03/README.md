@@ -184,3 +184,9 @@ lo que provocará que la posición guia quede en la casilla (2,1):
 	5. Misil UGM-133 Trident II
 
 * Con este metodo la computadora de todas maneras tiene probabilidades de ganar la partida (lo probé y logra ganarme :unamused:, aunque yo también pude ganarle :sunglasses:).
+
+
+### Testeo Funciones
+Para el testeo de las funciones de mi programa, use  ```` unittest ````. No se testean todas las funciones, pero sí más del 50% de ellas como se pide en el enunciado. El archivo ```` Tester.py ```` contiene todos los tests realizados.
+
+* Para el testeo de los métodos de clase, construí una clase de testeo para cada clase de mi programa.
