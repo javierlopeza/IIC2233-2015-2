@@ -1,7 +1,7 @@
 import unittest
-from mapa import Mapa
-from vehiculo import Vehiculo
-from ataque import Ataque
+from clases.mapa import Mapa
+from clases.vehiculo import Vehiculo
+from clases.ataque import Ataque
 
 
 class TestearMapa(unittest.TestCase):
