@@ -187,6 +187,6 @@ lo que provocará que la posición guia quede en la casilla (2,1):
 
 
 ### Testeo Funciones
-Para el testeo de las funciones de mi programa, use  ```` unittest ````. No se testean todas las funciones, pero sí más del 50% de ellas como se pide en el enunciado. El archivo ```` Tester.py ```` contiene todos los tests realizados.
+Para el testeo de las funciones de mi programa, use  ```` unittest ````. No se testean todas las funciones, pero sí más del 50% de ellas como se pide en el enunciado. Los archivos en la carpeta ```` Tests ```` contienen todos los tests realizados.
 
 * Para el testeo de los métodos de clase, construí una clase de testeo para cada clase de mi programa.
