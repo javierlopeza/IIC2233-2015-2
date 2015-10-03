@@ -1,20 +1,5 @@
 ﻿## Tarea 03
 
-###Borrador
-
-vacio
-
-
-###Dudas:
-
-nada por el momento
-
-
-###Pendiente:
-
-TESTEAR FUNCIONES
-
-
 ### Consideraciones
 
 * Al inicio de la partida se pide elegir si se jugará **contra otra persona o contra la computadora**. Se debe ingresar *p* para la primera opción o *c* para la segunda opción.
