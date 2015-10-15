@@ -6,7 +6,7 @@ def paciencia(cliente):
     return 2 * cliente.priority + 7
 
 
-class Cliente():
+class Cliente:
     def __init__(self, *args, **kwargs):
         self.priority = kwargs['priority']
         self.name = kwargs['name']
@@ -16,13 +16,13 @@ class Cliente():
 
     @property
     def recibe_llamada(self):
-        prob = random.randint(1,10)
+        prob = random.randint(1, 10)
         if prob == 1:
             return True
         return False
 
 
-class Restaurante():
+class Restaurante:
     def __init__(self, env, capacity):
         self.env = env
         self.mesas = simpy.PriorityResource(env, capacity=capacity)
@@ -43,7 +43,7 @@ class Restaurante():
                                  round(self.env.now, 2),
                                  round(self.env.now - cliente.arrive, 2)))
                     if cliente.recibe_llamada:
-                        yield self.env.timeout(random.uniform(7,12))
+                        yield self.env.timeout(random.uniform(7, 12))
                         print("[LLAMADA] El cliente {0} recibio una llamada importante "
                               "y se tuvo que ir al instante {1}".
                               format(cliente.name,
@@ -60,8 +60,6 @@ class Restaurante():
                   format(cliente.name,
                          round(self.env.now, 2),
                          round(paciencia(cliente), 2)))
-
-
 
 
 def generador_clientes(env, lambdat, res):
