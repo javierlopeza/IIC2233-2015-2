@@ -4,4 +4,5 @@ from Simulacion import Simulacion
 
 app = QtGui.QApplication([])
 simulacion = Simulacion(app)
+simulacion.run()
 app.exec()

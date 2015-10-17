@@ -4,6 +4,7 @@ from Casa import Casa
 from Vehiculo import VehiculoComun, Taxi, VehiculoEmergencia
 from Calle import Calle
 from random import randint, choice
+from copy import deepcopy
 
 
 class Ciudad:
@@ -19,7 +20,7 @@ class Ciudad:
         self.rellenar_ciudad_base()
         # self.grilla.tiempo_intervalo = float(input('Ingrese el intervalo de tiempo '
         #                                          'para los eventos en la simulacion: '))
-        self.grilla.tiempo_intervalo = 0.3
+        self.grilla.tiempo_intervalo = 0.01
 
     def rellenar_ciudad_base(self):
 
@@ -128,3 +129,144 @@ class Ciudad:
         clasificar_cruces(self)
         poner_semaforos(self)
         cargar_autos_iniciales(self)
+
+    def avanzar_vehiculos(self):
+        def prox_pos(self, pos_vehiculo, vehiculo_actual):
+            pos_vehiculo_aux = '{},{}'.format(round(float(pos_vehiculo.split(',')[0])),
+                                              round(float(pos_vehiculo.split(',')[1])))
+            if self.calles[pos_vehiculo_aux].direccion == ['derecha']:
+                prox_pos_x = int(pos_vehiculo_aux.split(',')[0]) + vehiculo_actual.velocidad
+                prox_pos_y = int(pos_vehiculo_aux.split(',')[1])
+            elif self.calles[pos_vehiculo_aux].direccion == ['izquierda']:
+                prox_pos_x = int(pos_vehiculo_aux.split(',')[0]) - vehiculo_actual.velocidad
+                prox_pos_y = int(pos_vehiculo_aux.split(',')[1])
+            elif self.calles[pos_vehiculo_aux].direccion == ['arriba']:
+                prox_pos_x = int(pos_vehiculo_aux.split(',')[0])
+                prox_pos_y = int(pos_vehiculo_aux.split(',')[1]) - vehiculo_actual.velocidad
+            elif self.calles[pos_vehiculo_aux].direccion == ['abajo']:
+                prox_pos_x = int(pos_vehiculo_aux.split(',')[0])
+                prox_pos_y = int(pos_vehiculo_aux.split(',')[1]) + vehiculo_actual.velocidad
+            prox_pos_str_red = '{},{}'.format(round(prox_pos_x), round(prox_pos_y))
+
+            return prox_pos_str_red, prox_pos_x, prox_pos_y, pos_vehiculo_aux
+
+        # TODO Si la proxima posicion es una calle, no es un cruce y esta la pista derecha vacia, entonces:
+        def mover1(self, prox_pos_x, prox_pos_y, vehiculo_actual, pos_vehiculo_aux, prox_pos_str_red):
+            # TODO A la posicion actual del vehiculo en self.vehiculos, se le suma los cuadrados que avanzaria en 1 segundo.
+            prox_pos_str = '{},{}'.format(prox_pos_x, prox_pos_y)
+            self.vehiculos.update({prox_pos_str: vehiculo_actual})
+
+            # TODO Se elimina el vehiculo de la pista derecha de la calle actual y de self.vehiculos.
+            self.calles[pos_vehiculo_aux].vehiculos_encima['der'] = None
+            del self.vehiculos[pos_vehiculo]
+
+            # TODO Se agrega el vehiculo a la pista derecha de la calle correspondiente a su nueva posicion redondeada.
+            self.calles[prox_pos_str_red].vehiculos_encima['der'] = vehiculo_actual
+
+            # TODO Se borra el auto de la grilla.
+            self.grilla.quitar_imagen(int(pos_vehiculo_aux.split(',')[0]),
+                                      int(pos_vehiculo_aux.split(',')[1]))
+
+            # TODO Se agrega el auto a la grilla en la nueva posicion.
+            self.grilla.agregar_auto(int(prox_pos_str_red.split(',')[0]),
+                                     int(prox_pos_str_red.split(',')[1]),
+                                     self.calles[prox_pos_str_red].pos_vehiculos[0],
+                                     self.calles[prox_pos_str_red].pos_vehiculos[1])
+
+        # TODO: Si la proxima posicion es una calle, es un cruce, el semaforo lo deja pasar y la pista derecha esta vacia, entonces: #ARREGLAR!!!!!!!
+        def mover2(self, prox_pos_x, prox_pos_y, vehiculo_actual, pos_vehiculo_aux, prox_pos_str_red):
+            # TODO A la posicion actual del vehiculo en self.vehiculos, se le suma los cuadrados que avanzaria en 1 segundo.
+            prox_pos_str = '{},{}'.format(prox_pos_x, prox_pos_y)
+            self.vehiculos.update({prox_pos_str: vehiculo_actual})
+
+            # TODO Se elimina el vehiculo de la pista derecha de la calle actual y de self.vehiculos.
+            self.calles[pos_vehiculo_aux].vehiculos_encima['der'] = None
+            del self.vehiculos[pos_vehiculo]
+
+            # TODO Se agrega el vehiculo a la pista derecha de la calle correspondiente a su nueva posicion redondeada.
+            self.calles[prox_pos_str_red].vehiculos_encima['der'] = vehiculo_actual
+
+            # TODO Se borra el auto de la grilla.
+            self.grilla.quitar_imagen(int(pos_vehiculo_aux.split(',')[0]),
+                                      int(pos_vehiculo_aux.split(',')[1]))
+
+            # TODO Se agrega el auto a la grilla en la nueva posicion.
+            self.grilla.agregar_auto(int(prox_pos_str_red.split(',')[0]),
+                                     int(prox_pos_str_red.split(',')[1]),
+                                     self.calles[prox_pos_str_red].pos_vehiculos[0],
+                                     self.calles[prox_pos_str_red].pos_vehiculos[1])
+
+            # TODO: Si la proxima posicon es una calle,
+
+        # TODO: Si la proxima posicion no es una calle, entonces:
+        def mover3(self, pos_vehiculo_aux, pos_vehiculo):
+            # TODO Se elimina el vehiculo de la pista derecha de la calle actual y de self.vehiculos.
+            self.calles[pos_vehiculo_aux].vehiculos_encima['der'] = None
+            del self.vehiculos[pos_vehiculo]
+
+            # TODO Se borra el auto de la grilla.
+            self.grilla.quitar_imagen(int(pos_vehiculo_aux.split(',')[0]),
+                                      int(pos_vehiculo_aux.split(',')[1]))
+
+            # TODO Se agregan entre aleatoriamente entre 0 y 2 vehiculos a la ciudad si es que no se ha superado el maximo de autos.
+            posiciones_entrada = []
+            if not self.calles['2,1'].vehiculos_encima['der']:
+                posiciones_entrada.append('2,1')
+            if not self.calles['8,1'].vehiculos_encima['der']:
+                posiciones_entrada.append('8,1')
+            if not self.calles['16,1'].vehiculos_encima['der']:
+                posiciones_entrada.append('16,1')
+            if len(self.vehiculos) + 2 < len(self.calles) /2 :
+                n_autos_nuevos = randint(0,len(posiciones_entrada))
+                for a in range(n_autos_nuevos):
+                    # Se instancia el nuevo auto
+                    nuevo_auto = VehiculoComun()
+                    # Se agrega el auto a la pista derecha de la calle de entrada
+                    self.calles[posiciones_entrada[a]].vehiculos_encima['der'] = nuevo_auto
+                    # Se agrega el auto a self.vehiculos
+                    self.vehiculos[posiciones_entrada[a]] = nuevo_auto
+                    # Se agrega el auto a la grilla
+                    x = int(posiciones_entrada[a].split(',')[0])
+                    y = int(posiciones_entrada[a].split(',')[1])
+                    theta = self.calles[posiciones_entrada[a]].pos_vehiculos[0]
+                    mirror = self.calles[posiciones_entrada[a]].pos_vehiculos[1]
+                    self.grilla.agregar_auto(x, y, theta, mirror)
+
+        aux_vehiculos = deepcopy(self.vehiculos)
+        for pos_vehiculo in aux_vehiculos:
+            vehiculo_actual = aux_vehiculos[pos_vehiculo]
+            prox_pos_str_red = prox_pos(self, pos_vehiculo, vehiculo_actual)[0]
+            prox_pos_x = prox_pos(self, pos_vehiculo, vehiculo_actual)[1]
+            prox_pos_y = prox_pos(self, pos_vehiculo, vehiculo_actual)[2]
+            pos_vehiculo_aux = prox_pos(self, pos_vehiculo, vehiculo_actual)[3]
+
+            # TODO Si la proxima posicion es una calle, no es un cruce y esta la pista derecha vacia, entonces:
+            if prox_pos_str_red in self.calles:
+                if not self.calles[prox_pos_str_red].cruce:
+                    if not self.calles[prox_pos_str_red].vehiculos_encima['der']:
+                        mover1(self, prox_pos_x, prox_pos_y, vehiculo_actual, pos_vehiculo_aux, prox_pos_str_red)
+
+            # TODO: Si la proxima posicion es una calle, es un cruce, el semaforo lo deja pasar y la pista derecha esta vacia, entonces:
+            if prox_pos_str_red in self.calles:
+                if self.calles[prox_pos_str_red].cruce:
+                    direccion_elegida = choice(self.calles[pos_vehiculo_aux].direccion)
+                    if direccion_elegida in self.calles[prox_pos_str_red].semaforo:
+                        if not self.calles[prox_pos_str_red].vehiculos_encima['der']:
+                            mover2(self, prox_pos_x, prox_pos_y, vehiculo_actual, pos_vehiculo_aux, prox_pos_str_red)
+
+            # TODO: Si la proxima posicion no es una calle, entonces:
+            if prox_pos_str_red not in self.calles:
+                mover3(self, pos_vehiculo_aux, pos_vehiculo)
+
+
+
+
+                            # print('[SIMULACION] Los vehiculos han avanzado durante {segundos} segundos')
+
+    def cambiar_semaforos(self):
+        for pos_calle in self.calles:
+            if self.calles[pos_calle].cruce:
+                x_pos = int(pos_calle.split(',')[0])
+                y_pos = int(pos_calle.split(',')[1])
+                self.calles[pos_calle].cambiar_semaforo(self.grilla, x_pos, y_pos)
+        print('[SIMULACION] Semaforos cambiados')

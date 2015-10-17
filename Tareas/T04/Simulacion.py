@@ -11,4 +11,10 @@ class Simulacion:
 
     def run(self):
         while self.tiempo_simulacion < self.tiempo_maximo:
-            
+            self.tiempo_simulacion += 1
+            # TODO: Si el tiempo de simulacion es multiplo de 20, todos los semaforos cambian de luz.
+            if self.tiempo_simulacion % 20 == 0:
+                self.ciudad.cambiar_semaforos()
+
+            # TODO: Todos los vehiculos avanzan
+            self.ciudad.avanzar_vehiculos()

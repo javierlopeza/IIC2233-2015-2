@@ -30,6 +30,7 @@ class GrillaSimulacion(*grilla_simulacion_ui):
             "Pickup-64.png",
             "Sedan-64.png"
         ])
+        filename = "Sedan-64.png"
         self.agregar_imagen(filename, x, y, theta, reflection)
 
     def agregar_cuartel_bomberos(self, x, y):

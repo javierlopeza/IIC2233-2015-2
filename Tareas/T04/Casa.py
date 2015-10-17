@@ -9,3 +9,4 @@ class Casa:
 
     def __repr__(self):
         return 'Casa de {}'.format(self.material)
+
