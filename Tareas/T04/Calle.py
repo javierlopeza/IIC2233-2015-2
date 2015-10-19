@@ -1,14 +1,17 @@
 # -*- encoding: utf-8 -*-
 
+
 class Calle:
     def __init__(self, direccion):
         self.direccion = [direccion]
         self.vehiculos_encima = {'der': None, 'izq': None}
         self.semaforo = None
         self.cruce = False
+        self.continuaciones = {}
 
     @property
     def pos_vehiculos(self):
+        theta = 0
         mirror = False
         if self.direccion == ['arriba']:
             theta = -90
@@ -33,4 +36,3 @@ class Calle:
         return 'Calle con direccion {} -> [IZQ: {}, DER: {}]'.format(self.direccion,
                                                                      self.vehiculos_encima['izq'],
                                                                      self.vehiculos_encima['der'])
-

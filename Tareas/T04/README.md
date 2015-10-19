@@ -8,7 +8,11 @@
 
 * Luego de rellenar la grilla con las calles, casas y autos iniciales, se pide ingresar el tiempo intervalo para la actualizacion de la grilla.
 
-* Los cruces y dónde poner semáforos se identifican en su mayoria automatizadamente, pero los cruces dobles tuve que agregarlos manualmente para asegurar el buen funcionamiento de sus semaforos.
+* Simulé que también los autos pueden ir por una calle y meterse a una casa o servicio adyacente, es decir, a veces los vehiculos "desaparecen" de la grilla pero es porque se simula esta entrada a casas o servicios.
+
+* Para la simulación, al inicializarla se carga una 'línea de tiempo' de todos los eventos que sucederán en el tiempo de simulación ingresado.
+
+* Todas las unidades de tiempos en el programa están en segundos.
 
 
 
