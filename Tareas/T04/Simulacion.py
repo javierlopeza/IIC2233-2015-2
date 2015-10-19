@@ -8,11 +8,11 @@ import itertools
 class Evento:
     def __init__(self, instante_ocurrencia, tipo_evento, lugar):
         self.instante_ocurrencia = instante_ocurrencia
-        self.tipo_evento = tipo_evento
+        self.tipo = tipo_evento
         self.lugar = lugar
 
     def __repr__(self):
-        return 'EVENTO: {} | INSTANTE: {} | LUGAR: {}'.format(self.tipo_evento, self.instante_ocurrencia/(60*60), self.lugar)
+        return 'EVENTO: {} | INSTANTE: {} | LUGAR: {}'.format(self.tipo, self.instante_ocurrencia, self.lugar)
 
 
 class Simulacion:
@@ -42,7 +42,7 @@ class Simulacion:
         def cargar_enfermos(self):
             reloj = 0
             while reloj < self.tiempo_maximo:
-                tiempo_nuevo_enfermo = expovariate(1 / (2 * 60 * 60)) + reloj
+                tiempo_nuevo_enfermo = round(expovariate(1 / (2 * 60 * 60)) + reloj)
                 lugar = choice(list(self.ciudad.casas.keys()))
                 nuevo_evento = Evento(tiempo_nuevo_enfermo, 'enfermo', lugar)
                 self.linea_de_tiempo.append(nuevo_evento)
@@ -52,7 +52,7 @@ class Simulacion:
             reloj = 0
             probs_robos_lugar = self.ciudad.lista_pesos_lugares_robos
             while reloj < self.tiempo_maximo:
-                tiempo_nuevo_robo = expovariate(1 / (4 * 60 * 60)) + reloj
+                tiempo_nuevo_robo = round(expovariate(1 / (4 * 60 * 60)) + reloj)
                 lugar = choice(probs_robos_lugar)
                 nuevo_evento = Evento(tiempo_nuevo_robo, 'robo', lugar)
                 self.linea_de_tiempo.append(nuevo_evento)
@@ -62,7 +62,7 @@ class Simulacion:
             reloj = 0
             probs_incendios_lugar = self.ciudad.lista_pesos_lugares_incendios
             while reloj < self.tiempo_maximo:
-                tiempo_nuevo_incendio = expovariate(1 / (10 * 60 * 60)) + reloj
+                tiempo_nuevo_incendio = round(expovariate(1 / (10 * 60 * 60)) + reloj)
                 lugar = choice(probs_incendios_lugar)
                 nuevo_evento = Evento(tiempo_nuevo_incendio, 'incendio', lugar)
                 self.linea_de_tiempo.append(nuevo_evento)
@@ -76,9 +76,6 @@ class Simulacion:
         cargar_incendios(self)
 
         ordenar_linea_de_tiempo(self)
-
-        for e in self.linea_de_tiempo:
-            print(e)
 
     def run_master(self):
         self.cargar_terrenos_vacios()
@@ -94,9 +91,29 @@ class Simulacion:
         self.cargar_linea_de_tiempo()
         self.tiempo_simulacion = 0
         while self.tiempo_simulacion < self.tiempo_maximo:
-            self.tiempo_simulacion += 1
-            # TODO: Si el tiempo de simulacion es multiplo de 20, todos los semaforos cambian de luz.
-            if self.tiempo_simulacion % 20 == 0:
-                self.ciudad.cambiar_semaforos()
-                # TODO: Todos los vehiculos avanzan
-                # self.ciudad.avanzar_vehiculos()
+            # Si es que quedan eventos:
+            if self.linea_de_tiempo:
+                siguiente_evento = self.linea_de_tiempo.pop(0)
+
+                # Los vehiculos avanzan durante un periodo de tiempo igual a delta_tiempo antes del siguiente evento.
+                delta_tiempo = siguiente_evento.instante_ocurrencia - self.tiempo_simulacion
+                self.ciudad.avanzar_vehiculos_periodo(delta_tiempo)
+
+                # Ocurre el siguiente evento.
+                self.tiempo_simulacion = siguiente_evento.instante_ocurrencia
+                if siguiente_evento.tipo == 'enfermo':
+                    # TODO: sale ambulancia al lugar del enfermo y vuelve al hospital.
+                    print('EVENTO ENFERMO')
+                elif siguiente_evento.tipo == 'robo':
+                    # TODO: sale una patrulla al lugar del robo y vuelve a la comisaria.
+                    print('EVENTO ROBO')
+                elif siguiente_evento.tipo == 'incendio':
+                    # TODO: sale un carro de bomberos al lugar del incendio, apaga el incendio y vuelve al cuartel.
+                    print('EVENTO INCENDIO')
+
+            # Si no quedan eventos:
+            else:
+                delta_tiempo_final = self.tiempo_maximo - self.tiempo_simulacion
+                self.ciudad.avanzar_vehiculos_periodo(delta_tiempo_final)
+
+                self.tiempo_simulacion = self.tiempo_maximo
