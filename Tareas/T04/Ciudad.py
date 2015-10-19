@@ -6,6 +6,7 @@ from Calle import Calle
 from Servicios import Servicio
 from random import randint, choice
 from copy import deepcopy
+from decimal import Decimal
 
 
 class Ciudad:
@@ -18,13 +19,12 @@ class Ciudad:
         self.calles = {}
         self.entradas = {}
         self.salidas = {}
-        self.terrenos_vacios = []
         self.casas = {}
         self.vehiculos = {}
         self.rellenar_ciudad_base(pos_policia, pos_bomberos, pos_hospital)
         # self.grilla.tiempo_intervalo = float(input('Ingrese el intervalo de tiempo '
         #                                          'para los eventos en la simulacion: '))
-        self.grilla.tiempo_intervalo = 0.01
+        self.grilla.tiempo_intervalo = 0
 
     def rellenar_ciudad_base(self, pos_policia, pos_bomberos, pos_hospital):
 
@@ -43,7 +43,9 @@ class Ciudad:
             self.grilla.agregar_cuartel_bomberos(x_bomberos, y_bomberos)
             self.grilla.agregar_hospital(x_hospital, y_hospital)
 
-        def cargar_calles_casas_vacios(self):
+            print('[CIUDAD] Servicios de emergencia posicionados')
+
+        def cargar_calles_casas(self):
             mapa_file = open('mapa fix.txt', 'r')
             lineas = mapa_file.readlines()
             for l in range(1, len(lineas)):
@@ -61,8 +63,6 @@ class Ciudad:
                     self.grilla.agregar_calle(x + 1, y + 1)
                     nueva_calle = Calle(direccion)
                     self.calles.update({'{},{}'.format(x + 1, y + 1): nueva_calle})
-                elif entidad.lower() == 'vacio\n':
-                    self.terrenos_vacios.append('{},{}'.format(x + 1, y + 1))
 
             print('[CIUDAD] Se cargaron {} calles y {} casas de mapa.txt'.format(len(self.calles), len(self.casas)))
 
@@ -90,7 +90,6 @@ class Ciudad:
                 ob_abajo2 = '{},{}'.format(x + 2, y)
                 ob_arriba2 = '{},{}'.format(x - 2, y)
 
-
                 # Cruce tipo + o T de 1 pista
                 if ob_izq1 in self.calles and ob_der1 in self.calles:
                     if self.calles[ob_izq1].direccion \
@@ -106,8 +105,8 @@ class Ciudad:
 
                 # Cruce doble +
                 if ob_izq2 in self.calles and ob_izq1 in self.calles and ob_der1 in self.calles:
-                    if self.calles[ob_izq2].direccion == self.calles[ob_der1].direccion != self.calles[
-                        ob_izq1].direccion == self.calles[pos_calle].direccion:
+                    if self.calles[ob_izq2].direccion == self.calles[ob_der1].direccion \
+                            != self.calles[ob_izq1].direccion == self.calles[pos_calle].direccion:
                         self.calles[pos_calle].cruce = True
 
                 if ob_der2 in self.calles and ob_der1 in self.calles and ob_izq1 in self.calles:
@@ -149,45 +148,46 @@ class Ciudad:
                 if ob_izq1 in self.calles and ob_abajo1 in self.calles \
                         and ob_arriba1 in self.calles and ob_abajo2 in self.calles \
                         and ob_arriba2 in self.calles:
-                    if (self.calles[ob_arriba1].direccion == self.calles[ob_abajo1].direccion == self.calles[
-                        ob_abajo2].direccion == self.calles[ob_arriba2].direccion == self.calles[
-                        pos_calle].direccion) and (self.calles[ob_izq1].direccion == ['derecha']):
+                    if (self.calles[ob_arriba1].direccion == self.calles[ob_abajo1].direccion
+                            == self.calles[ob_abajo2].direccion == self.calles[ob_arriba2].direccion
+                            == self.calles[pos_calle].direccion) and (self.calles[ob_izq1].direccion == ['derecha']):
                         self.calles[pos_calle].cruce = True
 
                 if ob_der1 in self.calles and ob_abajo1 in self.calles and ob_arriba1 in self.calles \
                         and ob_abajo2 in self.calles and ob_arriba2 in self.calles:
-                    if (self.calles[ob_arriba1].direccion == self.calles[ob_abajo1].direccion == self.calles[
-                        ob_abajo2].direccion == self.calles[ob_arriba2].direccion == self.calles[
-                        pos_calle].direccion) and (self.calles[ob_der1].direccion == ['izquierda']):
+                    if (self.calles[ob_arriba1].direccion == self.calles[ob_abajo1].direccion
+                            == self.calles[ob_abajo2].direccion == self.calles[ob_arriba2].direccion
+                            == self.calles[pos_calle].direccion) and (self.calles[ob_der1].direccion == ['izquierda']):
                         self.calles[pos_calle].cruce = True
 
                 # Cruce T Peligroso segunda fila
                 if ob_arriba2 in self.calles and ob_izq1 in self.calles and ob_der1 in self.calles \
                         and ob_der2 in self.calles and ob_izq2 in self.calles:
-                    if (self.calles[ob_izq1].direccion == self.calles[ob_der1].direccion == self.calles[
-                        ob_der2].direccion == self.calles[ob_izq2].direccion == self.calles[pos_calle].direccion) and (
-                                self.calles[ob_arriba2].direccion == ['abajo']):
+                    if self.calles[ob_izq1].direccion == self.calles[ob_der1].direccion \
+                            == self.calles[ob_der2].direccion == self.calles[ob_izq2].direccion \
+                            == self.calles[pos_calle].direccion \
+                            and self.calles[ob_arriba2].direccion == ['abajo']:
                         self.calles[pos_calle].cruce = True
 
                 if ob_abajo2 in self.calles and ob_izq1 in self.calles and ob_der1 in self.calles \
                         and ob_der2 in self.calles and ob_izq2 in self.calles:
-                    if (self.calles[ob_izq1].direccion == self.calles[ob_der1].direccion == self.calles[
-                        ob_der2].direccion == self.calles[ob_izq2].direccion == self.calles[pos_calle].direccion) and (
-                                self.calles[ob_abajo2].direccion == ['arriba']):
+                    if (self.calles[ob_izq1].direccion == self.calles[ob_der1].direccion
+                            == self.calles[ob_der2].direccion == self.calles[ob_izq2].direccion
+                            == self.calles[pos_calle].direccion) and (self.calles[ob_abajo2].direccion == ['arriba']):
                         self.calles[pos_calle].cruce = True
 
                 if ob_izq2 in self.calles and ob_abajo1 in self.calles and ob_arriba1 in self.calles \
                         and ob_abajo2 in self.calles and ob_arriba2 in self.calles:
-                    if (self.calles[ob_arriba1].direccion == self.calles[ob_abajo1].direccion == self.calles[
-                        ob_abajo2].direccion == self.calles[ob_arriba2].direccion == self.calles[
-                        pos_calle].direccion) and (self.calles[ob_izq2].direccion == ['derecha']):
+                    if (self.calles[ob_arriba1].direccion == self.calles[ob_abajo1].direccion
+                            == self.calles[ob_abajo2].direccion == self.calles[ob_arriba2].direccion
+                            == self.calles[pos_calle].direccion) and (self.calles[ob_izq2].direccion == ['derecha']):
                         self.calles[pos_calle].cruce = True
 
                 if ob_der2 in self.calles and ob_abajo1 in self.calles and ob_arriba1 in self.calles \
                         and ob_abajo2 in self.calles and ob_arriba2 in self.calles:
-                    if (self.calles[ob_arriba1].direccion == self.calles[ob_abajo1].direccion == self.calles[
-                        ob_abajo2].direccion == self.calles[ob_arriba2].direccion == self.calles[
-                        pos_calle].direccion) and (self.calles[ob_der2].direccion == ['izquierda']):
+                    if (self.calles[ob_arriba1].direccion == self.calles[ob_abajo1].direccion
+                            == self.calles[ob_abajo2].direccion == self.calles[ob_arriba2].direccion
+                            == self.calles[pos_calle].direccion) and (self.calles[ob_der2].direccion == ['izquierda']):
                         self.calles[pos_calle].cruce = True
 
             print('[CIUDAD] Se encontraron y clasificaron todos los cruces')
@@ -249,8 +249,8 @@ class Ciudad:
                     calle = self.calles[rnd_pos]
                     if not calle.vehiculos_encima['der'] and not calle.cruce:
                         pos = calle.pos_vehiculos
-                        self.grilla.agregar_convertible(int(rnd_pos.split(',')[0]), int(rnd_pos.split(',')[1]), pos[0],
-                                                        pos[1])
+                        self.grilla.agregar_sedan(int(rnd_pos.split(',')[0]), int(rnd_pos.split(',')[1]), pos[0],
+                                                  pos[1])
                         nuevo_vehiculo = VehiculoComun()
                         self.vehiculos.update({rnd_pos: nuevo_vehiculo})
                         calle.vehiculos_encima['der'] = nuevo_vehiculo
@@ -299,7 +299,7 @@ class Ciudad:
                     self.calles[pos_calle].continuaciones.update({None: None})
 
         poner_servicios_emergencia(self, pos_policia, pos_bomberos, pos_hospital)
-        cargar_calles_casas_vacios(self)
+        cargar_calles_casas(self)
         cargar_distancias_comisaria(self)
         clasificar_entradas_salidas(self)
         clasificar_continuaciones(self)
@@ -309,11 +309,47 @@ class Ciudad:
 
     @property
     def lista_pesos_lugares_robos(self):
-        pesos_lugares = []
+        probs_lugares = []
         for pos_casa in self.casas:
             for p in range(self.casas[pos_casa].peso_distancia_comisaria):
-                pesos_lugares.append(pos_casa)
-        return pesos_lugares
+                probs_lugares.append(pos_casa)
+        return probs_lugares
+
+    @property
+    def lista_pesos_lugares_incendios(self):
+        suma_pesos = 0
+        for pos_casa in self.casas:
+            material = self.casas[pos_casa].material
+            if material == 'madera':
+                peso_material = 10
+            elif material == 'ladrillos':
+                peso_material = 7
+            elif material == 'hormigon':
+                peso_material = 4
+            elif material == 'metal':
+                peso_material = 2
+            suma_pesos += peso_material
+
+        notaciones_cientificas = ('%.2E' % Decimal(str(p / suma_pesos)) for p in [10, 7, 4, 2])
+        max_exp = max((int(nc.split('-')[-1]) for nc in notaciones_cientificas))
+        pesos_por_material = [round((10 ** max_exp) * p / suma_pesos) for p in [10, 4, 7, 2]]
+
+        probs_lugares = []
+        for pos_casa in self.casas:
+            material = self.casas[pos_casa].material
+            if material == 'madera':
+                for i in range(pesos_por_material[0]):
+                    probs_lugares.append(pos_casa)
+            elif material == 'ladrillos':
+                for i in range(pesos_por_material[1]):
+                    probs_lugares.append(pos_casa)
+            elif material == 'hormigon':
+                for i in range(pesos_por_material[2]):
+                    probs_lugares.append(pos_casa)
+            elif material == 'metal':
+                for i in range(pesos_por_material[3]):
+                    probs_lugares.append(pos_casa)
+        return probs_lugares
 
     def avanzar_vehiculos(self):
         def prox_pos(self, pos_vehiculo, vehiculo_actual):
@@ -361,10 +397,10 @@ class Ciudad:
                                       int(pos_vehiculo_aux.split(',')[1]))
 
             # TODO Se agrega el auto a la grilla en la nueva posicion.
-            self.grilla.agregar_convertible(int(prox_pos_str_red.split(',')[0]),
-                                            int(prox_pos_str_red.split(',')[1]),
-                                            self.calles[prox_pos_str_red].pos_vehiculos[0],
-                                            self.calles[prox_pos_str_red].pos_vehiculos[1])
+            self.grilla.agregar_sedan(int(prox_pos_str_red.split(',')[0]),
+                                      int(prox_pos_str_red.split(',')[1]),
+                                      self.calles[prox_pos_str_red].pos_vehiculos[0],
+                                      self.calles[prox_pos_str_red].pos_vehiculos[1])
 
         def avance_cruce(self, prox_pos_x, prox_pos_y, vehiculo_actual, pos_vehiculo_str_redondeada, prox_pos_str_red,
                          pos_vehiculo):
@@ -384,10 +420,10 @@ class Ciudad:
                                       int(pos_vehiculo_str_redondeada.split(',')[1]))
 
             # TODO Se agrega el auto a la grilla en la nueva posicion.
-            self.grilla.agregar_convertible(int(prox_pos_str_red.split(',')[0]),
-                                            int(prox_pos_str_red.split(',')[1]),
-                                            self.calles[prox_pos_str_red].pos_vehiculos[0],
-                                            self.calles[prox_pos_str_red].pos_vehiculos[1])
+            self.grilla.agregar_sedan(int(prox_pos_str_red.split(',')[0]),
+                                      int(prox_pos_str_red.split(',')[1]),
+                                      self.calles[prox_pos_str_red].pos_vehiculos[0],
+                                      self.calles[prox_pos_str_red].pos_vehiculos[1])
 
             # TODO: Si la proxima posicon es una calle,
 
@@ -418,7 +454,7 @@ class Ciudad:
                 y = int(pos_entrada.split(',')[1])
                 theta = self.calles[pos_entrada].pos_vehiculos[0]
                 mirror = self.calles[pos_entrada].pos_vehiculos[1]
-                self.grilla.agregar_convertible(x, y, theta, mirror)
+                self.grilla.agregar_sedan(x, y, theta, mirror)
 
         aux_vehiculos = deepcopy(self.vehiculos)
         for pos_vehiculo in aux_vehiculos:
@@ -461,4 +497,4 @@ class Ciudad:
                 x_pos = int(pos_calle.split(',')[0])
                 y_pos = int(pos_calle.split(',')[1])
                 self.calles[pos_calle].cambiar_semaforo(self.grilla, x_pos, y_pos)
-        print('[SIMULACION] Semaforos cambiados')
+        # print('[SIMULACION] Semaforos cambiados')

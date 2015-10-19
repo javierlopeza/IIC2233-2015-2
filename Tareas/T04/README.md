@@ -10,7 +10,7 @@
 
 * Simulé que también los autos pueden ir por una calle y meterse a una casa o servicio adyacente, es decir, a veces los vehiculos "desaparecen" de la grilla pero es porque se simula esta entrada a casas o servicios.
 
-* Para la simulación, al inicializarla se carga una 'línea de tiempo' de todos los eventos que sucederán en el tiempo de simulación ingresado.
+* Para cada simulación, al inicializarla se carga una 'línea de tiempo' de todos los eventos que sucederán en el tiempo de simulación ingresado.
 
 * Todas las unidades de tiempos en el programa están en segundos.
 
