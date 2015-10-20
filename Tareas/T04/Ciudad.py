@@ -21,10 +21,11 @@ class Ciudad:
         self.salidas = {}
         self.casas = {}
         self.vehiculos = {}
+        self.taxis = {}
         self.rellenar_ciudad_base(pos_policia, pos_bomberos, pos_hospital)
         # self.grilla.tiempo_intervalo = float(input('Ingrese el intervalo de tiempo '
         #                                          'para los eventos en la simulacion: '))
-        self.grilla.tiempo_intervalo = 0.001
+        self.grilla.tiempo_intervalo = 0.01
 
     def rellenar_ciudad_base(self, pos_policia, pos_bomberos, pos_hospital):
 
@@ -43,7 +44,7 @@ class Ciudad:
             self.grilla.agregar_cuartel_bomberos(x_bomberos, y_bomberos)
             self.grilla.agregar_hospital(x_hospital, y_hospital)
 
-            print('[CIUDAD] Servicios de emergencia posicionados')
+            print('\t[CIUDAD] Servicios de emergencia posicionados')
 
         def cargar_calles_casas(self):
             mapa_file = open('mapa fix.txt', 'r')
@@ -64,7 +65,7 @@ class Ciudad:
                     nueva_calle = Calle(direccion)
                     self.calles.update({'{},{}'.format(x + 1, y + 1): nueva_calle})
 
-            print('[CIUDAD] Se cargaron {} calles y {} casas de mapa.txt'.format(len(self.calles), len(self.casas)))
+            print('\t[CIUDAD] Se cargaron {} calles y {} casas de mapa.txt'.format(len(self.calles), len(self.casas)))
 
         def cargar_distancias_comisaria(self):
             if self.servicios['policia']:
@@ -132,7 +133,7 @@ class Ciudad:
                         and ob_izq2 in self.calles:
                     if (self.calles[ob_izq1].direccion == self.calles[ob_der1].direccion == self.calles[
                         ob_der2].direccion == self.calles[ob_izq2].direccion == self.calles[pos_calle].direccion) \
-                            and (self.calles[ob_arriba1].direccion == ['abajo']):
+                            and (self.calles[ob_arriba1].direccion == 'abajo'):
                         self.calles[pos_calle].cruce = True
 
                 if ob_abajo1 in self.calles \
@@ -142,7 +143,7 @@ class Ciudad:
                         and ob_izq2 in self.calles:
                     if (self.calles[ob_izq1].direccion == self.calles[ob_der1].direccion == self.calles[
                         ob_der2].direccion == self.calles[ob_izq2].direccion == self.calles[pos_calle].direccion) \
-                            and (self.calles[ob_abajo1].direccion == ['arriba']):
+                            and (self.calles[ob_abajo1].direccion == 'arriba'):
                         self.calles[pos_calle].cruce = True
 
                 if ob_izq1 in self.calles and ob_abajo1 in self.calles \
@@ -150,14 +151,14 @@ class Ciudad:
                         and ob_arriba2 in self.calles:
                     if (self.calles[ob_arriba1].direccion == self.calles[ob_abajo1].direccion
                             == self.calles[ob_abajo2].direccion == self.calles[ob_arriba2].direccion
-                            == self.calles[pos_calle].direccion) and (self.calles[ob_izq1].direccion == ['derecha']):
+                            == self.calles[pos_calle].direccion) and (self.calles[ob_izq1].direccion == 'derecha'):
                         self.calles[pos_calle].cruce = True
 
                 if ob_der1 in self.calles and ob_abajo1 in self.calles and ob_arriba1 in self.calles \
                         and ob_abajo2 in self.calles and ob_arriba2 in self.calles:
                     if (self.calles[ob_arriba1].direccion == self.calles[ob_abajo1].direccion
                             == self.calles[ob_abajo2].direccion == self.calles[ob_arriba2].direccion
-                            == self.calles[pos_calle].direccion) and (self.calles[ob_der1].direccion == ['izquierda']):
+                            == self.calles[pos_calle].direccion) and (self.calles[ob_der1].direccion == 'izquierda'):
                         self.calles[pos_calle].cruce = True
 
                 # Cruce T Peligroso segunda fila
@@ -166,31 +167,31 @@ class Ciudad:
                     if self.calles[ob_izq1].direccion == self.calles[ob_der1].direccion \
                             == self.calles[ob_der2].direccion == self.calles[ob_izq2].direccion \
                             == self.calles[pos_calle].direccion \
-                            and self.calles[ob_arriba2].direccion == ['abajo']:
+                            and self.calles[ob_arriba2].direccion == 'abajo':
                         self.calles[pos_calle].cruce = True
 
                 if ob_abajo2 in self.calles and ob_izq1 in self.calles and ob_der1 in self.calles \
                         and ob_der2 in self.calles and ob_izq2 in self.calles:
                     if (self.calles[ob_izq1].direccion == self.calles[ob_der1].direccion
                             == self.calles[ob_der2].direccion == self.calles[ob_izq2].direccion
-                            == self.calles[pos_calle].direccion) and (self.calles[ob_abajo2].direccion == ['arriba']):
+                            == self.calles[pos_calle].direccion) and (self.calles[ob_abajo2].direccion == 'arriba'):
                         self.calles[pos_calle].cruce = True
 
                 if ob_izq2 in self.calles and ob_abajo1 in self.calles and ob_arriba1 in self.calles \
                         and ob_abajo2 in self.calles and ob_arriba2 in self.calles:
                     if (self.calles[ob_arriba1].direccion == self.calles[ob_abajo1].direccion
                             == self.calles[ob_abajo2].direccion == self.calles[ob_arriba2].direccion
-                            == self.calles[pos_calle].direccion) and (self.calles[ob_izq2].direccion == ['derecha']):
+                            == self.calles[pos_calle].direccion) and (self.calles[ob_izq2].direccion == 'derecha'):
                         self.calles[pos_calle].cruce = True
 
                 if ob_der2 in self.calles and ob_abajo1 in self.calles and ob_arriba1 in self.calles \
                         and ob_abajo2 in self.calles and ob_arriba2 in self.calles:
                     if (self.calles[ob_arriba1].direccion == self.calles[ob_abajo1].direccion
                             == self.calles[ob_abajo2].direccion == self.calles[ob_arriba2].direccion
-                            == self.calles[pos_calle].direccion) and (self.calles[ob_der2].direccion == ['izquierda']):
+                            == self.calles[pos_calle].direccion) and (self.calles[ob_der2].direccion == 'izquierda'):
                         self.calles[pos_calle].cruce = True
 
-            print('[CIUDAD] Se encontraron y clasificaron todos los cruces')
+            print('\t[CIUDAD] Se encontraron y clasificaron todos los cruces')
 
         def poner_semaforos(self):
             total_semaforos = 0
@@ -202,7 +203,7 @@ class Ciudad:
                     self.grilla.agregar_semaforo_vertical(int(pos_calle.split(',')[0]), int(pos_calle.split(',')[1]))
                     total_semaforos += 1
 
-            print('[CIUDAD] Se agregaron {} semaforos en los cruces'.format(total_semaforos))
+            print('\t[CIUDAD] Se agregaron {} semaforos en los cruces'.format(total_semaforos))
 
         def clasificar_entradas_salidas(self):
             for pos_calle in self.calles:
@@ -214,64 +215,63 @@ class Ciudad:
                 ob_abajo1 = '{},{}'.format(x + 1, y)
                 ob_arriba1 = '{},{}'.format(x - 1, y)
 
-                if self.calles[pos_calle].direccion == ['abajo']:
+                if self.calles[pos_calle].direccion == 'abajo':
                     if ob_arriba1 not in self.calles:
                         self.entradas.update({pos_calle: self.calles[pos_calle]})
                     if ob_abajo1 not in self.calles:
                         self.salidas.update({pos_calle: self.calles[pos_calle]})
 
-                elif self.calles[pos_calle].direccion == ['arriba']:
+                elif self.calles[pos_calle].direccion == 'arriba':
                     if ob_abajo1 not in self.calles:
                         self.entradas.update({pos_calle: self.calles[pos_calle]})
                     if ob_arriba1 not in self.calles:
                         self.salidas.update({pos_calle: self.calles[pos_calle]})
 
-                elif self.calles[pos_calle].direccion == ['derecha']:
+                elif self.calles[pos_calle].direccion == 'derecha':
                     if ob_izq1 not in self.calles:
                         self.entradas.update({pos_calle: self.calles[pos_calle]})
                     if ob_der1 not in self.calles:
                         self.salidas.update({pos_calle: self.calles[pos_calle]})
 
-                elif self.calles[pos_calle].direccion == ['izquierda']:
+                elif self.calles[pos_calle].direccion == 'izquierda':
                     if ob_der1 not in self.calles:
                         self.entradas.update({pos_calle: self.calles[pos_calle]})
                     if ob_izq1 not in self.calles:
                         self.salidas.update({pos_calle: self.calles[pos_calle]})
 
-            print('[CIUDAD] Se clasificaron y encontraron {} entradas y {} salidas de la ciudad'.format(
+            print('\t[CIUDAD] Se clasificaron y encontraron {} entradas y {} salidas de la ciudad'.format(
                 len(self.entradas), len(self.salidas)))
 
         def cargar_autos_iniciales(self):
-            autos_iniciales = randint(round(len(self.calles) / 4), round(len(self.calles) / 2) - randint(3, 8))
-            for a in range(autos_iniciales):
+            autos_iniciales = randint(round(len(self.calles) / 4), round(len(self.calles) / 2))
+            for a in range(round(0.8*autos_iniciales)):
                 while True:
                     rnd_pos = choice(list(self.calles.keys()))
                     calle = self.calles[rnd_pos]
-                    if not calle.vehiculos_encima['der'] and not calle.cruce:
+                    if not calle.vehiculo_encima and not calle.cruce:
                         pos = calle.pos_vehiculos
                         self.grilla.agregar_sedan(int(rnd_pos.split(',')[0]), int(rnd_pos.split(',')[1]), pos[0],
                                                   pos[1])
                         nuevo_vehiculo = VehiculoComun()
                         self.vehiculos.update({rnd_pos: nuevo_vehiculo})
-                        calle.vehiculos_encima['der'] = nuevo_vehiculo
+                        calle.vehiculo_encima = nuevo_vehiculo
                         break
 
-            print('[CIUDAD] Se agregaron {} autos inicialmente'.format(autos_iniciales))
+            print('\t[CIUDAD] Se agregaron {} autos inicialmente'.format(round(0.8*autos_iniciales)))
 
-            taxis_iniciales = randint(1, round(len(self.calles) / 2) - autos_iniciales)
-            for t in range(taxis_iniciales):
+            for t in range(round(0.2*autos_iniciales)):
                 while True:
                     rnd_pos = choice(list(self.calles.keys()))
                     calle = self.calles[rnd_pos]
-                    if not calle.vehiculos_encima['der'] and not calle.cruce:
+                    if not calle.vehiculo_encima and not calle.cruce:
                         pos = calle.pos_vehiculos
                         self.grilla.agregar_taxi(int(rnd_pos.split(',')[0]), int(rnd_pos.split(',')[1]), pos[0], pos[1])
                         nuevo_taxi = Taxi()
-                        self.vehiculos.update({rnd_pos: nuevo_taxi})
-                        calle.vehiculos_encima['der'] = nuevo_taxi
+                        self.taxis.update({rnd_pos: nuevo_taxi})
+                        calle.vehiculo_encima = nuevo_taxi
                         break
 
-            print('[CIUDAD] Se agregaron {} taxis inicialmente'.format(taxis_iniciales))
+            print('\t[CIUDAD] Se agregaron {} taxis inicialmente'.format(round(0.2*autos_iniciales)))
 
         def clasificar_continuaciones(self):
             for pos_calle in self.calles:
@@ -284,19 +284,21 @@ class Ciudad:
                 ob_arriba1 = '{},{}'.format(x - 1, y)
 
                 if ob_izq1 in self.calles:
-                    if self.calles[ob_izq1].direccion == ['izquierda']:
+                    if self.calles[ob_izq1].direccion == 'izquierda':
                         self.calles[pos_calle].continuaciones.update({ob_izq1: self.calles[ob_izq1]})
                 if ob_der1 in self.calles:
-                    if self.calles[ob_der1].direccion == ['derecha']:
+                    if self.calles[ob_der1].direccion == 'derecha':
                         self.calles[pos_calle].continuaciones.update({ob_der1: self.calles[ob_der1]})
                 if ob_arriba1 in self.calles:
-                    if self.calles[ob_arriba1].direccion == ['arriba']:
+                    if self.calles[ob_arriba1].direccion == 'arriba':
                         self.calles[pos_calle].continuaciones.update({ob_arriba1: self.calles[ob_arriba1]})
                 if ob_abajo1 in self.calles:
-                    if self.calles[ob_abajo1].direccion == ['abajo']:
+                    if self.calles[ob_abajo1].direccion == 'abajo':
                         self.calles[pos_calle].continuaciones.update({ob_abajo1: self.calles[ob_abajo1]})
                 if not self.calles[pos_calle].continuaciones:
                     self.calles[pos_calle].continuaciones.update({None: None})
+
+        print('[SIMULACION] Rellenando ciudad base...')
 
         poner_servicios_emergencia(self, pos_policia, pos_bomberos, pos_hospital)
         cargar_calles_casas(self)
@@ -358,16 +360,16 @@ class Ciudad:
             if pos_vehiculo_aux in self.calles:
                 pos_prox_calle = choice(list(self.calles[pos_vehiculo_aux].continuaciones.keys()))
                 if pos_prox_calle:
-                    if self.calles[pos_prox_calle].direccion == ['derecha']:
+                    if self.calles[pos_prox_calle].direccion == 'derecha':
                         prox_pos_x = float(pos_vehiculo.split(',')[0])
                         prox_pos_y = float(pos_vehiculo.split(',')[1]) + vehiculo_actual.velocidad
-                    elif self.calles[pos_prox_calle].direccion == ['izquierda']:
+                    elif self.calles[pos_prox_calle].direccion == 'izquierda':
                         prox_pos_x = float(pos_vehiculo.split(',')[0])
                         prox_pos_y = float(pos_vehiculo.split(',')[1]) - vehiculo_actual.velocidad
-                    elif self.calles[pos_prox_calle].direccion == ['arriba']:
+                    elif self.calles[pos_prox_calle].direccion == 'arriba':
                         prox_pos_x = float(pos_vehiculo.split(',')[0]) - vehiculo_actual.velocidad
                         prox_pos_y = float(pos_vehiculo.split(',')[1])
-                    elif self.calles[pos_prox_calle].direccion == ['abajo']:
+                    elif self.calles[pos_prox_calle].direccion == 'abajo':
                         prox_pos_x = float(pos_vehiculo.split(',')[0]) + vehiculo_actual.velocidad
                         prox_pos_y = float(pos_vehiculo.split(',')[1])
 
@@ -387,11 +389,14 @@ class Ciudad:
             self.vehiculos.update({prox_pos_str: vehiculo_actual})
 
             # Se elimina el vehiculo de la pista derecha de la calle actual y de self.vehiculos.
-            self.calles[pos_vehiculo_aux].vehiculos_encima['der'] = None
-            del self.vehiculos[pos_vehiculo]
+            self.calles[pos_vehiculo_aux].vehiculo_encima = None
+            if pos_vehiculo_aux in self.vehiculos:
+                del self.vehiculos[pos_vehiculo]
+            elif pos_vehiculo_aux in self.taxis:
+                del self.taxis[pos_vehiculo]
 
             # Se agrega el vehiculo a la pista derecha de la calle correspondiente a su nueva posicion redondeada.
-            self.calles[prox_pos_str_red].vehiculos_encima['der'] = vehiculo_actual
+            self.calles[prox_pos_str_red].vehiculo_encima = vehiculo_actual
 
             # Se borra el auto de la grilla.
             self.grilla.quitar_imagen(int(pos_vehiculo_aux.split(',')[0]),
@@ -410,11 +415,11 @@ class Ciudad:
             self.vehiculos.update({prox_pos_str: vehiculo_actual})
 
             # Se elimina el vehiculo de la pista derecha de la calle actual y de self.vehiculos.
-            self.calles[pos_vehiculo_str_redondeada].vehiculos_encima['der'] = None
+            self.calles[pos_vehiculo_str_redondeada].vehiculo_encima = None
             del self.vehiculos[pos_vehiculo]
 
             # Se agrega el vehiculo a la pista derecha de la calle correspondiente a su nueva posicion redondeada.
-            self.calles[prox_pos_str_red].vehiculos_encima['der'] = vehiculo_actual
+            self.calles[prox_pos_str_red].vehiculo_encima = vehiculo_actual
 
             # Se borra el auto de la grilla.
             self.grilla.quitar_imagen(int(pos_vehiculo_str_redondeada.split(',')[0]),
@@ -428,23 +433,28 @@ class Ciudad:
 
         def vehiculo_fuera(self, pos_vehiculo_aux, pos_vehiculo):
             # Se elimina el vehiculo de la pista derecha de la calle actual y de self.vehiculos.
-            self.calles[pos_vehiculo_aux].vehiculos_encima['der'] = None
-            del self.vehiculos[pos_vehiculo]
+            self.calles[pos_vehiculo_aux].vehiculo_encima = None
+            if pos_vehiculo_aux in self.vehiculos:
+                del self.vehiculos[pos_vehiculo]
+            elif pos_vehiculo_aux in self.taxis:
+                del self.taxis[pos_vehiculo]
 
             # Se borra el auto de la grilla.
             self.grilla.quitar_imagen(int(pos_vehiculo_aux.split(',')[0]),
                                       int(pos_vehiculo_aux.split(',')[1]))
 
             # Se agregan entre aleatoriamente entre 0 y 2 vehiculos a la ciudad sin superar el maximo de autos.
-            n_autos_nuevos = randint(0, min(2, int(len(self.calles) / 2 - len(self.vehiculos))))
+            if int(len(self.calles) / 2 - len(self.vehiculos)) == 0:
+                n_autos_nuevos = 0
+            else:
+                n_autos_nuevos = randint(0, min(2, int(len(self.calles) / 2 - len(self.vehiculos))))
             for a in range(n_autos_nuevos):
-
                 # Se instancia el nuevo auto
                 nuevo_auto = VehiculoComun()
-                # Se agrega el auto a la pista derecha vacia de una calle de entrada aleatoria
+                # Se agrega el auto a la calle de entrada aleatoria
                 for pos_entrada in self.entradas:
-                    if not self.entradas[pos_entrada].vehiculos_encima['der']:
-                        self.calles[pos_entrada].vehiculos_encima['der'] = nuevo_auto
+                    if not self.entradas[pos_entrada].vehiculo_encima:
+                        self.calles[pos_entrada].vehiculo_encima = nuevo_auto
                         break
                 # Se agrega el auto a self.vehiculos
                 self.vehiculos[pos_entrada] = nuevo_auto
@@ -456,6 +466,7 @@ class Ciudad:
                 self.grilla.agregar_sedan(x, y, theta, mirror)
 
         aux_vehiculos = deepcopy(self.vehiculos)
+        aux_vehiculos.update({pos:self.taxis[pos] for pos in self.taxis if not self.taxis[pos].tiempo_paralizado})
         for pos_vehiculo in aux_vehiculos:
             vehiculo_actual = aux_vehiculos[pos_vehiculo]
             PPP = prox_pos(self, pos_vehiculo, vehiculo_actual)
@@ -468,7 +479,7 @@ class Ciudad:
                 # Si la proxima posicion escogida es una calle, no es un cruce y esta la pista derecha vacia, entonces:
                 if prox_pos_str_redondeada in self.calles:
                     if not self.calles[prox_pos_str_redondeada].cruce:
-                        if not self.calles[prox_pos_str_redondeada].vehiculos_encima['der']:
+                        if not self.calles[prox_pos_str_redondeada].vehiculo_encima:
                             avance_comun(self, prox_pos_x, prox_pos_y, vehiculo_actual, pos_vehiculo_str_redondeada,
                                          prox_pos_str_redondeada)
 
@@ -478,7 +489,7 @@ class Ciudad:
                     if self.calles[prox_pos_str_redondeada].cruce:
                         if self.calles[pos_vehiculo_str_redondeada].direccion[0] \
                                 in self.calles[prox_pos_str_redondeada].semaforo:
-                            if not self.calles[prox_pos_str_redondeada].vehiculos_encima['der']:
+                            if not self.calles[prox_pos_str_redondeada].vehiculo_encima:
                                 avance_cruce(self,
                                              prox_pos_x,
                                              prox_pos_y,
@@ -503,4 +514,3 @@ class Ciudad:
             if t % 20 == 0:
                 self.cambiar_semaforos()
             self.avanzar_vehiculos()
-        print('[SIMULACION] Los vehiculos comunes de la ciudad se movieron por {} minutos'.format(round(delta / 60, 2)))

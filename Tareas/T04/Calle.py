@@ -3,8 +3,8 @@
 
 class Calle:
     def __init__(self, direccion):
-        self.direccion = [direccion]
-        self.vehiculos_encima = {'der': None, 'izq': None}
+        self.direccion = direccion
+        self.vehiculo_encima = None
         self.semaforo = None
         self.cruce = False
         self.continuaciones = {}
@@ -13,13 +13,13 @@ class Calle:
     def pos_vehiculos(self):
         theta = 0
         mirror = False
-        if self.direccion == ['arriba']:
+        if self.direccion == 'arriba':
             theta = -90
-        elif self.direccion == ['abajo']:
+        elif self.direccion == 'abajo':
             theta = 90
-        elif self.direccion == ['derecha']:
+        elif self.direccion == 'derecha':
             theta = 0
-        elif self.direccion == ['izquierda']:
+        elif self.direccion == 'izquierda':
             theta = 0
             mirror = True
         return theta, mirror
@@ -33,6 +33,5 @@ class Calle:
             grilla.agregar_semaforo_vertical(x, y)
 
     def __repr__(self):
-        return 'Calle con direccion {} -> [IZQ: {}, DER: {}]'.format(self.direccion,
-                                                                     self.vehiculos_encima['izq'],
-                                                                     self.vehiculos_encima['der'])
+        return 'Calle con Direccion: {} -> Vehiculo Encima: {}'.format(self.direccion,
+                                                                     self.vehiculo_encima)

@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 from Ciudad import Ciudad
-from random import expovariate, choice
+from random import expovariate, choice, randint
 import itertools
 
 
@@ -21,10 +21,11 @@ class Simulacion:
         self.app = app
         self.rows = rows
         self.cols = cols
-        self.tiempo_maximo = 2 * 60 * 60
+        self.tiempo_maximo = 24 * 60 * 60
         self.tiempo_simulacion = 0
         self.linea_de_tiempo = []
         self.terrenos_vacios = []
+        print('[SIMULACION] Se simulara durante un periodo de {} segundos.'.format(self.tiempo_maximo))
 
     def cargar_terrenos_vacios(self):
         mapa_file = open('mapa fix.txt', 'r')
@@ -43,9 +44,10 @@ class Simulacion:
             reloj = 0
             while reloj < self.tiempo_maximo:
                 tiempo_nuevo_enfermo = round(expovariate(1 / (2 * 60 * 60)) + reloj)
-                lugar = choice(list(self.ciudad.casas.keys()))
-                nuevo_evento = Evento(tiempo_nuevo_enfermo, 'enfermo', lugar)
-                self.linea_de_tiempo.append(nuevo_evento)
+                if tiempo_nuevo_enfermo <= self.tiempo_maximo:
+                    lugar = choice(list(self.ciudad.casas.keys()))
+                    nuevo_evento = Evento(tiempo_nuevo_enfermo, 'enfermo', lugar)
+                    self.linea_de_tiempo.append(nuevo_evento)
                 reloj += tiempo_nuevo_enfermo
 
         def cargar_robos(self):
@@ -53,9 +55,10 @@ class Simulacion:
             probs_robos_lugar = self.ciudad.lista_pesos_lugares_robos
             while reloj < self.tiempo_maximo:
                 tiempo_nuevo_robo = round(expovariate(1 / (4 * 60 * 60)) + reloj)
-                lugar = choice(probs_robos_lugar)
-                nuevo_evento = Evento(tiempo_nuevo_robo, 'robo', lugar)
-                self.linea_de_tiempo.append(nuevo_evento)
+                if tiempo_nuevo_robo <= self.tiempo_maximo:
+                    lugar = choice(probs_robos_lugar)
+                    nuevo_evento = Evento(tiempo_nuevo_robo, 'robo', lugar)
+                    self.linea_de_tiempo.append(nuevo_evento)
                 reloj += tiempo_nuevo_robo
 
         def cargar_incendios(self):
@@ -63,9 +66,10 @@ class Simulacion:
             probs_incendios_lugar = self.ciudad.lista_pesos_lugares_incendios
             while reloj < self.tiempo_maximo:
                 tiempo_nuevo_incendio = round(expovariate(1 / (10 * 60 * 60)) + reloj)
-                lugar = choice(probs_incendios_lugar)
-                nuevo_evento = Evento(tiempo_nuevo_incendio, 'incendio', lugar)
-                self.linea_de_tiempo.append(nuevo_evento)
+                if tiempo_nuevo_incendio <= self.tiempo_maximo:
+                    lugar = choice(probs_incendios_lugar)
+                    nuevo_evento = Evento(tiempo_nuevo_incendio, 'incendio', lugar)
+                    self.linea_de_tiempo.append(nuevo_evento)
                 reloj += tiempo_nuevo_incendio
 
         def ordenar_linea_de_tiempo(self):
@@ -77,6 +81,10 @@ class Simulacion:
 
         ordenar_linea_de_tiempo(self)
 
+        print('[SIMULACION] Los eventos que ocurriran en el periodo son: ')
+        for evento in self.linea_de_tiempo:
+            print('\t{}'.format(evento))
+
     def run_master(self):
         self.cargar_terrenos_vacios()
         for permutacion in itertools.permutations(self.terrenos_vacios):
@@ -86,7 +94,6 @@ class Simulacion:
             self.run(pos_policia, pos_bomberos, pos_hospital)
 
     def run(self, pos_policia, pos_bomberos, pos_hospital):
-        del self.ciudad
         self.ciudad = Ciudad(self.app, self.rows, self.cols, pos_policia, pos_bomberos, pos_hospital)
         self.cargar_linea_de_tiempo()
         self.tiempo_simulacion = 0
@@ -95,8 +102,32 @@ class Simulacion:
             if self.linea_de_tiempo:
                 siguiente_evento = self.linea_de_tiempo.pop(0)
 
+                # Se revisa si cada taxi recoge un pasajero en este tiempo antes del siguiente evento.
+                taxis_utiles_vacios = [taxi for taxi in self.ciudad.taxis.values()
+                                         if taxi.instante_nuevo_pasajero <= siguiente_evento.instante_ocurrencia
+                                       and not taxi.pasajero]
+                while taxis_utiles_vacios:
+                    taxis_utiles_vacios.sort(key=lambda x: x.instante_nuevo_pasajero)
+                    taxi = taxis_utiles_vacios[0]
+
+                    # Los vehiculos avanzan hasta que el taxi encuentra el pasajero.
+                    delta_mini = round(taxi.instante_nuevo_pasajero - self.tiempo_simulacion)
+                    self.ciudad.avanzar_vehiculos_periodo(delta_mini)
+
+                    # El taxi toma al pasajero
+                    taxi.recoger_pasajero(self.ciudad.calles)
+                    self.tiempo_simulacion = taxi.instante_nuevo_pasajero
+                    print('[SIMULACION] Un taxi recoge un pasajero en el '
+                          'instante {} con destino a {}'.format(round(self.tiempo_simulacion,2),
+                                                                taxi.destino))
+
+                    taxis_utiles_vacios = [taxi for taxi in self.ciudad.taxis.values()
+                                             if taxi.instante_nuevo_pasajero <= siguiente_evento.instante_ocurrencia
+                                           and not taxi.pasajero]
+
                 # Los vehiculos avanzan durante un periodo de tiempo igual a delta_tiempo antes del siguiente evento.
-                delta_tiempo = siguiente_evento.instante_ocurrencia - self.tiempo_simulacion
+                delta_tiempo = round(siguiente_evento.instante_ocurrencia - self.tiempo_simulacion)
+                print('[SIMULACION] Moviendo vehiculos comunes por {} segundos...'.format(delta_tiempo))
                 self.ciudad.avanzar_vehiculos_periodo(delta_tiempo)
 
                 # Ocurre el siguiente evento.
