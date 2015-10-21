@@ -12,12 +12,17 @@ from grafo import Grafo
 
 class Ciudad:
     def __init__(self, app, rows, cols, pos_policia, pos_bomberos, pos_hospital, n_escenario):
-        self.reporte = open('output_escenario_{}.txt'.format(n_escenario), 'w')
+        self.pos_policia = pos_policia
+        self.pos_bomberos = pos_bomberos
+        self.pos_hospital = pos_hospital
+        self.n_escenario = n_escenario
         self.eventos_reporte = []
         self.grilla = GrillaSimulacion(app, rows, cols)
         self.grilla.show()
         self.tiempos_incendios = []
         self.tiempos_enfermos = []
+        self.robos_frustrados = 0
+        self.robos_escapados = 0
         self.servicios = {'bomberos': None,
                           'policia': None,
                           'hospital': None}
@@ -618,3 +623,39 @@ class Ciudad:
             print('PROMEDIO DE TIEMPO APAGADO INCENDIOS: {} SEGUNDOS'.format(round(sum(self.tiempos_incendios)/len(self.tiempos_incendios)), 2))
         if self.tiempos_enfermos:
             print('PROMEDIO DE TIEMPO ASISTENCIA ENFERMOS: {} SEGUNDOS'.format(round(sum(self.tiempos_enfermos)/len(self.tiempos_enfermos)), 2))
+        if self.robos_escapados:
+            print('TOTAL DE ROBOS ESCAPADOS: {} ROBOS'.format(self.robos_escapados))
+        if self.robos_frustrados:
+            print('TOTAL DE ROBOS FRUSTRADOS: {} ROBOS'.format(self.robos_frustrados))
+            
+        self.eventos_reporte.sort(key=lambda  x: x.instante_ocurrencia)
+        file_reporte = open('output_escenario_{}.txt'.format(self.n_escenario), 'w')
+        file_reporte.write('TIEMPO\tEVENTO\tENTIDAD\tLUGAR\n')
+        for eve in self.eventos_reporte:
+            if eve.tipo == 'taxi1':
+                evento = 'Se detiene taxi a recoger pasajero'
+                entidad = 'Taxi'
+            elif eve.tipo == 'taxi0':
+                evento = 'Se detiene taxi a dejar pasajero'
+                entidad = 'Taxi'
+            elif eve.tipo == 'enfermo':
+                evento = 'Se enferma una persona'
+                entidad = 'Casa'
+            elif eve.tipo == 'robo':
+                evento = 'Se produce un robo'
+                entidad = 'Casa'
+            elif eve.tipo == 'incendio':
+                evento = 'Se produce un incendio'
+                entidad = 'Casa'
+            elif eve.tipo == 'apaga':
+                evento = 'Se apaga un incendio'
+                entidad = 'Bomberos'
+
+            tiempo_evento = eve.instante_ocurrencia
+            lugar = eve.lugar
+
+            file_reporte.write('{}\t{}\t{}\t{}\n'.format(tiempo_evento,
+                                                         evento,
+                                                         entidad,
+                                                         lugar
+                                                         ))

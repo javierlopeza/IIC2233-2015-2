@@ -1,4 +1,5 @@
 from Vehiculo import *
+from Simulacion import Evento
 
 
 class Servicio:
@@ -7,7 +8,7 @@ class Servicio:
         self.tipo = tipo
         self.vehiculos_disponibles = 3
 
-    def asistir_urgencia(self, ciudad, ubicacion_emergencia):
+    def asistir_urgencia(self, ciudad, ubicacion_emergencia, tiempo_actual):
         if self.vehiculos_disponibles:
             self.vehiculos_disponibles -= 1
             if self.tipo == 'bomberos':
@@ -29,9 +30,11 @@ class Servicio:
             tiempo_total += len(camino_ida)
             if self.tipo == 'bomberos':
                 tiempo_total += ciudad.casas[ubicacion_emergencia].demora_apagar_incendio
+                ciudad.eventos_reporte.append(Evento(tiempo_actual + tiempo_total, 'apaga', ubicacion_emergencia))
+                tiempo_total += round(len(camino_vuelta) * 2)
                 ciudad.tiempos_incendios.append(tiempo_total)
             elif self.tipo == 'hospital':
-                tiempo_total += len(camino_vuelta) * 2
+                tiempo_total += len(camino_vuelta)
                 ciudad.tiempos_enfermos.append(tiempo_total)
 
             # Se muestra como la ambulancia recorre la ciudad de ida.

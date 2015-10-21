@@ -18,11 +18,12 @@ class Evento:
 
 class Simulacion:
     def __init__(self, app, rows, cols):
+        self.estadisticas_ciudades = {}
         self.ciudad = None
         self.app = app
         self.rows = rows
         self.cols = cols
-        self.tiempo_maximo = 0.2 * 60 * 60
+        self.tiempo_maximo = 2 * 60 * 60
         self.tiempo_simulacion = 0
         self.linea_de_tiempo = []
         self.terrenos_vacios = []
@@ -95,6 +96,12 @@ class Simulacion:
             pos_hospital = permutacion[2]
             self.run(pos_policia, pos_bomberos, pos_hospital, n_escenario)
             n_escenario += 1
+        best = min(list(self.estadisticas_ciudades.keys()))
+        best_positions = self.estadisticas_ciudades[best]
+        policia = best_positions[0]
+        bomberos = best_positions[1]
+        hospital = best_positions[2]
+        self.ciudad = Ciudad(self.app, self.rows, self.cols, policia, bomberos, hospital, 99)
 
     def run(self, pos_policia, pos_bomberos, pos_hospital, n_escenario):
         self.ciudad = Ciudad(self.app, self.rows, self.cols, pos_policia, pos_bomberos, pos_hospital, n_escenario)
@@ -108,7 +115,7 @@ class Simulacion:
 
                 # Se revisa si cada taxi recoge un pasajero en este tiempo antes del siguiente evento.
                 taxis_utiles_vacios = [taxi for taxi in self.ciudad.taxis.values()
-                                         if taxi.instante_nuevo_pasajero <= siguiente_evento.instante_ocurrencia
+                                       if taxi.instante_nuevo_pasajero <= siguiente_evento.instante_ocurrencia
                                        and not taxi.pasajero]
                 while taxis_utiles_vacios:
                     taxis_utiles_vacios.sort(key=lambda x: x.instante_nuevo_pasajero)
@@ -122,11 +129,16 @@ class Simulacion:
                     taxi.recoger_pasajero(self.ciudad.calles)
                     self.tiempo_simulacion = taxi.instante_nuevo_pasajero
                     print('[SIMULACION] Un taxi recoge un pasajero en el '
-                          'instante {} con destino a {}'.format(round(self.tiempo_simulacion,2),
+                          'instante {} con destino a {}'.format(round(self.tiempo_simulacion, 2),
                                                                 taxi.destino))
+                    self.ciudad.eventos_reporte.append(
+                        Evento(round(self.tiempo_simulacion, 2), 'taxi1', choice(list(self.ciudad.calles.keys()))))
+                    self.ciudad.eventos_reporte.append(
+                        Evento(randint(int(self.tiempo_simulacion + 20), int(self.tiempo_simulacion + 50)), 'taxi0',
+                               taxi.destino))
 
                     taxis_utiles_vacios = [taxi for taxi in self.ciudad.taxis.values()
-                                             if taxi.instante_nuevo_pasajero <= siguiente_evento.instante_ocurrencia
+                                           if taxi.instante_nuevo_pasajero <= siguiente_evento.instante_ocurrencia
                                            and not taxi.pasajero]
 
                 # Los vehiculos avanzan durante un periodo de tiempo igual a delta_tiempo antes del siguiente evento.
@@ -139,20 +151,70 @@ class Simulacion:
                 if siguiente_evento.tipo == 'enfermo':
                     # TODO: sale ambulancia al lugar del enfermo y vuelve al hospital.
                     print('EVENTO ENFERMO')
-                    self.ciudad.servicios['hospital'].asistir_urgencia(self.ciudad, siguiente_evento.lugar)
+                    self.ciudad.servicios['hospital'].asistir_urgencia(self.ciudad, siguiente_evento.lugar,
+                                                                       self.tiempo_simulacion)
                 elif siguiente_evento.tipo == 'robo':
                     # TODO: sale una patrulla al lugar del robo y vuelve a la comisaria.
                     print('EVENTO ROBO')
-                    self.ciudad.servicios['policia'].asistir_urgencia(self.ciudad, siguiente_evento.lugar)
+                    self.ciudad.servicios['policia'].asistir_urgencia(self.ciudad, siguiente_evento.lugar,
+                                                                      self.tiempo_simulacion)
+                    tiempo_llegada_hogar = randint(10, 20)
+                    if tiempo_llegada_hogar < self.ciudad.casas[siguiente_evento.lugar].duracion_robo:
+                        self.ciudad.eventos_reporte.append(
+                            Evento(self.tiempo_simulacion, 'atrapa', siguiente_evento.lugar))
+                        self.ciudad.robos_frustrados += 1
+                    else:
+                        self.ciudad.eventos_reporte.append(
+                            Evento(self.tiempo_simulacion, 'escapa', siguiente_evento.lugar))
+                        self.ciudad.robos_escapados += 1
                 elif siguiente_evento.tipo == 'incendio':
                     # TODO: sale un carro de bomberos al lugar del incendio, apaga el incendio y vuelve al cuartel.
                     print('EVENTO INCENDIO')
-                    self.ciudad.servicios['bomberos'].asistir_urgencia(self.ciudad, siguiente_evento.lugar)
+                    self.ciudad.servicios['bomberos'].asistir_urgencia(self.ciudad, siguiente_evento.lugar,
+                                                                       self.tiempo_simulacion)
 
 
             # Si no quedan eventos:
             else:
+                siguiente_evento = Evento(self.tiempo_maximo, None, None)
+                # Se revisa si cada taxi recoge un pasajero en este tiempo antes del siguiente evento.
+                taxis_utiles_vacios = [taxi for taxi in self.ciudad.taxis.values()
+                                       if taxi.instante_nuevo_pasajero <= siguiente_evento.instante_ocurrencia
+                                       and not taxi.pasajero]
+                while taxis_utiles_vacios:
+                    taxis_utiles_vacios.sort(key=lambda x: x.instante_nuevo_pasajero)
+                    taxi = taxis_utiles_vacios[0]
+
+                    # Los vehiculos avanzan hasta que el taxi encuentra el pasajero.
+                    delta_mini = round(taxi.instante_nuevo_pasajero - self.tiempo_simulacion)
+                    self.ciudad.avanzar_vehiculos_periodo(delta_mini)
+
+                    # El taxi toma al pasajero
+                    taxi.recoger_pasajero(self.ciudad.calles)
+                    self.tiempo_simulacion = taxi.instante_nuevo_pasajero
+                    print('[SIMULACION] Un taxi recoge un pasajero en el '
+                          'instante {} con destino a {}'.format(round(self.tiempo_simulacion, 2),
+                                                                taxi.destino))
+                    self.ciudad.eventos_reporte.append(
+                        Evento(round(self.tiempo_simulacion, 2), 'taxi1', choice(list(self.ciudad.calles.keys()))))
+                    self.ciudad.eventos_reporte.append(
+                        Evento(randint(int(self.tiempo_simulacion + 20), int(self.tiempo_simulacion + 200)), 'taxi0',
+                               taxi.destino))
+
+                    taxis_utiles_vacios = [taxi for taxi in self.ciudad.taxis.values()
+                                           if taxi.instante_nuevo_pasajero <= siguiente_evento.instante_ocurrencia
+                                           and not taxi.pasajero]
+
                 delta_tiempo_final = self.tiempo_maximo - self.tiempo_simulacion
                 self.ciudad.avanzar_vehiculos_periodo(int(delta_tiempo_final))
                 self.tiempo_simulacion = self.tiempo_maximo
         self.ciudad.estadisticas()
+        tprom_incendios = round(sum((self.ciudad.tiempos_incendios) / len(self.ciudad.tiempos_incendios)), 2)
+        tprom_ambulancias = round(sum((self.ciudad.tiempos_enfermos) / len(self.ciudad.tiempos_enfermos)), 2)
+        robos_frustrados = self.ciudad.robos_frustrados
+        robos_escapados = self.ciudad.robos_escapados
+        peoridad = tprom_incendios + tprom_ambulancias - robos_frustrados + robos_escapados
+        self.estadisticas_ciudades.update({peoridad: [self.ciudad.pos_policia,
+                                                      self.ciudad.pos_bomberos,
+                                                      self.ciudad.pos_hospital]})
+

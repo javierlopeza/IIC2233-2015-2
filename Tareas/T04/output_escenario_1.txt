@@ -1,0 +1,10 @@
+TIEMPO	EVENTO	ENTIDAD	LUGAR
+5.34	Se detiene taxi a recoger pasajero	Taxi	20,10
+20.12	Se detiene taxi a recoger pasajero	Taxi	12,7
+27	Se detiene taxi a dejar pasajero	Taxi	5,22
+38.74	Se detiene taxi a recoger pasajero	Taxi	21,12
+55.44	Se detiene taxi a recoger pasajero	Taxi	5,14
+62	Se detiene taxi a dejar pasajero	Taxi	25,13
+66	Se detiene taxi a dejar pasajero	Taxi	4,6
+77	Se detiene taxi a dejar pasajero	Taxi	18,23
+4360	Se produce un incendio	Casa	3,5
