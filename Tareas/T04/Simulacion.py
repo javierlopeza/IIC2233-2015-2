@@ -3,6 +3,7 @@
 from Ciudad import Ciudad
 from random import expovariate, choice, randint
 import itertools
+from copy import deepcopy
 
 
 class Evento:
@@ -21,7 +22,7 @@ class Simulacion:
         self.app = app
         self.rows = rows
         self.cols = cols
-        self.tiempo_maximo = 24 * 60 * 60
+        self.tiempo_maximo = 0.2 * 60 * 60
         self.tiempo_simulacion = 0
         self.linea_de_tiempo = []
         self.terrenos_vacios = []
@@ -87,15 +88,18 @@ class Simulacion:
 
     def run_master(self):
         self.cargar_terrenos_vacios()
+        n_escenario = 1
         for permutacion in itertools.permutations(self.terrenos_vacios):
             pos_policia = permutacion[0]
             pos_bomberos = permutacion[1]
             pos_hospital = permutacion[2]
-            self.run(pos_policia, pos_bomberos, pos_hospital)
+            self.run(pos_policia, pos_bomberos, pos_hospital, n_escenario)
+            n_escenario += 1
 
-    def run(self, pos_policia, pos_bomberos, pos_hospital):
-        self.ciudad = Ciudad(self.app, self.rows, self.cols, pos_policia, pos_bomberos, pos_hospital)
+    def run(self, pos_policia, pos_bomberos, pos_hospital, n_escenario):
+        self.ciudad = Ciudad(self.app, self.rows, self.cols, pos_policia, pos_bomberos, pos_hospital, n_escenario)
         self.cargar_linea_de_tiempo()
+        self.ciudad.eventos_reporte = deepcopy(self.linea_de_tiempo)
         self.tiempo_simulacion = 0
         while self.tiempo_simulacion < self.tiempo_maximo:
             # Si es que quedan eventos:
@@ -135,16 +139,20 @@ class Simulacion:
                 if siguiente_evento.tipo == 'enfermo':
                     # TODO: sale ambulancia al lugar del enfermo y vuelve al hospital.
                     print('EVENTO ENFERMO')
+                    self.ciudad.servicios['hospital'].asistir_urgencia(self.ciudad, siguiente_evento.lugar)
                 elif siguiente_evento.tipo == 'robo':
                     # TODO: sale una patrulla al lugar del robo y vuelve a la comisaria.
                     print('EVENTO ROBO')
+                    self.ciudad.servicios['policia'].asistir_urgencia(self.ciudad, siguiente_evento.lugar)
                 elif siguiente_evento.tipo == 'incendio':
                     # TODO: sale un carro de bomberos al lugar del incendio, apaga el incendio y vuelve al cuartel.
                     print('EVENTO INCENDIO')
+                    self.ciudad.servicios['bomberos'].asistir_urgencia(self.ciudad, siguiente_evento.lugar)
+
 
             # Si no quedan eventos:
             else:
                 delta_tiempo_final = self.tiempo_maximo - self.tiempo_simulacion
-                self.ciudad.avanzar_vehiculos_periodo(delta_tiempo_final)
-
+                self.ciudad.avanzar_vehiculos_periodo(int(delta_tiempo_final))
                 self.tiempo_simulacion = self.tiempo_maximo
+        self.ciudad.estadisticas()

@@ -14,7 +14,7 @@ class VehiculoComun:
 class Taxi(VehiculoComun):
     def __init__(self):
         super().__init__()
-        self.instante_nuevo_pasajero = expovariate(1/40)
+        self.instante_nuevo_pasajero = expovariate(1 / 40)
         self.pasajero = False
         self.destino = None
         self.tiempo_paralizado = 0
@@ -24,29 +24,27 @@ class Taxi(VehiculoComun):
         self.destino = choice(list(calles.keys()))
         self.tiempo_paralizado = randint(5, 15)
 
-
     def dejar_pasajero(self, tiempo_simulacion):
         self.pasajero = False
         self.destino = None
-        self.instante_nuevo_pasajero = expovariate(1/40) + tiempo_simulacion
-        self.tiempo_paralizado = randint(10,20)
+        self.instante_nuevo_pasajero = expovariate(1 / 40) + tiempo_simulacion
+        self.tiempo_paralizado = randint(10, 20)
 
     def __repr__(self):
         return 'Taxi con velocidad {}'.format(round(self.velocidad, 2))
 
 
-class VehiculoEmergencia:
+class Ambulancia:
     def __init__(self):
-        self.sirena_activada = False
+        self.velocidad = 1
+        self.sirena_activada = True
+        self.tipo = 'ambulancia'
 
-    def __repr__(self):
-        add = ''
-        if not self.sirena_activada:
-            add = 'no '
-        return 'Vehículo de emergencia tipo {} ' \
-               'con velocidad {} y sirena {}activada'.format(self.tipo,
-                                                             self.velocidad,
-                                                             add)
+
+class CarroBomberos:
+    def __init__(self):
+        self.sirena_activada = True
+        self.tipo = 'carro_bomba'
 
     @property
     def velocidad(self):
@@ -55,16 +53,13 @@ class VehiculoEmergencia:
         return 0.5
 
 
-class Ambulancia(VehiculoEmergencia):
+class Patrulla:
     def __init__(self):
-        super().__init__()
+        self.sirena_activada = True
 
 
-class CarroBomberos(VehiculoEmergencia):
-    def __init__(self):
-        super().__init__()
-
-class Patrulla(VehiculoEmergencia):
-    def __init__(self):
-        super().__init__()
-
+    @property
+    def velocidad(self):
+        if self.sirena_activada:
+            return 1
+        return 0.5

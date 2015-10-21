@@ -1,18 +1,23 @@
 # -*- encoding: utf-8 -*-
 from gui.gui import GrillaSimulacion
 from Casa import Casa
-from Vehiculo import VehiculoComun, Taxi, VehiculoEmergencia
+from Vehiculo import VehiculoComun, Taxi
 from Calle import Calle
 from Servicios import Servicio
 from random import randint, choice
 from copy import deepcopy
 from decimal import Decimal
+from grafo import Grafo
 
 
 class Ciudad:
-    def __init__(self, app, rows, cols, pos_policia, pos_bomberos, pos_hospital):
+    def __init__(self, app, rows, cols, pos_policia, pos_bomberos, pos_hospital, n_escenario):
+        self.reporte = open('output_escenario_{}.txt'.format(n_escenario), 'w')
+        self.eventos_reporte = []
         self.grilla = GrillaSimulacion(app, rows, cols)
         self.grilla.show()
+        self.tiempos_incendios = []
+        self.tiempos_enfermos = []
         self.servicios = {'bomberos': None,
                           'policia': None,
                           'hospital': None}
@@ -25,7 +30,7 @@ class Ciudad:
         self.rellenar_ciudad_base(pos_policia, pos_bomberos, pos_hospital)
         # self.grilla.tiempo_intervalo = float(input('Ingrese el intervalo de tiempo '
         #                                          'para los eventos en la simulacion: '))
-        self.grilla.tiempo_intervalo = 0.01
+        self.grilla.tiempo_intervalo = 0
 
     def rellenar_ciudad_base(self, pos_policia, pos_bomberos, pos_hospital):
 
@@ -244,7 +249,7 @@ class Ciudad:
 
         def cargar_autos_iniciales(self):
             autos_iniciales = randint(round(len(self.calles) / 4), round(len(self.calles) / 2))
-            for a in range(round(0.8*autos_iniciales)):
+            for a in range(round(0.8 * autos_iniciales)):
                 while True:
                     rnd_pos = choice(list(self.calles.keys()))
                     calle = self.calles[rnd_pos]
@@ -257,9 +262,9 @@ class Ciudad:
                         calle.vehiculo_encima = nuevo_vehiculo
                         break
 
-            print('\t[CIUDAD] Se agregaron {} autos inicialmente'.format(round(0.8*autos_iniciales)))
+            print('\t[CIUDAD] Se agregaron {} autos inicialmente'.format(round(0.8 * autos_iniciales)))
 
-            for t in range(round(0.2*autos_iniciales)):
+            for t in range(round(0.2 * autos_iniciales)):
                 while True:
                     rnd_pos = choice(list(self.calles.keys()))
                     calle = self.calles[rnd_pos]
@@ -271,7 +276,7 @@ class Ciudad:
                         calle.vehiculo_encima = nuevo_taxi
                         break
 
-            print('\t[CIUDAD] Se agregaron {} taxis inicialmente'.format(round(0.2*autos_iniciales)))
+            print('\t[CIUDAD] Se agregaron {} taxis inicialmente'.format(round(0.2 * autos_iniciales)))
 
         def clasificar_continuaciones(self):
             for pos_calle in self.calles:
@@ -298,6 +303,85 @@ class Ciudad:
                 if not self.calles[pos_calle].continuaciones:
                     self.calles[pos_calle].continuaciones.update({None: None})
 
+        def cargar_grafo(self):
+            arcos = []
+            arcos_sin_sentido_izq = []
+            arcos_sin_sentido_der = []
+            arcos_sin_sentido_izqder = []
+            arcos_sin_sentido_abajo = []
+            arcos_sin_sentido_arriba = []
+            arcos_sin_sentido_arribaabajo = []
+
+            for pos_calle in self.calles:
+                llegadas = []
+                llegadas_sin_sentido_izq = []
+                llegadas_sin_sentido_der = []
+                llegadas_sin_sentido_izqder = []
+                llegadas_sin_sentido_abajo = []
+                llegadas_sin_sentido_arriba = []
+                llegadas_sin_sentido_arribaabajo = []
+
+                x = int(pos_calle.split(',')[0])
+                y = int(pos_calle.split(',')[1])
+
+                ob_izq = '{},{}'.format(x, y - 1)
+                ob_der = '{},{}'.format(x, y + 1)
+                ob_abajo = '{},{}'.format(x + 1, y)
+                ob_arriba = '{},{}'.format(x - 1, y)
+
+                if ob_izq in self.calles:
+                    llegadas_sin_sentido_izq.append(ob_izq)
+                    llegadas_sin_sentido_izqder.append(ob_izq)
+                    if self.calles[ob_izq].direccion == 'izquierda':
+                        llegadas.append(ob_izq)
+                if ob_der in self.calles:
+                    llegadas_sin_sentido_der.append(ob_der)
+                    llegadas_sin_sentido_izqder.append(ob_der)
+                    if self.calles[ob_der].direccion == 'derecha':
+                        llegadas.append(ob_der)
+                if ob_abajo in self.calles:
+                    llegadas_sin_sentido_abajo.append(ob_abajo)
+                    llegadas_sin_sentido_arribaabajo.append(ob_abajo)
+                    if self.calles[ob_abajo].direccion == 'abajo':
+                        llegadas.append(ob_abajo)
+                if ob_arriba in self.calles:
+                    llegadas_sin_sentido_arriba.append(ob_arriba)
+                    llegadas_sin_sentido_arribaabajo.append(ob_arriba)
+                    if self.calles[ob_arriba].direccion == 'arriba':
+                        llegadas.append(ob_arriba)
+
+                if llegadas:
+                    arcos.append([pos_calle, llegadas])
+                if llegadas_sin_sentido_izq:
+                    arcos_sin_sentido_izq.append([pos_calle, llegadas_sin_sentido_izq])
+                if llegadas_sin_sentido_der:
+                    arcos_sin_sentido_der.append([pos_calle, llegadas_sin_sentido_der])
+                if llegadas_sin_sentido_abajo:
+                    arcos_sin_sentido_abajo.append([pos_calle, llegadas_sin_sentido_abajo])
+                if llegadas_sin_sentido_arriba:
+                    arcos_sin_sentido_arriba.append([pos_calle, llegadas_sin_sentido_arriba])
+                if llegadas_sin_sentido_izqder:
+                    arcos_sin_sentido_izqder.append([pos_calle, llegadas_sin_sentido_izqder])
+                if llegadas_sin_sentido_arribaabajo:
+                    arcos_sin_sentido_izqder.append([pos_calle, llegadas_sin_sentido_arribaabajo])
+
+
+            self.grafo = Grafo(arcos)
+            self.grafo_sin_sentido_izq = Grafo(arcos_sin_sentido_izq)
+            self.grafo_sin_sentido_der = Grafo(arcos_sin_sentido_der)
+            self.grafo_sin_sentido_abajo = Grafo(arcos_sin_sentido_abajo)
+            self.grafo_sin_sentido_arriba = Grafo(arcos_sin_sentido_arriba)
+            self.grafo_sin_sentido_izqder = Grafo(arcos_sin_sentido_izqder)
+            self.grafo_sin_sentido_arribaabajo = Grafo(arcos_sin_sentido_arribaabajo)
+
+            self.grafos = [self.grafo,
+                           self.grafo_sin_sentido_izq,
+                           self.grafo_sin_sentido_der,
+                           self.grafo_sin_sentido_abajo,
+                           self.grafo_sin_sentido_arriba,
+                           self.grafo_sin_sentido_izqder,
+                           self.grafo_sin_sentido_arribaabajo]
+
         print('[SIMULACION] Rellenando ciudad base...')
 
         poner_servicios_emergencia(self, pos_policia, pos_bomberos, pos_hospital)
@@ -308,6 +392,7 @@ class Ciudad:
         clasificar_cruces(self)
         poner_semaforos(self)
         cargar_autos_iniciales(self)
+        cargar_grafo(self)
 
     @property
     def lista_pesos_lugares_robos(self):
@@ -447,7 +532,10 @@ class Ciudad:
             if int(len(self.calles) / 2 - len(self.vehiculos)) == 0:
                 n_autos_nuevos = 0
             else:
-                n_autos_nuevos = randint(0, min(2, int(len(self.calles) / 2 - len(self.vehiculos))))
+                try:
+                    n_autos_nuevos = randint(0, min(2, int(len(self.calles) / 2 - len(self.vehiculos))))
+                except ValueError:
+                    n_autos_nuevos = 0
             for a in range(n_autos_nuevos):
                 # Se instancia el nuevo auto
                 nuevo_auto = VehiculoComun()
@@ -466,7 +554,7 @@ class Ciudad:
                 self.grilla.agregar_sedan(x, y, theta, mirror)
 
         aux_vehiculos = deepcopy(self.vehiculos)
-        aux_vehiculos.update({pos:self.taxis[pos] for pos in self.taxis if not self.taxis[pos].tiempo_paralizado})
+        aux_vehiculos.update({pos: self.taxis[pos] for pos in self.taxis if not self.taxis[pos].tiempo_paralizado})
         for pos_vehiculo in aux_vehiculos:
             vehiculo_actual = aux_vehiculos[pos_vehiculo]
             PPP = prox_pos(self, pos_vehiculo, vehiculo_actual)
@@ -480,7 +568,11 @@ class Ciudad:
                 if prox_pos_str_redondeada in self.calles:
                     if not self.calles[prox_pos_str_redondeada].cruce:
                         if not self.calles[prox_pos_str_redondeada].vehiculo_encima:
-                            avance_comun(self, prox_pos_x, prox_pos_y, vehiculo_actual, pos_vehiculo_str_redondeada,
+                            avance_comun(self,
+                                         prox_pos_x,
+                                         prox_pos_y,
+                                         vehiculo_actual,
+                                         pos_vehiculo_str_redondeada,
                                          prox_pos_str_redondeada)
 
                 # Si la proxima posicion escogida es una calle, es un cruce, el semaforo lo deja pasar,
@@ -514,3 +606,15 @@ class Ciudad:
             if t % 20 == 0:
                 self.cambiar_semaforos()
             self.avanzar_vehiculos()
+
+    def buscar_ruta_corta(self, inicio, final):
+        for graph in self.grafos:
+            ruta_corta = graph.ruta_corta(inicio, final)
+            if ruta_corta:
+                return ruta_corta
+
+    def estadisticas(self):
+        if self.tiempos_incendios:
+            print('PROMEDIO DE TIEMPO APAGADO INCENDIOS: {} SEGUNDOS'.format(round(sum(self.tiempos_incendios)/len(self.tiempos_incendios)), 2))
+        if self.tiempos_enfermos:
+            print('PROMEDIO DE TIEMPO ASISTENCIA ENFERMOS: {} SEGUNDOS'.format(round(sum(self.tiempos_enfermos)/len(self.tiempos_enfermos)), 2))

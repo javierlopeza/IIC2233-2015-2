@@ -9,22 +9,18 @@ class Casa:
         if material == 'madera':
             self.rango_demorar_apagar_incendio = [30, 120]
         elif material == 'ladrillos':
-            self.rando_demorar_apagar_incendio = [40, 100]
+            self.rango_demorar_apagar_incendio = [40, 100]
         elif material == 'hormigon':
-            self.rando_demorar_apagar_incendio = [60, 80]
+            self.rango_demorar_apagar_incendio = [60, 80]
         elif material == 'metal':
-            self.rando_demorar_apagar_incendio = [30, 40]
+            self.rango_demorar_apagar_incendio = [30, 40]
         self.peso_distancia_comisaria = None
 
     @property
     def demora_apagar_incendio(self):
-        a = self.rando_demorar_apagar_incendio[0]
-        b = self.rando_demorar_apagar_incendio[1]
+        a = self.rango_demorar_apagar_incendio[0]*60
+        b = self.rango_demorar_apagar_incendio[1]*60
         return uniform(a, b)
 
     def __repr__(self):
         return 'Casa de {}'.format(self.material)
-
-
-
-
