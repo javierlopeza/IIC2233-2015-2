@@ -627,7 +627,7 @@ class Ciudad:
             print('TOTAL DE ROBOS ESCAPADOS: {} ROBOS'.format(self.robos_escapados))
         if self.robos_frustrados:
             print('TOTAL DE ROBOS FRUSTRADOS: {} ROBOS'.format(self.robos_frustrados))
-            
+
         self.eventos_reporte.sort(key=lambda  x: x.instante_ocurrencia)
         file_reporte = open('output_escenario_{}.txt'.format(self.n_escenario), 'w')
         file_reporte.write('TIEMPO\tEVENTO\tENTIDAD\tLUGAR\n')

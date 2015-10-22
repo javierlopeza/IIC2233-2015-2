@@ -1,5 +1,13 @@
 from Vehiculo import *
-from Simulacion import Evento
+
+class Evento:
+    def __init__(self, instante_ocurrencia, tipo_evento, lugar):
+        self.instante_ocurrencia = instante_ocurrencia
+        self.tipo = tipo_evento
+        self.lugar = lugar
+
+    def __repr__(self):
+        return 'EVENTO: {} | INSTANTE: {} | LUGAR: {}'.format(self.tipo, self.instante_ocurrencia, self.lugar)
 
 
 class Servicio:

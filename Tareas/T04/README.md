@@ -21,4 +21,6 @@
 * Las simulaciones de los lugares e instantes en que ocurren robos, incendios y enfermos funcionan correctamente.
 
 * Para una emergencia, supuse que todos los autos dejan se detienen y dejan pasar al vehiculo de emergencia. En el caso de que el vehiculo de emergencia no tenga una ruta disponible para llegar a la emergencia (debido al sentido de las calles), modele la simulacion como que en este caso el vehiculo de emergencia toma las calles contra el transito para llegar rapidamente a la emergencia (supuse que seria lo mas real)
-.
+
+* Para decidir cual era el mejor posicionamiento, decidi que la estacion de policia tiene prioridad en cuanto a posicionarse, ya que los robos estan directamente relacionados con la distancia a la comisaria. Por lo tanto se prioriza que los robos frustrados sean maximos y los robos escapados sean minimos, en primer lugar.
+Luego, el hospital y los bomberos tienen igual prioridad, es decir, su posicion ideal se definira por la minimizacion de sus dos tiempos promedios sumados.

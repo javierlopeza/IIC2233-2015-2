@@ -4,6 +4,7 @@ from Ciudad import Ciudad
 from random import expovariate, choice, randint
 import itertools
 from copy import deepcopy
+from time import sleep
 
 
 class Evento:
@@ -23,7 +24,7 @@ class Simulacion:
         self.app = app
         self.rows = rows
         self.cols = cols
-        self.tiempo_maximo = 2 * 60 * 60
+        self.tiempo_maximo = 8 * 60 * 60
         self.tiempo_simulacion = 0
         self.linea_de_tiempo = []
         self.terrenos_vacios = []
@@ -102,6 +103,10 @@ class Simulacion:
         bomberos = best_positions[1]
         hospital = best_positions[2]
         self.ciudad = Ciudad(self.app, self.rows, self.cols, policia, bomberos, hospital, 99)
+        print('\n[SIMULACION] FINALIZADA\n')
+        # Se pone sleep para alcanzar a ver las posiciones ideales de los servicios antes de que se
+        # cierre todo.
+        sleep(10)
 
     def run(self, pos_policia, pos_bomberos, pos_hospital, n_escenario):
         self.ciudad = Ciudad(self.app, self.rows, self.cols, pos_policia, pos_bomberos, pos_hospital, n_escenario)
@@ -151,12 +156,40 @@ class Simulacion:
                 if siguiente_evento.tipo == 'enfermo':
                     # TODO: sale ambulancia al lugar del enfermo y vuelve al hospital.
                     print('EVENTO ENFERMO')
-                    self.ciudad.servicios['hospital'].asistir_urgencia(self.ciudad, siguiente_evento.lugar,
+                    x_lugar = int(siguiente_evento.lugar.split(",")[0])
+                    y_lugar = int(siguiente_evento.lugar.split(",")[1])
+                    arriba = '{},{}'.format(x_lugar - 1, y_lugar)
+                    abajo = '{},{}'.format(x_lugar + 1, y_lugar)
+                    izq = '{},{}'.format(x_lugar, y_lugar - 1)
+                    der = '{},{}'.format(x_lugar, y_lugar + 1)
+                    if arriba in self.ciudad.calles:
+                        lugar_calle = arriba
+                    elif abajo in self.ciudad.calles:
+                        lugar_calle = abajo
+                    elif izq in self.ciudad.calles:
+                        lugar_calle = izq
+                    elif der in self.ciudad.calles:
+                        lugar_calle = der
+                    self.ciudad.servicios['hospital'].asistir_urgencia(self.ciudad, lugar_calle,
                                                                        self.tiempo_simulacion)
                 elif siguiente_evento.tipo == 'robo':
                     # TODO: sale una patrulla al lugar del robo y vuelve a la comisaria.
                     print('EVENTO ROBO')
-                    self.ciudad.servicios['policia'].asistir_urgencia(self.ciudad, siguiente_evento.lugar,
+                    x_lugar = int(siguiente_evento.lugar.split(",")[0])
+                    y_lugar = int(siguiente_evento.lugar.split(",")[1])
+                    arriba = '{},{}'.format(x_lugar - 1, y_lugar)
+                    abajo = '{},{}'.format(x_lugar + 1, y_lugar)
+                    izq = '{},{}'.format(x_lugar, y_lugar - 1)
+                    der = '{},{}'.format(x_lugar, y_lugar + 1)
+                    if arriba in self.ciudad.calles:
+                        lugar_calle = arriba
+                    elif abajo in self.ciudad.calles:
+                        lugar_calle = abajo
+                    elif izq in self.ciudad.calles:
+                        lugar_calle = izq
+                    elif der in self.ciudad.calles:
+                        lugar_calle = der
+                    self.ciudad.servicios['policia'].asistir_urgencia(self.ciudad, lugar_calle,
                                                                       self.tiempo_simulacion)
                     tiempo_llegada_hogar = randint(10, 20)
                     if tiempo_llegada_hogar < self.ciudad.casas[siguiente_evento.lugar].duracion_robo:
@@ -170,7 +203,21 @@ class Simulacion:
                 elif siguiente_evento.tipo == 'incendio':
                     # TODO: sale un carro de bomberos al lugar del incendio, apaga el incendio y vuelve al cuartel.
                     print('EVENTO INCENDIO')
-                    self.ciudad.servicios['bomberos'].asistir_urgencia(self.ciudad, siguiente_evento.lugar,
+                    x_lugar = int(siguiente_evento.lugar.split(",")[0])
+                    y_lugar = int(siguiente_evento.lugar.split(",")[1])
+                    arriba = '{},{}'.format(x_lugar - 1, y_lugar)
+                    abajo = '{},{}'.format(x_lugar + 1, y_lugar)
+                    izq = '{},{}'.format(x_lugar, y_lugar - 1)
+                    der = '{},{}'.format(x_lugar, y_lugar + 1)
+                    if arriba in self.ciudad.calles:
+                        lugar_calle = arriba
+                    elif abajo in self.ciudad.calles:
+                        lugar_calle = abajo
+                    elif izq in self.ciudad.calles:
+                        lugar_calle = izq
+                    elif der in self.ciudad.calles:
+                        lugar_calle = der
+                    self.ciudad.servicios['bomberos'].asistir_urgencia(self.ciudad, lugar_calle,
                                                                        self.tiempo_simulacion)
 
 
@@ -209,11 +256,15 @@ class Simulacion:
                 self.ciudad.avanzar_vehiculos_periodo(int(delta_tiempo_final))
                 self.tiempo_simulacion = self.tiempo_maximo
         self.ciudad.estadisticas()
-        tprom_incendios = round(sum((self.ciudad.tiempos_incendios) / len(self.ciudad.tiempos_incendios)), 2)
-        tprom_ambulancias = round(sum((self.ciudad.tiempos_enfermos) / len(self.ciudad.tiempos_enfermos)), 2)
+        tprom_incendios = 0
+        tprom_ambulancias = 0
+        if self.ciudad.tiempos_incendios:
+            tprom_incendios = round(sum(self.ciudad.tiempos_incendios) / len(self.ciudad.tiempos_incendios), 2)
+        if self.ciudad.tiempos_enfermos:
+            tprom_ambulancias = round(sum(self.ciudad.tiempos_enfermos) / len(self.ciudad.tiempos_enfermos), 2)
         robos_frustrados = self.ciudad.robos_frustrados
         robos_escapados = self.ciudad.robos_escapados
-        peoridad = tprom_incendios + tprom_ambulancias - robos_frustrados + robos_escapados
+        peoridad = 10*tprom_incendios + tprom_ambulancias - 240*robos_frustrados + 240*robos_escapados
         self.estadisticas_ciudades.update({peoridad: [self.ciudad.pos_policia,
                                                       self.ciudad.pos_bomberos,
                                                       self.ciudad.pos_hospital]})
