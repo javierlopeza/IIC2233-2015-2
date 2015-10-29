@@ -98,6 +98,14 @@ class InstaPUC:
     @staticmethod
     def grey(ihdr, matriz):
         salida = []
+        for a in range(len(matriz)):
+            for b in range(len(matriz[0])):
+                R = matriz[a][b][0]
+                G = matriz[a][b][1]
+                B = matriz[a][b][2]
+                prom = (R+G+B)/3
+                matriz[a][b] = (prom, prom, prom)
+        ihdr['tipo_color'] = 0
         ########################################
         #                                      #
         # Completar método.                    #
