@@ -1,6 +1,7 @@
 from PyQt4 import QtCore, QtGui, uic
-from math import atan2, degrees, acos, sqrt
+from SSClass import SSMilitar, SSZombie
 from angulo_triangulo import angulo_triangulo
+from vector_unitario import vector_unitario
 from time import sleep
 import os
 
@@ -11,6 +12,7 @@ class MainWindow(form[0], form[1]):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.cargar_spritesheet()
         self.setup_base()
 
     def setup_base(self):
@@ -28,16 +30,17 @@ class MainWindow(form[0], form[1]):
         # Color negro para ContornoZonaJuego.
         self.ContornoZonaJuegoLabel.setStyleSheet("background-color: #000000;")
         # Agrega un militar en la mitad de ZonaJuego
-        militar_pixmap = QtGui.QPixmap('assets/movs_militar/pie_neutro.png')
-        self.MilitarLabel.setPixmap(militar_pixmap)
-        self.MilitarLabel.setScaledContents(True)
+        self.MilitarLabel.setPixmap(self.SSMilitar.pie_neutro)
         # Set Mouse Tracking
         self.setMouseTracking(True)
         self.ZonaJuego.setMouseTracking(True)
         self.MilitarLabel.setMouseTracking(True)
-        # Atributos de posicion del mouse en ZonaJuego
-        self.x_mouse = 210
-        self.y_mouse = 0
+        # Atributo de direccion de frente de MilitarLabel
+        self.vector_vista = [0.0, 1.0]
+
+    def cargar_spritesheet(self):
+        self.SSMilitar = SSMilitar()
+        self.SSZombie = SSZombie()
 
     def keyPressEvent(self, QKeyEvent):
         # Evento de pausar o activar el juego apretando barra espacio.
@@ -46,6 +49,27 @@ class MainWindow(form[0], form[1]):
                 self.EstadoJuegoLabel.setText('Juego Pausado')
             else:
                 self.EstadoJuegoLabel.setText('Juego Activo')
+        # TODO: Evento de avanzar al militar al presionar W,S,A,D.
+        elif QKeyEvent.key() == QtCore.Qt.Key_W:
+            dx = self.vector_vista[0]
+            dy = self.vector_vista[1]
+            self.moveMilitar(dx, dy)
+        elif QKeyEvent.key() == QtCore.Qt.Key_S:
+            dx = self.vector_vista[0]
+            dy = -self.vector_vista[1]
+            self.moveMilitar(dx, dy)
+            self.moveMilitar(dx, dy)
+        elif QKeyEvent.key() == QtCore.Qt.Key_A:
+            dx = -self.vector_vista[1]
+            dy = self.vector_vista[0]
+            self.moveMilitar(dx, dy)
+            self.moveMilitar(dx, dy)
+        elif QKeyEvent.key() == QtCore.Qt.Key_D:
+            dx = self.vector_vista[1]
+            dy = -self.vector_vista[0]
+            self.moveMilitar(dx, dy)
+            self.moveMilitar(dx, dy)
+            self.moveMilitar(dx, dy)
 
     def setSalud(self, vida):
         # Metodo que:
@@ -67,29 +91,25 @@ class MainWindow(form[0], form[1]):
     def setPuntaje(self, nuevo_puntaje):
         self.PuntajeLabel.setText('Puntaje: {}'.format(nuevo_puntaje))
 
-    def moveMilitar(self):
-        # TODO
+    def moveMilitar(self, dx, dy):
+        # TODO: que vaya en direccion de acercarse al puntero del mouse.
         x = self.MilitarLabel.x()
         y = self.MilitarLabel.y()
+        self.MilitarLabel.move(x + dx, y - dy)
 
     def rotarMilitar(self, angulo):
-        # TODO
-        # pixmap = QtGui.QPixmap('assets/movs_militar/pie_neutro.png')
-        pixmap = self.MilitarLabel.pixmap()
-        nuevo_pixmap = pixmap.transformed(QtGui.QTransform().rotate(angulo))
-        self.MilitarLabel.setPixmap(nuevo_pixmap)
-        # self.MilitarLabel.setScaledContents(True)
+        nuevo_pixmap = self.SSMilitar.pie_neutro
+        self.MilitarLabel.setPixmap(nuevo_pixmap.transformed(QtGui.QTransform().rotate(angulo)))
 
     def mouseMoveEvent(self, QMouseEvent):
-        # TODO
         x_militar = self.MilitarLabel.x()
         y_militar = self.MilitarLabel.y()
-        x_previo = self.x_mouse
-        y_previo = self.y_mouse
-        self.x_mouse = QMouseEvent.x() - 10
-        self.y_mouse = QMouseEvent.y() - 130
-        angulo = angulo_triangulo([x_militar, y_militar], [x_previo, y_previo], [self.x_mouse, self.y_mouse])
+        self.x_mouse = (QMouseEvent.x() - 10) - x_militar
+        self.y_mouse = -((QMouseEvent.y() - 130) - y_militar)
+        angulo = angulo_triangulo([0, 0], [0, 1], [self.x_mouse, self.y_mouse])
         self.rotarMilitar(angulo)
+        self.vector_vista = vector_unitario([0, 0], [self.x_mouse, self.y_mouse])
+        print(self.vector_vista)
 
 
 if __name__ == '__main__':

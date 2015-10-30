@@ -129,7 +129,7 @@ class InstaPUC:
         nueva_imagen.write(b'26')
         nueva_imagen.write(b'10')
 
-
+            # nagalaz@uc.cl
         ########################################
         #                                      #
         # Completar método.                    #
