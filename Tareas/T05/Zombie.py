@@ -52,9 +52,9 @@ class Zombie(QtCore.QThread):
         self.__position = value
         nuevo_pixmap = self.SSZombie.actualizar_ss
         self.trigger_moveZombie.emit(MoveZombieEvent(self.image,
-                                          self.position[0],
-                                          self.position[1],
-                                          nuevo_pixmap))
+                                                     self.position[0],
+                                                     self.position[1],
+                                                     nuevo_pixmap))
 
     def actualizar_vector_vista(self):
         militar_x = self.parent.MilitarLabel.x() - self.image.x() + 10
@@ -82,7 +82,7 @@ class Zombie(QtCore.QThread):
                     pos_ocupada = self.parent.pos_dict[obj]
                     pos_ocup_x = pos_ocupada[0]
                     pos_ocup_y = pos_ocupada[1]
-                    if (- 5 < pos_ocup_x - zombie_x < 5) and (-5 < pos_ocup_y - zombie_y < 5):
+                    if (- 6 < pos_ocup_x - zombie_x < 6) and (-6 < pos_ocup_y - zombie_y < 6):
                         puede_avanzar = False
                         if obj == "militar":
                             toca_militar = True
@@ -99,4 +99,4 @@ class Zombie(QtCore.QThread):
                 self.parent.vida_militar -= damage
                 if self.parent.vida_militar < 0:
                     self.parent.vida_militar = 0
-                self.parent.disminuirSalud()
+                self.parent.setSalud()
