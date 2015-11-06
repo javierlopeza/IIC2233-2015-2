@@ -1,8 +1,9 @@
 from PyQt4 import QtCore, QtGui, uic
-from SSClass import SSMilitar, SSZombie
+from SSClass import SSMilitar
 from angulo_triangulo import angulo_triangulo_mouse, angulo_triangulo_zombie
 from vector_unitario import vector_unitario
 from random import randint, choice
+import sys
 
 ventana = uic.loadUiType("gui.ui")
 
@@ -22,7 +23,9 @@ class MainWindow(ventana[0], ventana[1]):
         self.setWindowIcon(pixmap)
 
         # Color verde para la BarraSalud.
+        self.color_salud = "verde"
         self.BarraSaludLabel.setStyleSheet("background-color: #3DF400;")
+
         # Set BarraSalud ancho a 385.
         self.BarraSaludLabel.setFixedWidth(385)
 
@@ -37,6 +40,8 @@ class MainWindow(ventana[0], ventana[1]):
 
         # Agrega un militar en la mitad de ZonaJuego
         self.MilitarLabel.setPixmap(self.SSMilitar.pie_neutro)
+        self.angulo_militar = 0
+        self.vida_militar = 100
 
         # Set Mouse Tracking para ZonaJuego y MilitarLabel.
         self.setMouseTracking(True)
@@ -60,7 +65,6 @@ class MainWindow(ventana[0], ventana[1]):
     def cargar_spritesheet(self):
         # Carga las imagenes de los Sprite Sheet del militar y zombie.
         self.SSMilitar = SSMilitar()
-        self.SSZombie = SSZombie()
 
     def keyPressEvent(self, QKeyEvent):
         # Evento de pausar o activar el juego apretando barra espacio.
@@ -97,6 +101,7 @@ class MainWindow(ventana[0], ventana[1]):
         self.y_mouse = -((QMouseEvent.y() - 130) - y_militar)
         angulo = angulo_triangulo_mouse([0, 0], [0, 1], [self.x_mouse, self.y_mouse])
         self.rotarMilitar(angulo)
+        self.angulo_militar = angulo
         self.vector_vista = vector_unitario([0, 0], [self.x_mouse, self.y_mouse])
 
     def mousePressEvent(self, QMouseEvent):
@@ -109,19 +114,31 @@ class MainWindow(ventana[0], ventana[1]):
                 self.setMunicion(municion_nueva)
                 print("BOOM! Quedan {} balas.".format(municion_nueva))
 
-    def setSalud(self, vida):  # Vida entre 0 - 100
+    def disminuirSalud(self):  # Vida entre 0 - 100
         # Metodo que:
         #   Cambia el color y width de la BarraSalud segun la vida.
-        new_width = (385 * (1 - (100 - vida) / 100))
+        new_width = (385 * (1 - (100 - self.vida_militar) / 100))
         self.BarraSaludLabel.setFixedWidth(new_width)
-        if vida < 60:  # Si la vida es menor a 15, el color de BarraSalud es amarillo.
-            self.BarraSaludLabel.setStyleSheet("background-color: #ffff00;")
-        if vida < 30:  # Si la vida es menor a 30, el color de BarraSalud es naranjo.
-            self.BarraSaludLabel.setStyleSheet("background-color: #ff8000;")
-        if vida < 15:  # Si la vida es menor a 15, el color de BarraSalud es rojo.
-            self.BarraSaludLabel.setStyleSheet("background-color: #ff0000;")
+        if self.vida_militar < 20 and self.color_salud == "naranjo":  # Si la vida es menor a 15, el color de BarraSalud es rojo.
+            self.BarraSaludLabel.setStyleSheet("background-color: #FF0000;")
+            self.color_salud = "rojo"
+        elif self.vida_militar < 40 and self.color_salud == "amarillo":  # Si la vida es menor a 30, el color de BarraSalud es naranjo.
+            self.BarraSaludLabel.setStyleSheet("background-color: #FF6600;")
+            self.color_salud = "naranjo"
+        elif self.vida_militar < 80 and self.color_salud == "verde":  # Si la vida es menor a 15, el color de BarraSalud es amarillo.
+            self.BarraSaludLabel.setStyleSheet("background-color: #FFFF00;")
+            self.color_salud = "amarillo"
+
         # Cambia el valor numerico de la vida.
-        self.SaludLabel.setText('Salud: {}'.format(vida))
+        self.SaludLabel.setText('Salud: {}'.format(self.vida_militar))
+
+        if self.vida_militar == 0:
+            print('murio militar')
+            sys.exit()
+
+    def aumentarSalud(self):
+        # TODO: do
+        pass
 
     def setMunicion(self, nueva_municion):
         # Cambia el texto de MunicionLabel, actualizandolo a nueva_municion.
@@ -137,9 +154,28 @@ class MainWindow(ventana[0], ventana[1]):
         y = self.MilitarLabel.y()
         new_x = x + velocidad * dx
         new_y = y - velocidad * dy
+
         # Control de limites de ZonaJuego, para que el militar no salga de las murallas.
+        topa_murallas = True
         if -10 <= new_x <= self.ZonaJuego.width() - 35 and -10 <= new_y <= self.ZonaJuego.height() - 35:
+            topa_murallas = False
+
+        # Control de colisiones con los Zombies.
+        topa_zombie = False
+        for obj in self.pos_dict:
+            if obj != 'militar':
+                pos_ocupada = self.pos_dict[obj]
+                pos_ocup_x = pos_ocupada[0]
+                pos_ocup_y = pos_ocupada[1]
+                if (- 5 < pos_ocup_x - new_x < 5) and (-5 < pos_ocup_y - new_y < 5):
+                    topa_zombie = True
+                    break
+
+        if not topa_murallas and not topa_zombie:
+            self.MilitarLabel.setPixmap(self.SSMilitar.actualizar_ss)
+            self.rotarMilitar(self.angulo_militar)
             self.MilitarLabel.move(new_x, new_y)
+
 
         # Se actualiza el diccionario de posiciones.
         self.pos_dict.update({'militar': [new_x, new_y]})
@@ -149,7 +185,7 @@ class MainWindow(ventana[0], ventana[1]):
 
     def rotarMilitar(self, angulo):
         # Rota el QPixmap de MilitarLabel en angulo grados sentido horario.
-        nuevo_pixmap = self.SSMilitar.pie_neutro
+        nuevo_pixmap = self.SSMilitar.en_uso
         self.MilitarLabel.setPixmap(nuevo_pixmap.transformed(QtGui.QTransform().rotate(angulo)))
 
     def rotarZombies(self):
@@ -165,8 +201,11 @@ class MainWindow(ventana[0], ventana[1]):
             zombie.vector_vista = vector_unitario([0, 0], [militar_x, -militar_y])
 
     def moveZombie(self, MoveZombieEvent):
+        MoveZombieEvent.image.setPixmap(MoveZombieEvent.nuevo)
         label = MoveZombieEvent.image
         label.move(MoveZombieEvent.x, MoveZombieEvent.y)
+
+        self.rotarZombies()
 
     def new_zombie_start_position(self, nombre_zombie):
         # Para verificar que la posicion inicial no este ocupada.
@@ -199,6 +238,6 @@ class MainWindow(ventana[0], ventana[1]):
             if not hay_algo:
                 buscar_pos = False
 
-        self.pos_dict.update({nombre_zombie: position})
+        self.pos_dict.update({nombre_zombie: (position[0] - 10, position[1] - 130)})
 
         return position

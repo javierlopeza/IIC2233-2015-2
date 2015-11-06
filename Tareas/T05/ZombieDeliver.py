@@ -25,10 +25,11 @@ class ZombieDeliver(QtCore.QThread):
             start_position = self.control_juego.ventana.new_zombie_start_position(nombre_zombie)
             nuevo_zombie = Zombie(parent=self.control_juego.ventana,
                                   x=start_position[0],
-                                  y=start_position[1])
+                                  y=start_position[1],
+                                  name=nombre_zombie)
 
             self.control_juego.ventana.lista_zombies.append(nuevo_zombie)
 
             nuevo_zombie.start()
 
-            self.control_juego.ventana.rotarZombies()
+        self.control_juego.ventana.rotarZombies()
