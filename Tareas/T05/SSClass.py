@@ -47,3 +47,9 @@ class SSZombie:
         else:
             self.en_uso = self.pie_neutro
         return self.en_uso
+
+
+class SSBox:
+    def __init__(self):
+        self.vida = QtGui.QPixmap('assets/boxes/life_box.png')
+        self.balas = QtGui.QPixmap('assets/boxes/gun_box.png')

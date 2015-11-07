@@ -24,14 +24,28 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QLabel" name="EstadoJuegoLabel">
-      <property name="text">
-       <string>Juego Activo</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="EstadoJuegoLabel">
+        <property name="text">
+         <string>Juego Activo</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="RelojLabel">
+        <property name="text">
+         <string>Tiempo: 00:00</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
     <item>
      <widget class="QLabel" name="PuntajeLabel">
@@ -102,7 +116,7 @@
        <string>Municion: 50</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignBottom|Qt::AlignHCenter</set>
       </property>
      </widget>
     </item>

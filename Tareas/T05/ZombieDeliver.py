@@ -1,7 +1,9 @@
 from PyQt4 import QtCore
 from time import sleep
 from random import expovariate
+from math import log
 from Zombie import Zombie
+
 
 class CreateZombieEvent:
     def __init__(self, nombre_zombie):
@@ -29,14 +31,15 @@ class ZombieDeliver(QtCore.QThread):
         self.trigger_createzombie.emit(CreateZombieEvent(self.Dzombie))
 
     def run(self):
-        sleep(0.5)
+        sleep(2)  # Tiempo de espera para empezar a soltar Zombies nuevos.
         while True:
-            lambda_exp = 1  # TODO: construir funcion lambda(t)
-            t_prox_zombie = expovariate(lambda_exp)
+            lambda_exp = 1 / log(self.control_juego.tiempo_total + 1, 10)  # Funcion lambda(t)
+            t_prox_zombie = expovariate(1 / lambda_exp) + 0.1
+            print(lambda_exp)
             sleep(t_prox_zombie)
 
-            self.control_juego.ventana.zombie_id += 1
-            nombre_zombie = 'zombie {}'.format(self.control_juego.ventana.zombie_id)
-
-            self.Dzombie = nombre_zombie
-
+            total_zombies = len(self.control_juego.ventana.lista_zombies)
+            if total_zombies < 25:  # Mantiene un maximo de 25 Zombies en la ZonaJuego.
+                self.control_juego.ventana.zombie_id += 1
+                nombre_zombie = 'zombie {}'.format(self.control_juego.ventana.zombie_id)
+                self.Dzombie = nombre_zombie
