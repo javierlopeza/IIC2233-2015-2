@@ -15,6 +15,7 @@ ventana = uic.loadUiType("gui.ui")
 class MainWindow(ventana[0], ventana[1]):
     def __init__(self, control_juego):
         super().__init__()
+        self.jugando = True
 
         # Menu Inicial
         texto, ok = QtGui.QInputDialog.getText(self, "Menu Inicial", "Ingresa tu nombre: [OK] para jugar | [Cancel] para salir")
@@ -147,7 +148,8 @@ class MainWindow(ventana[0], ventana[1]):
         # Cambia el valor numerico de la vida.
         self.SaludLabel.setText('Salud: {}'.format(self.vida_militar))
 
-        if self.vida_militar == 0:
+        if self.vida_militar == 0 and self.jugando:
+            self.jugando = False
             self.terminar_juego()
 
     def setMunicion(self):
@@ -370,13 +372,18 @@ class MainWindow(ventana[0], ventana[1]):
         self.control_juego.reloj.terminate()
         self.control_juego.helicoptero.terminate()
 
-        print(len(self.lista_zombies))
         for zombie in self.lista_zombies:
-            zombie.terminate()
+            self.jugando = False
+            zombie.damage = 0
+
+        if not self.nombre_jugador:
+            self.nombre_jugador = "JUGADOR"
 
         QtGui.QMessageBox.information(
             self,
-            "Fin del Juego",
-            "Puntaje Final: {}".format(self.puntaje)
+            "Has Perdido",
+            "{0} : {1} PUNTOS".format(self.nombre_jugador, self.puntaje)
             )
+
         sys.exit()
+

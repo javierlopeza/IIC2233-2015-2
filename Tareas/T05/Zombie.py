@@ -38,6 +38,11 @@ class Zombie(QtCore.QThread):
         # Factor para variar la velocidad del zombie.
         self.velocidad = randint(10, 20)
 
+        # Factor para variar el damage que provoca el zombie
+        self.damage = randint(1, 3)
+
+        self.jugando = True
+
     def rotar(self, angulo):
         # Rota el QPixmap de ZombieLabel en angulo grados sentido horario.
         nuevo_pixmap = self.SSZombie.en_uso
@@ -62,7 +67,7 @@ class Zombie(QtCore.QThread):
         self.vector_vista = vector_unitario([0, 0], [militar_x, -militar_y])
 
     def run(self):
-        while True:
+        while self.jugando:
             # Avanza en direccion hacia el militar.
             sleep(1 / self.velocidad)
             dx = self.vector_vista[0]
@@ -95,8 +100,7 @@ class Zombie(QtCore.QThread):
 
             if toca_militar:  # Si toca al militar le provoca un damage aleatorio entre 1 y 3.
                 sleep(uniform(0.4, 0.1))
-                damage = randint(1, 3)
-                self.parent.vida_militar -= damage
+                self.parent.vida_militar -= self.damage
                 if self.parent.vida_militar < 0:
                     self.parent.vida_militar = 0
                 self.parent.setSalud()

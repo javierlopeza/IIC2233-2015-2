@@ -1,13 +1,8 @@
 ﻿## Tarea 05
 
-### Pendiente
-
-* Pausar juego.
-
-* Menu final. Terminate todos los Threads.
-
-
 ### Consideraciones
+
+* Al terminar el juego (la vida del Militar llega a 0) se despliega un mensaje final mostrando el puntaje obtenido en la partida. Por detrás, en el programa, me tira varios errores que no logré solucionar, pero que en ningún momento afectaron el termino del juego gráficamente. Es claro que esos errores no deberían estar, pero para efectos de alguien que solamente usa el juego para jugar no le presentaría ningún problema.
 
 * El Militar puede mover con las flechas o con WASD y, al mismo tiempo, dirigirlo con el mouse.
 
@@ -33,7 +28,5 @@
 
 * Las Balas van a una velocidad relativamente lenta con el fin de que gráficamente se vea su trayectoria. Esto no afecta en la precisión de la pistola, ya que los Zombies son lentos.
 
-* En general, todas las velocidades de los personajes y las balas se pueden modificar fácilmente en el programa.
-
-
+* En general, todas las velocidades de los personajes y las balas se pueden modificar fácilmente en el programa. Las velocidades se pusieron de acuerdo a lo que parecía más real o gráficamente mejor.
 

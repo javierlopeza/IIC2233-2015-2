@@ -31,7 +31,7 @@ class ZombieDeliver(QtCore.QThread):
         self.trigger_createzombie.emit(CreateZombieEvent(self.Dzombie))
 
     def run(self):
-        sleep(2)  # Tiempo de espera para empezar a soltar Zombies nuevos.
+        sleep(1)  # Tiempo de espera para empezar a soltar Zombies nuevos.
         while True:
             lambda_exp = 1 / log(self.control_juego.tiempo_total + 1, 10)  # Funcion lambda(t)
             t_prox_zombie = expovariate(1 / lambda_exp) + 0.1
