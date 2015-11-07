@@ -2,21 +2,9 @@
 
 ### Pendiente
 
-* Revisar funcion lambda(t) frecuencia zombies.
-
-* Helicoptero que entrega cajas de salud y de municiones.
-
-* Disparo de balas.
-
 * Pausar juego.
 
-* Puntaje.
-
-* Menu inicial.
-
-* Menu final.
- 
-* (?) Buscar mejores SS Zombies.
+* Menu final. Terminate todos los Threads.
 
 
 ### Consideraciones

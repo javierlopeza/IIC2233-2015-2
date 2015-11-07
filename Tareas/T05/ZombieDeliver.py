@@ -35,7 +35,6 @@ class ZombieDeliver(QtCore.QThread):
         while True:
             lambda_exp = 1 / log(self.control_juego.tiempo_total + 1, 10)  # Funcion lambda(t)
             t_prox_zombie = expovariate(1 / lambda_exp) + 0.1
-            print(lambda_exp)
             sleep(t_prox_zombie)
 
             total_zombies = len(self.control_juego.ventana.lista_zombies)
