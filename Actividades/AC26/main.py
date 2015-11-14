@@ -15,10 +15,14 @@ class Interfaz:
 """)
 
     def elegir_opcion(self):
-        eleccion = input("Ingrese su opcion (1 a 6): ")
-        while not eleccion.isdecimal() or (int(eleccion) < 1 or int(eleccion) > 7):
-            eleccion = input("Ingrese una opcion valida (1 a 6): ")
-        return int(eleccion)
+        try:
+            eleccion = input("Ingrese su opcion (1 a 6): ")
+            while not eleccion.isdecimal() or (int(eleccion) < 1 or int(eleccion) > 7):
+                eleccion = input("Ingrese una opcion valida (1 a 6): ")
+            return int(eleccion)
+        except:
+            self.show_menu()
+            self.elegir_opcion()
 
 
 class Cliente:
@@ -41,13 +45,19 @@ class Cliente:
     def escuchar(self):
         while True:
             data = self.s_cliente.recv(1024)
-            data_str = data.decode('utf-8', errors="ignore")
-            datos = data_str.split("separadorespecial")
+            data_str = ""
+            cont = 0
+            for B in data:
+                data_str += chr(B)
+                if "separadorespecial" in data_str:
+                    break
+                else:
+                    cont += 1
 
-            nombre_archivo = datos[0]
-            contenido_archivo = datos[1].encode('utf-8')
+            nombre_archivo = str(data_str.split("separadorespecial")[0])
+            contenido_archivo = data[cont:]
 
-            with open("./Cliente_{0}".format(nombre_archivo),'wb+') as f:
+            with open("Cliente_{0}".format(nombre_archivo),'wb+') as f:
                 f.write(contenido_archivo)
 
             print("Archivo Recibido y Descargado: {}".format(nombre_archivo))
@@ -183,7 +193,7 @@ class Servidor:
             for archivo in self.archivos_por_enviar:
                 print(archivo[0])
             for archivo in self.archivos_por_enviar:
-                data_enviar = archivo[0].encode("utf-8") + "separadorespecial".encode('utf-8') + archivo[1]
+                data_enviar = archivo[0].encode() + "separadorespecial".encode() + archivo[1]
                 self.cliente.send(data_enviar)
             print("{} archivos enviados.".format(len(self.archivos_por_enviar)))
             self.archivos_por_enviar.clear()
