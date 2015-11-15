@@ -32,6 +32,12 @@
      <height>31</height>
     </rect>
    </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="echoMode">
+    <enum>QLineEdit::Password</enum>
+   </property>
   </widget>
   <widget class="QLabel" name="usuarioLabel1">
    <property name="geometry">
@@ -183,6 +189,9 @@
      <width>221</width>
      <height>31</height>
     </rect>
+   </property>
+   <property name="echoMode">
+    <enum>QLineEdit::Password</enum>
    </property>
   </widget>
   <widget class="QPushButton" name="RegistrarseButton">
