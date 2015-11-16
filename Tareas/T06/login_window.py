@@ -8,7 +8,7 @@ ventana = uic.loadUiType("login_gui.ui")
 
 
 class LoginWindow(ventana[0], ventana[1]):
-    def __init__(self):
+    def __init__(self, host, port):
         super().__init__()
         self.setupUi(self)
 
@@ -19,8 +19,8 @@ class LoginWindow(ventana[0], ventana[1]):
         self.setWindowIcon(pixmap)
 
         # Set socket Login.
-        self.host = socket.gethostname()
-        self.port = 4010
+        self.host = host
+        self.port = port
         self.socket_login = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             self.socket_login.connect((self.host, self.port))
@@ -53,7 +53,7 @@ class LoginWindow(ventana[0], ventana[1]):
             respuesta_verificacion = self.solicitar_verificacion_ingreso(usuario, clave)
             if respuesta_verificacion:
                 self.close()
-                self.main_window = UsuarioWindow(usuario)
+                self.main_window = UsuarioWindow(usuario, self.host, self.port)
                 self.main_window.show()
 
             else:
@@ -80,7 +80,7 @@ class LoginWindow(ventana[0], ventana[1]):
                 QtGui.QMessageBox.information(None, 'EXITO', 'Registro exitoso, se iniciara automaticamente su sesion.',
                                               QtGui.QMessageBox.Ok)
                 self.close()
-                self.main_window = UsuarioWindow(usuario)
+                self.main_window = UsuarioWindow(usuario, self.host, self.port)
                 self.main_window.show()
 
             else:

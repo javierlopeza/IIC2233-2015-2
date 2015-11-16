@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>441</width>
-    <height>677</height>
+    <width>861</width>
+    <height>651</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,10 +16,10 @@
   <widget class="QPushButton" name="SubirArchivoButton">
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>460</x>
      <y>60</y>
-     <width>111</width>
-     <height>41</height>
+     <width>121</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="text">
@@ -29,10 +29,10 @@
   <widget class="QPushButton" name="SubirCarpetaButton">
    <property name="geometry">
     <rect>
-     <x>140</x>
-     <y>60</y>
-     <width>111</width>
-     <height>41</height>
+     <x>460</x>
+     <y>100</y>
+     <width>121</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="text">
@@ -43,9 +43,9 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>120</y>
+     <y>60</y>
      <width>401</width>
-     <height>181</height>
+     <height>241</height>
     </rect>
    </property>
    <property name="animated">
@@ -60,32 +60,32 @@
   <widget class="QPushButton" name="ActualizarButton">
    <property name="geometry">
     <rect>
-     <x>330</x>
-     <y>60</y>
-     <width>91</width>
+     <x>460</x>
+     <y>270</y>
+     <width>121</width>
      <height>41</height>
     </rect>
    </property>
    <property name="text">
-    <string>Actualizar</string>
+    <string>Actualizar Todo</string>
    </property>
   </widget>
-  <widget class="QListWidget" name="AmigosListView">
+  <widget class="QListWidget" name="AmigosList">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>380</y>
-     <width>141</width>
-     <height>181</height>
+     <x>650</x>
+     <y>50</y>
+     <width>181</width>
+     <height>211</height>
     </rect>
    </property>
   </widget>
   <widget class="QLabel" name="TusAmigosLabel">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>350</y>
-     <width>81</width>
+     <x>660</x>
+     <y>20</y>
+     <width>161</width>
      <height>21</height>
     </rect>
    </property>
@@ -99,9 +99,9 @@
   <widget class="QPushButton" name="ConversarButton">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>570</y>
-     <width>91</width>
+     <x>650</x>
+     <y>270</y>
+     <width>81</width>
      <height>31</height>
     </rect>
    </property>
@@ -112,9 +112,9 @@
   <widget class="QTextEdit" name="ChatTextField">
    <property name="geometry">
     <rect>
-     <x>210</x>
+     <x>20</x>
      <y>570</y>
-     <width>191</width>
+     <width>471</width>
      <height>51</height>
     </rect>
    </property>
@@ -132,10 +132,10 @@ p, li { white-space: pre-wrap; }
   <widget class="QPushButton" name="EnviarButton">
    <property name="geometry">
     <rect>
-     <x>260</x>
-     <y>630</y>
+     <x>500</x>
+     <y>570</y>
      <width>91</width>
-     <height>31</height>
+     <height>51</height>
     </rect>
    </property>
    <property name="text">
@@ -145,7 +145,7 @@ p, li { white-space: pre-wrap; }
   <widget class="QLabel" name="ConversandoConLabel">
    <property name="geometry">
     <rect>
-     <x>210</x>
+     <x>20</x>
      <y>350</y>
      <width>191</width>
      <height>21</height>
@@ -161,9 +161,9 @@ p, li { white-space: pre-wrap; }
   <widget class="Line" name="line">
    <property name="geometry">
     <rect>
-     <x>30</x>
+     <x>20</x>
      <y>320</y>
-     <width>381</width>
+     <width>601</width>
      <height>20</height>
     </rect>
    </property>
@@ -174,9 +174,9 @@ p, li { white-space: pre-wrap; }
   <widget class="QListWidget" name="ChatList">
    <property name="geometry">
     <rect>
-     <x>210</x>
+     <x>20</x>
      <y>380</y>
-     <width>191</width>
+     <width>571</width>
      <height>181</height>
     </rect>
    </property>
@@ -192,11 +192,121 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
+     <pointsize>11</pointsize>
     </font>
    </property>
    <property name="text">
     <string>Usuario conectado: </string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="BajarArchivoButton">
+   <property name="geometry">
+    <rect>
+     <x>460</x>
+     <y>160</y>
+     <width>121</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Bajar Archivo</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="BajarCarpetaButton">
+   <property name="geometry">
+    <rect>
+     <x>460</x>
+     <y>200</y>
+     <width>121</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Bajar Carpeta</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="AgregarAmigoLabel">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>340</y>
+     <width>161</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Agregar Amigo</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="AgregarAmigoLineEdit">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>370</y>
+     <width>161</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="AgregarAmigoButton">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>400</y>
+     <width>101</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Agregar</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="EnviarArchivoButton">
+   <property name="geometry">
+    <rect>
+     <x>740</x>
+     <y>270</y>
+     <width>91</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Enviar Archivo</string>
+   </property>
+  </widget>
+  <widget class="Line" name="line_2">
+   <property name="geometry">
+    <rect>
+     <x>613</x>
+     <y>10</y>
+     <width>20</width>
+     <height>631</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="IconoLabel">
+   <property name="geometry">
+    <rect>
+     <x>670</x>
+     <y>472</y>
+     <width>150</width>
+     <height>150</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>ICONO</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
