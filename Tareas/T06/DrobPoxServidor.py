@@ -79,6 +79,12 @@ class DrobPoxServidor:
                 else:
                     cliente.send("No te puedes agregar a ti mismo.".encode('utf-8'))
 
+            elif data_dec.startswith("LISTA_AMIGOS"):
+                usuario = data_dec.split(" ")[1]
+                lista_amigos = self.database_amistades[usuario]
+                lista_enc = json.dumps(lista_amigos)
+                cliente.send(lista_enc.encode('utf-8'))
+
             elif data_dec.startswith("QUIT"):
                 cliente.send("QUIT".encode('utf-8'))
                 self.clientes_conectados.remove(cliente)

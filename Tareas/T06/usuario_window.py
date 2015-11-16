@@ -3,6 +3,7 @@ import socket
 from random import randint, choice
 from time import sleep
 import sys
+import json
 
 ventana = uic.loadUiType("main_gui.ui")
 
@@ -12,12 +13,14 @@ class UsuarioWindow(ventana[0], ventana[1]):
         super().__init__()
         self.setupUi(self)
 
-        self.usuario = usuario
-        self.setup_base()
-
         self.host = host
         self.port = port
         self.setup_networking()
+
+        self.usuario = usuario
+        self.setup_base()
+
+
 
     def setup_base(self):
         # Set titulo ventana a DropbPox.
@@ -32,18 +35,35 @@ class UsuarioWindow(ventana[0], ventana[1]):
         # Set usuario conectado.
         self.UsuarioConectadoLabel.setText("Usuario conectado: {}".format(self.usuario))
 
+
         self.EnviarButton.clicked.connect(self.enviar_pressed)
         self.AgregarAmigoButton.clicked.connect(self.agregar_amigo_pressed)
+        self.ActualizarTodoButton.clicked.connect(self.actualizar_todo)
 
         item = QtGui.QTreeWidgetItem(self.ArchivosTree)
-        item.setText(0, "Carpeta 1")
+        item.setText(0, "Carpeta")
 
-        f = QtGui.QTreeWidgetItem(item)
-        f.setText(0, "Archivo 1")
+        # Cargar lista de amigos.
+        self.actualizar_lista_amigos()
 
     def setup_networking(self):
         self.socket_usuario = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket_usuario.connect((self.host, self.port))
+
+    def actualizar_todo(self):
+        self.actualizar_lista_amigos()
+
+    def actualizar_lista_amigos(self):
+        data_solicitar = "LISTA_AMIGOS" + " " + self.usuario
+        self.socket_usuario.send(data_solicitar.encode('utf-8'))
+        recibido = self.socket_usuario.recv(1024).decode('utf-8')
+        lista_amigos = json.loads(recibido)
+        self.AmigosList.clear()
+        for amigo in lista_amigos:
+            item_nuevo_amigo = QtGui.QListWidgetItem(amigo)
+            self.AmigosList.addItem(item_nuevo_amigo)
+            self.AmigosList.scrollToItem(item_nuevo_amigo)
+            self.AgregarAmigoLineEdit.clear()
 
     def solicitar_agregar_amigo(self, amigo):
         data_solicitar = "AGREGAR_AMIGO" + " " + self.usuario + " " + amigo
