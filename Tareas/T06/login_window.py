@@ -31,6 +31,8 @@ class LoginWindow(ventana[0], ventana[1]):
                                        'vuelva a intentarlo mas tarde.',
                                        QtGui.QMessageBox.Ok)
             sys.exit()
+        aceptar_socket = "ACEPTAR log-in"
+        self.socket_login.send(aceptar_socket.encode("utf-8"))
 
         # Set connections buttons.
         self.IngresarButton.clicked.connect(self.ingresar_clicked)
@@ -90,8 +92,6 @@ class LoginWindow(ventana[0], ventana[1]):
             QtGui.QMessageBox.critical(None, 'ERROR', 'Usuario y/o clave invalido.', QtGui.QMessageBox.Ok)
 
     def closeEvent(self, QCloseEvent):
-        data = "QUIT"
+        data = "QUIT" + " log-in"
         self.socket_login.send(data.encode('utf-8'))
-        verificacion = self.socket_login.recv(1024).decode('utf-8')
-        if verificacion == "QUIT":
-            self.socket_login.close()
+        self.socket_login.close()

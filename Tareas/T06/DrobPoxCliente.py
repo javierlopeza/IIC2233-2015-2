@@ -1,6 +1,5 @@
-from PyQt4 import QtCore, QtGui, uic
+from PyQt4 import QtGui
 from login_window import LoginWindow
-import datetime
 
 
 class DrobPoxCliente:

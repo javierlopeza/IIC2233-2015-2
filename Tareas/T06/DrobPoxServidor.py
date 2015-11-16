@@ -2,6 +2,7 @@ import socket
 import hashlib
 from cargar_database_usuarios import cargar_database_usuarios
 from cargar_database_amistades import cargar_database_amistades
+from cargar_database_chats import cargar_database_chats
 from hashear import hashear
 import threading
 import json
@@ -20,7 +21,9 @@ class DrobPoxServidor:
         self.socket_servidor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket_servidor.bind((self.host, self.port))
         self.socket_servidor.listen(5)
-        self.clientes_conectados = []
+        self.clientes_conectados = {}
+        self.conexiones = []
+
         # Thread Aceptador
         thread_aceptador = threading.Thread(target=self.aceptar())
         thread_aceptador.setDaemon(True)
@@ -29,21 +32,27 @@ class DrobPoxServidor:
     def cargar_database(self):
         self.database_usuarios = cargar_database_usuarios()
         self.database_amistades = cargar_database_amistades()
+        self.database_chats = cargar_database_chats()
 
     def aceptar(self):
         print("SERVIDOR ACTIVO...")
         while True:
             cliente_nuevo, address = self.socket_servidor.accept()
-            self.clientes_conectados.append(cliente_nuevo)
+            self.conexiones.append(cliente_nuevo)
             thread_cliente = threading.Thread(target=self.recibir_data, args=(cliente_nuevo,))
             thread_cliente.daemon = True
             thread_cliente.start()
 
     def recibir_data(self, cliente):
-        while cliente in self.clientes_conectados:
+        while cliente in self.conexiones:
             data = cliente.recv(1024)
             data_dec = data.decode('utf-8')
-            if data_dec.startswith("INGRESO"):
+
+            if data_dec.startswith("ACEPTAR"):
+                usuario = data_dec.split(" ")[1]
+                self.clientes_conectados.update({usuario:cliente})
+
+            elif data_dec.startswith("INGRESO"):
                 usuario = data_dec.split(" ")[1]
                 clave = data_dec.split(" ")[2]
 
@@ -85,9 +94,31 @@ class DrobPoxServidor:
                 lista_enc = json.dumps(lista_amigos)
                 cliente.send(lista_enc.encode('utf-8'))
 
+            elif data_dec.startswith("HISTORIAL_CHAT"):
+                usuario = data_dec.split(" ")[1]
+                amigo = data_dec.split(" ")[2]
+                amistad = sorted([usuario, amigo])
+                chat_name = "{0}-{1}".format(amistad[0], amistad[1])
+                lista_historial = self.database_chats[chat_name]
+                lista_enc = json.dumps(lista_historial)
+                cliente.send(lista_enc.encode('utf-8'))
+
+            elif data_dec.startswith("MENSAJE"):
+                usuario = data_dec.split("S1E2P3A4R5A6D7O8R9M0A1G2I3C4O5")[1]
+                amigo = data_dec.split("S1E2P3A4R5A6D7O8R9M0A1G2I3C4O5")[2]
+                mensaje = data_dec.split("S1E2P3A4R5A6D7O8R9M0A1G2I3C4O5")[3]
+                amistad = sorted([usuario, amigo])
+                chat_name = "{0}-{1}".format(amistad[0], amistad[1])
+                self.database_chats[chat_name].append(mensaje)
+                with open("database/database_chats.txt", "w") as chats:
+                    json.dump(self.database_chats, chats)
+
+
             elif data_dec.startswith("QUIT"):
+                usuario = data_dec.split(" ")[1]
                 cliente.send("QUIT".encode('utf-8'))
-                self.clientes_conectados.remove(cliente)
+                del self.clientes_conectados[usuario]
+                self.conexiones.remove(cliente)
 
 
     def verificar_ingreso(self, usuario, clave_ing):
@@ -112,6 +143,12 @@ class DrobPoxServidor:
         self.database_amistades[amigo].append(usuario)
         with open("database/database_amistades.txt", "w") as act:
             json.dump(self.database_amistades, act)
+
+        amistad = sorted([usuario, amigo])
+        chat_name = "{0}-{1}".format(amistad[0], amistad[1])
+        self.database_chats.update({chat_name: []})
+        with open("database/database_chats.txt", "w") as chats:
+            json.dump(self.database_chats, chats)
 
     def registrar(self, usuario, clave):
         # Se hashea la clave.
