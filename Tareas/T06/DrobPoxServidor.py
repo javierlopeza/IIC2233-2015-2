@@ -50,7 +50,10 @@ class DrobPoxServidor:
 
             if data_dec.startswith("ACEPTAR"):
                 usuario = data_dec.split(" ")[1]
-                self.clientes_conectados.update({usuario:cliente})
+                self.clientes_conectados.update({usuario: cliente})
+
+            elif data_dec.startswith("STOP_ESCUCHAR"):
+                cliente.send("STOP_ESCUCHAR".encode('utf-8'))
 
             elif data_dec.startswith("INGRESO"):
                 usuario = data_dec.split(" ")[1]
@@ -80,6 +83,8 @@ class DrobPoxServidor:
                         if nuevo_amigo not in self.database_amistades[usuario]:
                             self.agregar_amigo(usuario, nuevo_amigo)
                             cliente.send("True".encode('utf-8'))
+                            if nuevo_amigo in self.clientes_conectados.keys():
+                                self.clientes_conectados[nuevo_amigo].send("NUEVO_AMIGO".encode('utf-8'))
                         else:
                             cliente.send("El usuario ya es tu amigo.".encode('utf-8'))
                     else:
@@ -113,13 +118,19 @@ class DrobPoxServidor:
                 with open("database/database_chats.txt", "w") as chats:
                     json.dump(self.database_chats, chats)
 
+                if amigo in self.clientes_conectados.keys():
+                    notificacion_mensaje = "NUEVO_MENSAJE" \
+                                           + "S1E2P3A4R5A6D7O8R9M0A1G2I3C4O5" \
+                                           + usuario \
+                                           + "S1E2P3A4R5A6D7O8R9M0A1G2I3C4O5" \
+                                           + mensaje
+                    self.clientes_conectados[amigo].send(notificacion_mensaje.encode('utf-8'))
 
             elif data_dec.startswith("QUIT"):
                 usuario = data_dec.split(" ")[1]
                 cliente.send("QUIT".encode('utf-8'))
                 del self.clientes_conectados[usuario]
                 self.conexiones.remove(cliente)
-
 
     def verificar_ingreso(self, usuario, clave_ing):
         if usuario in self.database_usuarios.keys():

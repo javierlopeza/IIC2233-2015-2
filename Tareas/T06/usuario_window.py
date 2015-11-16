@@ -2,6 +2,8 @@ from PyQt4 import QtGui, uic
 import socket
 import sys
 import json
+import threading
+from time import sleep
 
 ventana = uic.loadUiType("main_gui.ui")
 
@@ -46,8 +48,11 @@ class UsuarioWindow(ventana[0], ventana[1]):
 
     def setup_networking(self):
         self.socket_usuario = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
         try:
             self.socket_usuario.connect((self.host, self.port))
+            self.start_escuchar()
+
         except socket.error:
             QtGui.QMessageBox.critical(None,
                                        'ERROR',
@@ -55,12 +60,46 @@ class UsuarioWindow(ventana[0], ventana[1]):
                                        'vuelva a intentarlo mas tarde.',
                                        QtGui.QMessageBox.Ok)
             sys.exit()
+
         aceptar_user = "ACEPTAR" + " " + self.usuario
         self.socket_usuario.send(aceptar_user.encode('utf-8'))
 
+    def start_escuchar(self):
+        self.conectado = True
+        self.thread_escuchador = threading.Thread(target=self.escuchar)
+        self.thread_escuchador.setDaemon(True)
+        self.thread_escuchador.start()
+
+    def escuchar(self):
+        sleep(0.5)
+        while self.conectado:
+            data = self.socket_usuario.recv(1024)
+            data_dec = data.decode('utf-8')
+            if data_dec.startswith("STOP_ESCUCHAR"):
+                self.conectado = False
+
+            elif data_dec.startswith("NUEVO_AMIGO"):
+                self.actualizar_lista_amigos()
+
+            elif data_dec.startswith("NUEVO_MENSAJE"):
+                sender = data_dec.split("S1E2P3A4R5A6D7O8R9M0A1G2I3C4O5")[1]
+                mensaje = data_dec.split("S1E2P3A4R5A6D7O8R9M0A1G2I3C4O5")[2]
+                if sender == self.amigo_chat:
+                    item_nuevo_msg = QtGui.QListWidgetItem(mensaje)
+                    self.ChatList.addItem(item_nuevo_msg)
+                    self.ChatList.scrollToItem(item_nuevo_msg)
+
+    def stop_escuchar(self):
+        self.socket_usuario.send("STOP_ESCUCHAR".encode('utf-8'))
+
     def actualizar_todo(self):
+        self.stop_escuchar()
+
         self.actualizar_lista_amigos()
+
         # TODO actualizar arbol archivos.
+
+        self.start_escuchar()
 
     def actualizar_lista_amigos(self):
         data_solicitar = "LISTA_AMIGOS" + " " + self.usuario
@@ -86,10 +125,11 @@ class UsuarioWindow(ventana[0], ventana[1]):
                                        QtGui.QMessageBox.Ok)
 
     def conversar(self, amigo):
-        # TODO: thread escuchar al amigo en el chat actual.
 
         self.ConversandoConLabel.setText("Conversando con: {}".format(amigo))
         self.amigo_chat = amigo
+
+        self.stop_escuchar()
 
         data_solicitar = "HISTORIAL_CHAT" + " " + self.usuario + " " + amigo
         self.socket_usuario.send(data_solicitar.encode('utf-8'))
@@ -102,10 +142,17 @@ class UsuarioWindow(ventana[0], ventana[1]):
             self.ChatList.addItem(item_nuevo_msg)
             self.ChatList.scrollToItem(item_nuevo_msg)
 
+        self.start_escuchar()
+
     def solicitar_agregar_amigo(self, amigo):
+        self.stop_escuchar()
+
         data_solicitar = "AGREGAR_AMIGO" + " " + self.usuario + " " + amigo
         self.socket_usuario.send(data_solicitar.encode('utf-8'))
         verificacion = self.socket_usuario.recv(1024).decode('utf-8')
+
+        self.start_escuchar()
+
         return verificacion
 
     def agregar_amigo_pressed(self):
@@ -131,12 +178,12 @@ class UsuarioWindow(ventana[0], ventana[1]):
             self.ChatList.addItem(item_mensaje)
             self.ChatList.scrollToItem(item_mensaje)
 
-            self.enviar(mensaje_final)
+            self.enviar_mensaje(mensaje_final)
             self.ChatTextField.clear()
         else:
             QtGui.QMessageBox.critical(None, 'ERROR', "No hay ningun chat activo.", QtGui.QMessageBox.Ok)
 
-    def enviar(self, mensaje):
+    def enviar_mensaje(self, mensaje):
         data_enviada = "MENSAJE" \
                        + "S1E2P3A4R5A6D7O8R9M0A1G2I3C4O5" \
                        + self.usuario \
@@ -147,8 +194,11 @@ class UsuarioWindow(ventana[0], ventana[1]):
         self.socket_usuario.send(data_enviada.encode('utf-8'))
 
     def closeEvent(self, QCloseEvent):
+        self.stop_escuchar()
+
         data = "QUIT" + " " + self.usuario
         self.socket_usuario.send(data.encode('utf-8'))
         verificacion = self.socket_usuario.recv(1024).decode('utf-8')
         if verificacion == "QUIT":
+            self.conectado = False
             self.socket_usuario.close()

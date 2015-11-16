@@ -146,10 +146,15 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>350</y>
-     <width>191</width>
-     <height>21</height>
+     <y>340</y>
+     <width>361</width>
+     <height>31</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Conversando con: Nadie</string>
@@ -192,7 +197,7 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="font">
     <font>
-     <pointsize>11</pointsize>
+     <pointsize>12</pointsize>
     </font>
    </property>
    <property name="text">
