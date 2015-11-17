@@ -1,8 +1,7 @@
 # coding=utf-8
 import requests
-import json
 from requests.auth import HTTPBasicAuth
-import operator
+from argparse import ArgumentParser
 
 
 # Debe tener los atributos:
@@ -17,37 +16,60 @@ class Table:
 
 
 if __name__ == '__main__':
-    USERNAME = "napoleon"
-    PASSWORD = "macoy123"
+    parser = ArgumentParser(description='Resultados Votaciones')
 
-    listas = requests.get('http://votaciometro.cloudapp.net/api/v1/lists', auth=HTTPBasicAuth(USERNAME, PASSWORD))
-    listas = listas.json()
+    parser.add_argument('obtener', help='Obtener resultados votaciones')
 
-    listas_candidatas = {}
-    for lista in listas:
-        listas_candidatas.update({lista: 0})
+    parser.add_argument(
+        '-u',
+        '--user',
+        type=str,
+        required=True,
+        help="Username"
+    )
 
-    tables = requests.get('http://votaciometro.cloudapp.net/api/v1/tables', auth=HTTPBasicAuth(USERNAME, PASSWORD))
-    tables = tables.json()
+    parser.add_argument(
+        '-p',
+        '--passw',
+        type=str,
+        required=True,
+        help="Password"
+    )
 
-    mesas = []
+    args = parser.parse_args()
 
-    for mesa in tables:
-        i = mesa["_id"]
-        n = mesa["name"]
-        nueva_mesa = Table(i, n)
-        mesas.append(nueva_mesa)
+    if args.obtener:
+        USERNAME = args.user
+        PASSWORD = args.passw
 
-    for mesa in mesas:
-        info_mesa = requests.get('http://votaciometro.cloudapp.net/api/v1/tables/{}'.format(mesa._id),
-                                 auth=HTTPBasicAuth(USERNAME, PASSWORD))
-        info_mesa = info_mesa.json()
-        for lista_candidata in info_mesa["votes"].keys():
-            listas_candidatas[lista_candidata] += info_mesa["votes"][lista_candidata]
+        listas = requests.get('http://votaciometro.cloudapp.net/api/v1/lists', auth=HTTPBasicAuth(USERNAME, PASSWORD))
+        listas = listas.json()
 
-    print("VOTOS POR LISTA HASTA EL MOMENTO:")
-    for lista in listas_candidatas.keys():
-        print("\t{0}: {1} votos".format(lista, listas_candidatas[lista]))
-    ganador_ahora = max(listas_candidatas, key=listas_candidatas.get)
-    print()
-    print("LISTA CON MAYORIA DE VOTOS HASTA EL MOMENTO: {}".format(ganador_ahora))
+        listas_candidatas = {}
+        for lista in listas:
+            listas_candidatas.update({lista: 0})
+
+        tables = requests.get('http://votaciometro.cloudapp.net/api/v1/tables', auth=HTTPBasicAuth(USERNAME, PASSWORD))
+        tables = tables.json()
+
+        mesas = []
+
+        for mesa in tables:
+            i = mesa["_id"]
+            n = mesa["name"]
+            nueva_mesa = Table(i, n)
+            mesas.append(nueva_mesa)
+
+        for mesa in mesas:
+            info_mesa = requests.get('http://votaciometro.cloudapp.net/api/v1/tables/{}'.format(mesa._id),
+                                     auth=HTTPBasicAuth(USERNAME, PASSWORD))
+            info_mesa = info_mesa.json()
+            for lista_candidata in info_mesa["votes"].keys():
+                listas_candidatas[lista_candidata] += info_mesa["votes"][lista_candidata]
+
+        print("VOTOS POR LISTA HASTA EL MOMENTO:")
+        for lista in listas_candidatas.keys():
+            print("\t{0}: {1} votos".format(lista, listas_candidatas[lista]))
+        ganador_ahora = max(listas_candidatas, key=listas_candidatas.get)
+        print()
+        print("LISTA CON MAYORIA DE VOTOS HASTA EL MOMENTO: {}".format(ganador_ahora))
