@@ -45,8 +45,9 @@ if __name__ == '__main__':
         for lista_candidata in info_mesa["votes"].keys():
             listas_candidatas[lista_candidata] += info_mesa["votes"][lista_candidata]
 
+    print("VOTOS POR LISTA HASTA EL MOMENTO:")
     for lista in listas_candidatas.keys():
-        print("{0}: {1} votos".format(lista, listas_candidatas[lista]))
+        print("\t{0}: {1} votos".format(lista, listas_candidatas[lista]))
     ganador_ahora = max(listas_candidatas, key=listas_candidatas.get)
     print()
     print("LISTA CON MAYORIA DE VOTOS HASTA EL MOMENTO: {}".format(ganador_ahora))
