@@ -27,13 +27,13 @@ optional arguments:
 
 ## Using full-name flags:
 
-```` python main.py obtener -user napoleon -passw macoy123 ````
+```` python main.py obtener -user USER123 -passw PPP123````
 
 ## Short version:
 
-```` python main.py obtener -u napoleon -p macoy123 ````
+```` python main.py obtener -u USER123 -p PPP123 ````
 
-# Output:
+## Output:
 ````
 VOTOS POR LISTA HASTA EL MOMENTO:
         Solidaridad: 2839 votos
