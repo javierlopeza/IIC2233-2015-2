@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
+
 from PyQt4 import QtGui
 from login_window import LoginWindow
-
 
 class DrobPoxCliente:
     def __init__(self, host, port):

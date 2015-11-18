@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from PyQt4 import QtGui, uic
 import socket
 import select
@@ -8,6 +10,7 @@ import pickle
 import threading
 from time import sleep
 from get_tree_path import get_tree_path
+from reemplazar_emojis import reemplazar_emojis
 
 ventana = uic.loadUiType("main_gui.ui")
 
@@ -203,6 +206,9 @@ class UsuarioWindow(ventana[0], ventana[1]):
         if mensaje and self.amigo_chat:
             mensaje_final = "{0}: {1}".format(self.usuario,
                                               mensaje)
+
+            mensaje_final = reemplazar_emojis(mensaje_final)
+
             item_mensaje = QtGui.QListWidgetItem(mensaje_final)
             self.ChatList.addItem(item_mensaje)
             self.ChatList.scrollToItem(item_mensaje)
@@ -355,8 +361,24 @@ class UsuarioWindow(ventana[0], ventana[1]):
         self.start_escuchar()
 
     def bajar_carpeta_pressed(self):
-        # TODO
-        pass
+        carpeta_seleccionada = self.ArchivosTree.currentItem()
+        if carpeta_seleccionada:
+            nombre_carpeta = carpeta_seleccionada.text(0)
+            ruta_llegar = get_tree_path(carpeta_seleccionada)
+            path_destino = QtGui.QFileDialog.getExistingDirectory(self)
+            if path_destino:
+                self.bajar_carpeta(nombre_carpeta, ruta_llegar, path_destino)
+        else:
+            QtGui.QMessageBox.critical(None,
+                                       'ERROR',
+                                       "No ha seleccionado una carpeta para descargar.",
+                                       QtGui.QMessageBox.Ok)
+
+    def bajar_carpeta(self, nombre_carpeta, ruta_llegar, path_destino):
+        print(os.path.join(path_destino, ""))
+
+
+
 
     def closeEvent(self, QCloseEvent):
         self.stop_escuchar()

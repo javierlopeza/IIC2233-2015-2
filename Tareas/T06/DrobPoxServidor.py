@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import socket
 import hashlib
 from cargar_database_usuarios import cargar_database_usuarios
@@ -80,7 +82,7 @@ class DrobPoxServidor:
                 while data:
                     data_contenido += data
                     ready = select.select([cliente], [], [], 0)
-                    if(ready[0]):
+                    if (ready[0]):
                         data = cliente.recv(1024)
                     else:
                         data = b''

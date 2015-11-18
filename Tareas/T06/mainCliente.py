@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from DrobPoxCliente import DrobPoxCliente
 import socket
 
