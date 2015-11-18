@@ -11,3 +11,6 @@
 
 * Para iniciar un chat con otro usuario, se debe seleccionar el usuario de la lista de amigos y hacer click en Conversar.
 
+* Cuando el usuario "sube un archivo" este se guarda en el directorio principal de su DrobPox.
+
+* Cuando el usuario "sube una carpeta" esta se guarda en el directorio principal de su DrobPox.

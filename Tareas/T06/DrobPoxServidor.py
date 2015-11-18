@@ -3,9 +3,14 @@ import hashlib
 from cargar_database_usuarios import cargar_database_usuarios
 from cargar_database_amistades import cargar_database_amistades
 from cargar_database_chats import cargar_database_chats
+from cargar_database_archivos import cargar_database_archivos
+from cargar_database_arboles import cargar_database_arboles
 from hashear import hashear
 import threading
 import json
+import pickle
+import os
+from time import sleep
 
 
 class DrobPoxServidor:
@@ -33,6 +38,8 @@ class DrobPoxServidor:
         self.database_usuarios = cargar_database_usuarios()
         self.database_amistades = cargar_database_amistades()
         self.database_chats = cargar_database_chats()
+        self.database_archivos = cargar_database_archivos()
+        self.database_arboles = cargar_database_arboles()
 
     def aceptar(self):
         print("SERVIDOR ACTIVO...")
@@ -46,9 +53,41 @@ class DrobPoxServidor:
     def recibir_data(self, cliente):
         while cliente in self.conexiones:
             data = cliente.recv(1024)
-            data_dec = data.decode('utf-8')
+            data_dec = data.decode('utf-8', errors="ignore")
 
-            if data_dec.startswith("ACEPTAR"):
+            if data_dec.startswith("ARCHIVO"):
+                # Recepcion archivos.
+                data_str = ""
+                meta = []  # [Usuario, Padre, Filename]
+                largo_info_meta = 0
+                for B in data:
+                    data_str += chr(B)
+                    if "SEPARADOR123456789ESPECIAL" in data_str:
+                        info = data_str.split("SEPARADOR123456789ESPECIAL")[0]
+                        meta.append(info)
+                        data_str = ""
+                    largo_info_meta += 1
+                    if len(meta) == 4:
+                        break
+
+                usuario = meta[1]
+                padre = meta[2]
+                filename = meta[3]
+                data_archivo = data[largo_info_meta:]
+                if data_archivo:
+                    self.agregar_archivo(usuario, padre, filename, data_archivo)
+                if usuario in self.clientes_conectados.keys():
+                    self.clientes_conectados[usuario].send("ARCHIVO_SUBIDO".encode('utf-8'))
+
+            elif data_dec.startswith("CARPETA"):
+                usuario = data_dec.split("SEPARADOR123456789ESPECIAL")[1]
+                padre = data_dec.split("SEPARADOR123456789ESPECIAL")[2]
+                foldername = data_dec.split("SEPARADOR123456789ESPECIAL")[3]
+                self.agregar_carpeta(usuario, padre, foldername)
+                if usuario in self.clientes_conectados.keys():
+                    self.clientes_conectados[usuario].send("CARPETA_SUBIDA".encode('utf-8'))
+
+            elif data_dec.startswith("ACEPTAR"):
                 usuario = data_dec.split(" ")[1]
                 self.clientes_conectados.update({usuario: cliente})
 
@@ -126,11 +165,67 @@ class DrobPoxServidor:
                                            + mensaje
                     self.clientes_conectados[amigo].send(notificacion_mensaje.encode('utf-8'))
 
+            elif data_dec.startswith("LISTA_ARCHIVOS"):
+                usuario = data_dec.split(" ")[1]
+                arbol = self.database_arboles[usuario]
+                arbol_ser = pickle.dumps(arbol)
+                cliente.send(arbol_ser)
+
             elif data_dec.startswith("QUIT"):
                 usuario = data_dec.split(" ")[1]
                 cliente.send("QUIT".encode('utf-8'))
                 del self.clientes_conectados[usuario]
                 self.conexiones.remove(cliente)
+
+    def agregar_archivo(self, usuario, padre, filename, data_archivo):
+        if padre == "__ROOT__":
+            self.database_archivos[usuario].append(("file", padre, filename, data_archivo))
+            with open("database/database_archivos.txt", "wb") as database_file:
+                pickle.dump(self.database_archivos, database_file)
+
+            self.database_arboles[usuario].append(("file", padre, filename, None))
+            with open("database/database_arboles.txt", "wb") as database_tree_file:
+                pickle.dump(self.database_arboles, database_tree_file)
+
+        else:
+
+            def llegar_a_padre(lista, nombre_archivo, ruta_padre):
+                for (tipo, padre, nombre, contenido) in lista:
+                    if tipo == "folder" and nombre == ruta_padre[0] and len(ruta_padre) == 1:
+                        contenido.append(("file", ruta_padre[0], nombre_archivo, []))
+                        break
+                    elif tipo == "folder" and nombre == ruta_padre[0] and len(ruta_padre) > 1:
+                        llegar_a_padre(contenido, nombre_archivo, ruta_padre[1:])
+                        break
+
+            ruta_padre = padre.split("\\")[1:]
+            llegar_a_padre(self.database_archivos[usuario], filename, ruta_padre)
+            llegar_a_padre(self.database_arboles[usuario], filename, ruta_padre)
+
+    def agregar_carpeta(self, usuario, padre, foldername):
+        if padre == "__ROOT__":
+            self.database_archivos[usuario].append(("folder", padre, foldername, []))
+            with open("database/database_archivos.txt", "wb") as database_file:
+                pickle.dump(self.database_archivos, database_file)
+
+            self.database_arboles[usuario].append(("folder", padre, foldername, []))
+            with open("database/database_arboles.txt", "wb") as database_tree_file:
+                pickle.dump(self.database_arboles, database_tree_file)
+
+        else:
+
+            def llegar_a_padre(lista, nombre_carpeta, ruta_padre):
+                for (tipo, padre, nombre, contenido) in lista:
+                    if tipo == "folder" and nombre == ruta_padre[0] and len(ruta_padre) == 1:
+                        contenido.append(("folder", ruta_padre[0], nombre_carpeta, []))
+                        break
+                    elif tipo == "folder" and nombre == ruta_padre[0] and len(ruta_padre) > 1:
+                        llegar_a_padre(contenido, nombre_carpeta, ruta_padre[1:])
+                        break
+
+            ruta_padre = padre.split("\\")[1:]
+            llegar_a_padre(self.database_archivos[usuario], foldername, ruta_padre)
+            llegar_a_padre(self.database_arboles[usuario], foldername, ruta_padre)
 
     def verificar_ingreso(self, usuario, clave_ing):
         if usuario in self.database_usuarios.keys():
@@ -172,5 +267,14 @@ class DrobPoxServidor:
 
         # Se agrega la lista de amigos.
         self.database_amistades.update({usuario: []})
-        with open("database/database_amistades.txt", "w") as new:
-            json.dump(self.database_amistades, new)
+        with open("database/database_amistades.txt", "w") as new_friend_db:
+            json.dump(self.database_amistades, new_friend_db)
+
+        # Se agrega su base de datos de archivos
+        self.database_archivos.update({usuario: []})
+        with open("database/database_archivos.txt", "wb") as new_files_db:
+            pickle.dump(self.database_archivos, new_files_db)
+        # y arbol.
+        self.database_arboles.update({usuario: []})
+        with open("database/database_arboles.txt", "wb") as new_trees_db:
+            pickle.dump(self.database_arboles, new_trees_db)

@@ -1,7 +1,9 @@
 from PyQt4 import QtGui, uic
 import socket
 import sys
+import os
 import json
+import pickle
 import threading
 from time import sleep
 
@@ -37,14 +39,15 @@ class UsuarioWindow(ventana[0], ventana[1]):
 
         self.EnviarButton.clicked.connect(self.enviar_pressed)
         self.AgregarAmigoButton.clicked.connect(self.agregar_amigo_pressed)
-        self.ActualizarTodoButton.clicked.connect(self.actualizar_todo)
+        self.ActualizarTodoButton.clicked.connect(self.actualizar_todo_pressed)
         self.ConversarButton.clicked.connect(self.conversar_pressed)
+        self.SubirArchivoButton.clicked.connect(self.subir_archivo_pressed)
+        self.SubirCarpetaButton.clicked.connect(self.subir_carpeta_pressed)
+        self.BajarArchivoButton.clicked.connect(self.bajar_archivo_pressed)
+        self.BajarCarpetaButton.clicked.connect(self.bajar_carpeta_pressed)
 
-        item = QtGui.QTreeWidgetItem(self.ArchivosTree)
-        item.setText(0, "Carpeta")
-
-        # Cargar lista de amigos.
-        self.actualizar_lista_amigos()
+        # Cargar todos los datos del usuario.
+        self.start_up()
 
     def setup_networking(self):
         self.socket_usuario = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -71,10 +74,10 @@ class UsuarioWindow(ventana[0], ventana[1]):
         self.thread_escuchador.start()
 
     def escuchar(self):
-        sleep(0.5)
+        sleep(0.2)
         while self.conectado:
             data = self.socket_usuario.recv(1024)
-            data_dec = data.decode('utf-8')
+            data_dec = data.decode('utf-8', errors="ignore")
             if data_dec.startswith("STOP_ESCUCHAR"):
                 self.conectado = False
 
@@ -92,14 +95,19 @@ class UsuarioWindow(ventana[0], ventana[1]):
     def stop_escuchar(self):
         self.socket_usuario.send("STOP_ESCUCHAR".encode('utf-8'))
 
-    def actualizar_todo(self):
-        self.stop_escuchar()
-
+    def start_up(self):
         self.actualizar_lista_amigos()
-
-        # TODO actualizar arbol archivos.
-
+        self.stop_escuchar()
+        self.actualizar_arbol_archivos()
         self.start_escuchar()
+
+    def actualizar_todo_pressed(self):
+        self.CargandoLabel.setText("Cargando...")
+        self.stop_escuchar()
+        self.actualizar_lista_amigos()
+        self.actualizar_arbol_archivos()
+        self.start_escuchar()
+        self.CargandoLabel.setText(" ")
 
     def actualizar_lista_amigos(self):
         data_solicitar = "LISTA_AMIGOS" + " " + self.usuario
@@ -112,6 +120,27 @@ class UsuarioWindow(ventana[0], ventana[1]):
             self.AmigosList.addItem(item_nuevo_amigo)
             self.AmigosList.scrollToItem(item_nuevo_amigo)
             self.AgregarAmigoLineEdit.clear()
+
+    def actualizar_arbol_archivos(self):
+        data_solicitar = "LISTA_ARCHIVOS" + " " + self.usuario
+        sleep(1.6)  # Espera a que el servidor efectivamente haya cargado el archivo.
+        self.socket_usuario.send(data_solicitar.encode('utf-8'))
+        print("ENVIO SOLICITUD ARBOL")
+        recibido = self.socket_usuario.recv(1024)
+        lista_archivos = pickle.loads(recibido)
+        print("RECIBO ARBOL")
+        self.ArchivosTree.clear()
+        self.mostrar_archivos(lista_archivos, self.ArchivosTree)
+
+    def mostrar_archivos(self, lista_archivos, parent):
+        for (tipo, padre, nombre, contenido) in lista_archivos:
+            if tipo == "file":
+                new_file = QtGui.QTreeWidgetItem(parent)
+                new_file.setText(0, nombre)
+            elif tipo == "folder":
+                new_carpeta = QtGui.QTreeWidgetItem(parent)
+                new_carpeta.setText(0, nombre)
+                self.mostrar_archivos(contenido, new_carpeta)
 
     def conversar_pressed(self):
         amigo_seleccionado = self.AmigosList.currentItem()
@@ -192,6 +221,99 @@ class UsuarioWindow(ventana[0], ventana[1]):
                        + "S1E2P3A4R5A6D7O8R9M0A1G2I3C4O5" \
                        + mensaje  # Inclui ese separador para evitar problemas con los espacios del mensaje.
         self.socket_usuario.send(data_enviada.encode('utf-8'))
+
+    def subir_archivo_pressed(self):
+        self.CargandoLabel.setText("Cargando...")
+
+        # Se selecciona el path del archivo.
+        path_archivo = QtGui.QFileDialog.getOpenFileName(self)
+
+        if path_archivo:
+            # Se sube el archivo.
+            self.subir_archivo(path_archivo)
+
+        self.CargandoLabel.setText(" ")
+
+    def subir_archivo(self, path_archivo, parent="__ROOT__"):
+        self.stop_escuchar()
+
+        (filepath, filename) = os.path.split(path_archivo)
+        print("ARCHIVO A SUBIR:", filename)
+
+        # Se lee el archivo en bytes y se guarda la data.
+        with open(path_archivo, "rb") as nuevo_archivo:
+            data_archivo = nuevo_archivo.read()
+
+        meta = "ARCHIVO" \
+               + "SEPARADOR123456789ESPECIAL" \
+               + self.usuario \
+               + "SEPARADOR123456789ESPECIAL" \
+               + parent \
+               + "SEPARADOR123456789ESPECIAL" \
+               + filename \
+               + "SEPARADOR123456789ESPECIAL"
+
+        data_enviar = meta.encode('utf-8') + data_archivo
+
+        self.socket_usuario.send(data_enviar)
+        verificacion = self.socket_usuario.recv(1024).decode('utf-8')
+        if verificacion == "ARCHIVO_SUBIDO":
+            print("RECIBI QUE EL ARCHIVO SE SUBIO")
+            self.actualizar_arbol_archivos()
+
+        self.start_escuchar()
+
+    def subir_carpeta_pressed(self):
+        self.CargandoLabel.setText("Cargando...")
+
+        # Se selecciona el path de la carpeta.
+        path_carpeta = QtGui.QFileDialog.getExistingDirectory(self)
+
+        if path_carpeta:
+            # Se sube la carpeta.
+            self.subir_carpeta(path_carpeta)
+
+        self.CargandoLabel.setText(" ")
+
+    def subir_carpeta(self, path_carpeta, parent="__ROOT__"):
+        (folderpath, foldername) = os.path.split(path_carpeta)
+        self.stop_escuchar()
+
+        meta = "CARPETA" \
+               + "SEPARADOR123456789ESPECIAL" \
+               + self.usuario \
+               + "SEPARADOR123456789ESPECIAL" \
+               + parent \
+               + "SEPARADOR123456789ESPECIAL" \
+               + foldername
+
+        data_enviar = meta.encode('utf-8')
+        self.socket_usuario.send(data_enviar)
+
+        verificacion = self.socket_usuario.recv(1024).decode('utf-8')
+        if verificacion == "CARPETA_SUBIDA":
+            self.actualizar_arbol_archivos()
+
+        self.start_escuchar()
+
+        new_parent = os.path.join(parent, foldername)
+        for f in os.listdir(path_carpeta):
+            sleep(0.8)
+            if os.path.isdir(os.path.join(path_carpeta, f)):  # Si es una carpeta.
+                pathcarpeta = os.path.join(path_carpeta, f)
+                self.subir_carpeta(pathcarpeta, new_parent)
+
+            elif os.path.isfile(os.path.join(path_carpeta, f)):  # Si es un archivo.
+                patharchivo = os.path.join(path_carpeta, f)
+                self.subir_archivo(patharchivo, new_parent)
+
+    def bajar_archivo_pressed(self):
+        # TODO
+        pass
+
+    def bajar_carpeta_pressed(self):
+        # TODO
+        pass
 
     def closeEvent(self, QCloseEvent):
         self.stop_escuchar()
