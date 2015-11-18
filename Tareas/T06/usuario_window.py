@@ -1,11 +1,13 @@
 from PyQt4 import QtGui, uic
 import socket
+import select
 import sys
 import os
 import json
 import pickle
 import threading
 from time import sleep
+from get_tree_path import get_tree_path
 
 ventana = uic.loadUiType("main_gui.ui")
 
@@ -241,7 +243,7 @@ class UsuarioWindow(ventana[0], ventana[1]):
         with open(path_archivo, "rb") as nuevo_archivo:
             data_archivo = nuevo_archivo.read()
 
-        meta = "ARCHIVO" \
+        meta = "SUBIR_ARCHIVO" \
                + "SEPARADOR123456789ESPECIAL" \
                + self.usuario \
                + "SEPARADOR123456789ESPECIAL" \
@@ -255,7 +257,6 @@ class UsuarioWindow(ventana[0], ventana[1]):
         self.socket_usuario.send(data_enviar)
         verificacion = self.socket_usuario.recv(1024).decode('utf-8')
         if verificacion == "ARCHIVO_SUBIDO":
-            print("RECIBI QUE EL ARCHIVO SE SUBIO")
             self.actualizar_arbol_archivos()
 
         self.start_escuchar()
@@ -277,7 +278,7 @@ class UsuarioWindow(ventana[0], ventana[1]):
 
         self.stop_escuchar()
 
-        meta = "CARPETA" \
+        meta = "SUBIR_CARPETA" \
                + "SEPARADOR123456789ESPECIAL" \
                + self.usuario \
                + "SEPARADOR123456789ESPECIAL" \
@@ -306,8 +307,52 @@ class UsuarioWindow(ventana[0], ventana[1]):
                 self.subir_archivo(patharchivo, new_parent)
 
     def bajar_archivo_pressed(self):
-        # TODO
-        pass
+        archivo_seleccionado = self.ArchivosTree.currentItem()
+        if archivo_seleccionado:
+            nombre_archivo = archivo_seleccionado.text(0)
+            ruta_hijo = get_tree_path(archivo_seleccionado)
+            path_destino = QtGui.QFileDialog.getExistingDirectory(self)
+            if path_destino:
+                self.bajar_archivo(nombre_archivo, ruta_hijo, path_destino)
+        else:
+            QtGui.QMessageBox.critical(None,
+                                       'ERROR',
+                                       "No ha seleccionado un archivo para descargar.",
+                                       QtGui.QMessageBox.Ok)
+
+    def bajar_archivo(self, nombre_archivo, ruta_hijo, path_destino):
+        self.stop_escuchar()
+
+        solicitud_bajada = "BAJAR_ARCHIVO" \
+                           + "SEPARADOR123456789ESPECIAL" \
+                           + self.usuario \
+                           + "SEPARADOR123456789ESPECIAL" \
+                           + nombre_archivo \
+                           + "SEPARADOR123456789ESPECIAL" \
+                           + ruta_hijo
+
+        self.socket_usuario.send(solicitud_bajada.encode('utf-8'))
+
+        data_recibida = self.socket_usuario.recv(1024)
+
+        if "ERROR" not in data_recibida[:6].decode('utf-8', errors="ignore"):
+
+            with open(os.path.join(path_destino, nombre_archivo), 'wb+') as f:
+                while data_recibida:
+                    f.write(data_recibida)
+                    ready = select.select([self.socket_usuario], [], [], 0)
+                    if (ready[0]):
+                        data_recibida = self.socket_usuario.recv(1024)
+                    else:
+                        data_recibida = b''
+
+        else:
+            QtGui.QMessageBox.critical(None,
+                                       'ERROR',
+                                       "Si desea bajar una carpeta, utilice el boton correcto.",
+                                       QtGui.QMessageBox.Ok)
+
+        self.start_escuchar()
 
     def bajar_carpeta_pressed(self):
         # TODO

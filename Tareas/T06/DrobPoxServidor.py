@@ -56,7 +56,7 @@ class DrobPoxServidor:
             data = cliente.recv(1024)
             data_dec = data.decode('utf-8', errors="ignore")
 
-            if data_dec.startswith("ARCHIVO"):
+            if data_dec.startswith("SUBIR_ARCHIVO"):
                 # Recepcion archivos.
                 data_str = ""
                 meta = []  # [Usuario, Padre, Filename]
@@ -90,13 +90,26 @@ class DrobPoxServidor:
                 if usuario in self.clientes_conectados.keys():
                     self.clientes_conectados[usuario].send("ARCHIVO_SUBIDO".encode('utf-8'))
 
-            elif data_dec.startswith("CARPETA"):
+            elif data_dec.startswith("SUBIR_CARPETA"):
                 usuario = data_dec.split("SEPARADOR123456789ESPECIAL")[1]
                 padre = data_dec.split("SEPARADOR123456789ESPECIAL")[2]
                 foldername = data_dec.split("SEPARADOR123456789ESPECIAL")[3]
                 self.agregar_carpeta(usuario, padre, foldername)
                 if usuario in self.clientes_conectados.keys():
                     self.clientes_conectados[usuario].send("CARPETA_SUBIDA".encode('utf-8'))
+
+            elif data_dec.startswith("BAJAR_ARCHIVO"):
+                usuario = data_dec.split("SEPARADOR123456789ESPECIAL")[1]
+                nombre_archivo = data_dec.split("SEPARADOR123456789ESPECIAL")[2]
+                ruta_hijo = data_dec.split("SEPARADOR123456789ESPECIAL")[3]
+
+                data_archivo = self.enviar_archivo(usuario, nombre_archivo, ruta_hijo)
+
+                if usuario in self.clientes_conectados.keys():
+                    if data_archivo != "ERROR":
+                        cliente.send(data_archivo)
+                    else:
+                        cliente.send("ERROR".encode("utf-8"))
 
             elif data_dec.startswith("ACEPTAR"):
                 usuario = data_dec.split(" ")[1]
@@ -270,6 +283,24 @@ class DrobPoxServidor:
             ruta_padre = padre.split("\\")[1:]
             llegar_a_padre(self.database_archivos[usuario], foldername, ruta_padre)
             llegar_a_padre(self.database_arboles[usuario], foldername, ruta_padre)
+
+    def enviar_archivo(self, usuario, nombre_archivo, ruta_hijo):
+
+        def obtener_data_hijo(lista, nombre_archivo, ruta_hijo):
+            print(ruta_hijo)
+            for (tipo, padre, nombre, contenido) in lista:
+                if len(ruta_hijo) == 1 and tipo == "file" and nombre == nombre_archivo:
+                    print("ARCHIVO ENCONTRADO!", nombre_archivo)
+                    return contenido
+                elif len(ruta_hijo) > 1 and tipo == "folder" and nombre == ruta_hijo[0]:
+                    return obtener_data_hijo(contenido, nombre_archivo, ruta_hijo[1:])
+            print("ERROR")
+            return "ERROR"
+
+        ruta_hijo = ruta_hijo.split("\\")
+        data_archivo = obtener_data_hijo(self.database_archivos[usuario], nombre_archivo, ruta_hijo)
+
+        return data_archivo
 
     def verificar_ingreso(self, usuario, clave_ing):
         if usuario in self.database_usuarios.keys():
