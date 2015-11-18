@@ -86,7 +86,7 @@ class DrobPoxServidor:
 
                 if data_contenido:
                     self.agregar_archivo(usuario, padre, filename, data_contenido)
-                print(self.database_arboles)
+
                 if usuario in self.clientes_conectados.keys():
                     self.clientes_conectados[usuario].send("ARCHIVO_SUBIDO".encode('utf-8'))
 
@@ -202,27 +202,38 @@ class DrobPoxServidor:
                     break
 
             self.database_archivos[usuario].append(("file", padre, filename, data_archivo))
-            with open("database/database_archivos.txt", "wb") as database_file:
-                pickle.dump(self.database_archivos, database_file)
-
             self.database_arboles[usuario].append(("file", padre, filename, None))
-            with open("database/database_arboles.txt", "wb") as database_tree_file:
-                pickle.dump(self.database_arboles, database_tree_file)
+
 
         else:
 
-            def llegar_a_padre(lista, nombre_archivo, ruta_padre):
+            def llegar_a_padre_arbol(lista, nombre_archivo, ruta_padre):
                 for (tipo, padre, nombre, contenido) in lista:
                     if tipo == "folder" and nombre == ruta_padre[0] and len(ruta_padre) == 1:
                         contenido.append(("file", ruta_padre[0], nombre_archivo, []))
                         break
                     elif tipo == "folder" and nombre == ruta_padre[0] and len(ruta_padre) > 1:
-                        llegar_a_padre(contenido, nombre_archivo, ruta_padre[1:])
+                        llegar_a_padre_arbol(contenido, nombre_archivo, ruta_padre[1:])
+                        break
+
+            def llegar_a_padre_archivos(lista, nombre_archivo, ruta_padre, data_archivo):
+                for (tipo, padre, nombre, contenido) in lista:
+                    if tipo == "folder" and nombre == ruta_padre[0] and len(ruta_padre) == 1:
+                        contenido.append(("file", ruta_padre[0], nombre_archivo, data_archivo))
+                        break
+                    elif tipo == "folder" and nombre == ruta_padre[0] and len(ruta_padre) > 1:
+                        llegar_a_padre_archivos(contenido, nombre_archivo, ruta_padre[1:], data_archivo)
                         break
 
             ruta_padre = padre.split("\\")[1:]
-            llegar_a_padre(self.database_archivos[usuario], filename, ruta_padre)
-            llegar_a_padre(self.database_arboles[usuario], filename, ruta_padre)
+            llegar_a_padre_arbol(self.database_arboles[usuario], filename, ruta_padre)
+            llegar_a_padre_archivos(self.database_archivos[usuario], filename, ruta_padre, data_archivo)
+
+        with open("database/database_archivos.txt", "wb") as database_file:
+            pickle.dump(self.database_archivos, database_file)
+
+        with open("database/database_arboles.txt", "wb") as database_tree_file:
+            pickle.dump(self.database_arboles, database_tree_file)
 
     def agregar_carpeta(self, usuario, padre, foldername):
         if padre == "__ROOT__":
