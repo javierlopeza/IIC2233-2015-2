@@ -9,6 +9,7 @@ from hashear import hashear
 import threading
 import json
 import pickle
+import select
 import os
 from time import sleep
 
@@ -73,9 +74,19 @@ class DrobPoxServidor:
                 usuario = meta[1]
                 padre = meta[2]
                 filename = meta[3]
-                data_archivo = data[largo_info_meta:]
-                if data_archivo:
-                    self.agregar_archivo(usuario, padre, filename, data_archivo)
+                data_contenido = data[largo_info_meta:]
+
+                while data:
+                    data_contenido += data
+                    ready = select.select([cliente], [], [], 0)
+                    if(ready[0]):
+                        data = cliente.recv(1024)
+                    else:
+                        data = b''
+
+                if data_contenido:
+                    self.agregar_archivo(usuario, padre, filename, data_contenido)
+                print(self.database_arboles)
                 if usuario in self.clientes_conectados.keys():
                     self.clientes_conectados[usuario].send("ARCHIVO_SUBIDO".encode('utf-8'))
 
