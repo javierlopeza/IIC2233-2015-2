@@ -114,6 +114,18 @@ class DrobPoxServidor:
                     else:
                         cliente.send("ERROR".encode("utf-8"))
 
+            elif data_dec.startswith("BAJAR_CARPETA"):
+                usuario = data_dec.split("SEPARADOR123456789ESPECIAL")[1]
+                nombre_carpeta = data_dec.split("SEPARADOR123456789ESPECIAL")[2]
+                ruta_llegar = data_dec.split("SEPARADOR123456789ESPECIAL")[3]
+                ruta_llegar = ruta_llegar.split("\\")
+
+                carpeta = self.encontrar_carpeta(usuario, nombre_carpeta, ruta_llegar)
+                data_enviar_carpeta = self.enviar_carpeta(usuario, carpeta)
+
+                cliente.send(data_enviar_carpeta)
+
+
             elif data_dec.startswith("ACEPTAR"):
                 usuario = data_dec.split(" ")[1]
                 self.clientes_conectados.update({usuario: cliente})
@@ -301,6 +313,38 @@ class DrobPoxServidor:
         data_archivo = obtener_data_hijo(self.database_archivos[usuario], nombre_archivo, ruta_hijo)
 
         return data_archivo
+
+
+    def encontrar_carpeta(self, usuario, nombre_carpeta, ruta_llegar):
+
+        print("ARCHIVOS", self.database_archivos[usuario])
+
+        def obtener_data_carpeta(lista, nombre_carpeta, ruta_llegar):
+            for (tipo, padre, nombre, contenido) in lista:
+                if len(ruta_llegar) == 1 and tipo == "folder" and nombre == nombre_carpeta:
+                    print("ENCONTRE LA CARPETA!!")
+                    return (tipo, padre, nombre, contenido)
+                elif len(ruta_llegar) > 1 and tipo == "folder" and nombre == ruta_llegar[0]:
+                    return obtener_data_carpeta(contenido, nombre_carpeta, ruta_llegar[1:])
+            return "ERROR"
+
+        print(ruta_llegar)
+        data_carpeta = obtener_data_carpeta(self.database_archivos[usuario], nombre_carpeta, ruta_llegar)
+        print("DATA", data_carpeta)
+        return data_carpeta
+
+    def enviar_carpeta(self, usuario, carpeta):
+        print(carpeta[0])
+
+        with open("data_carpeta_{}.txt".format(usuario), "wb+") as data_carpeta_file:
+            pickle.dump(carpeta, data_carpeta_file)
+
+        with open("data_carpeta_{}.txt".format(usuario), "rb") as data_carpeta_file:
+            data_enviar_carpeta = data_carpeta_file.read()
+
+        os.remove("data_carpeta_{}.txt".format(usuario))
+
+        return data_enviar_carpeta
 
     def verificar_ingreso(self, usuario, clave_ing):
         if usuario in self.database_usuarios.keys():

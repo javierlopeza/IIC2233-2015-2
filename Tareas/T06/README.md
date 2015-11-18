@@ -4,6 +4,8 @@
 
 * Permitir eliminar archivos y carpetas.
 
+* Fix tiempo carga de archivos y carpetas.
+
 
 ### Consideraciones
 
@@ -17,10 +19,10 @@
 
 * Cuando el usuario "sube una carpeta" esta se guarda en el directorio principal de su DrobPox.
 
-* La subida de archivos y carpetas demora un poco, pero resulta. Incluso a veces puede quedar unos segundos en "No Responde", pero un par de segundos despues la carga se efectua sin problemas.
+* **ARREGLAR:** La subida de archivos y carpetas demora un poco, pero resulta. Incluso a veces puede quedar unos segundos en "No Responde", pero un par de segundos despues la carga se efectua sin problemas.
 
 * Si se sube una carpeta o un archivo que ya se encontraba en el directorio principal, se reemplaza completamente.
 
-* Si se quiere bajar un archivo, se debe seleccionar uno del arbol en la interfaz y hacer click en el boton Bajar Archivo. El programa no permitira bajar una carpeta con este boton. Funciona analogamente para la descarga de carpetas.
+* Si se quiere bajar un archivo, se debe seleccionar uno del arbol en la interfaz y hacer click en el boton Bajar Archivo, el programa no permitira bajar una carpeta con este boton. Funciona de manera analoga para la descarga de carpetas.
 
 

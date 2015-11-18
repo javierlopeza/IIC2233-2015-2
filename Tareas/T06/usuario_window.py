@@ -375,7 +375,89 @@ class UsuarioWindow(ventana[0], ventana[1]):
                                        QtGui.QMessageBox.Ok)
 
     def bajar_carpeta(self, nombre_carpeta, ruta_llegar, path_destino):
-        print(os.path.join(path_destino, ""))
+        self.stop_escuchar()
+
+        print(nombre_carpeta)
+        print(ruta_llegar)
+        dir_destino = os.path.join(path_destino, nombre_carpeta)
+        print(dir_destino)
+
+        if not os.path.exists(dir_destino):
+
+            solicitud_bajada = "BAJAR_CARPETA" \
+                               + "SEPARADOR123456789ESPECIAL" \
+                               + self.usuario \
+                               + "SEPARADOR123456789ESPECIAL" \
+                               + nombre_carpeta \
+                               + "SEPARADOR123456789ESPECIAL" \
+                               + ruta_llegar
+
+            self.socket_usuario.send(solicitud_bajada.encode('utf-8'))
+            print("COMIENZA RECEPCION CARPETA")
+            data = self.socket_usuario.recv(1024)
+
+            if "ERROR" not in data[:6].decode('utf-8', errors="ignore"):
+                data_contenido = b''
+                while data:
+                    print("SIGUE RECEPCION CARPETA")
+                    data_contenido += data
+                    ready = select.select([self.socket_usuario], [], [], 0)
+                    if (ready[0]):
+                        data = self.socket_usuario.recv(1024)
+                    else:
+                        data = b''
+
+                print("PROCESANDO CARPETA RECIBIDA")
+                with open("carpeta_{}.txt".format(nombre_carpeta), "wb+") as file_carpeta:
+                    file_carpeta.write(data_contenido)
+
+                with open("carpeta_{}.txt".format(nombre_carpeta), "rb") as file_carpeta:
+                    data_carpeta = pickle.load(file_carpeta)
+
+                os.remove("carpeta_{}.txt".format(nombre_carpeta))
+
+                self.escribir_carpeta(data_carpeta, path_destino)
+
+            else:
+                QtGui.QMessageBox.critical(None,
+                                       'ERROR',
+                                       "No se ha podido descargar la carpeta.",
+                                       QtGui.QMessageBox.Ok)
+
+
+        else:
+            QtGui.QMessageBox.critical(None,
+                                       'ERROR',
+                                       "Ya existe una carpeta con el mismo nombre en el destino seleccionado.",
+                                       QtGui.QMessageBox.Ok)
+        self.start_escuchar()
+
+
+    def escribir_archivo(self, path_destino, file_data):
+            with open(path_destino, "wb+") as new_file:
+                new_file.write(file_data)
+
+    def escribir_carpeta(self, data_carpeta, path):
+        # Se crea la carpeta.
+        dir_nueva_carpeta = os.path.join(path, data_carpeta[2])
+        if not os.path.exists(dir_nueva_carpeta):
+            os.makedirs(dir_nueva_carpeta)
+
+            for (tipo, padre, nombre, contenido) in data_carpeta[3]:
+                if tipo == "file":
+                    path_file = os.path.join(dir_nueva_carpeta, nombre)
+                    self.escribir_archivo(path_file, contenido)
+
+                elif tipo == "folder":
+                    self.escribir_carpeta((tipo, padre, nombre, contenido), dir_nueva_carpeta)
+
+        else:
+            QtGui.QMessageBox.critical(None,
+                                       'ERROR',
+                                       "Ya existe una carpeta con el mismo nombre en el destino seleccionado.",
+                                       QtGui.QMessageBox.Ok)
+
+
 
 
 
