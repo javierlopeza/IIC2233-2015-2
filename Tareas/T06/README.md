@@ -2,6 +2,8 @@
 
 ### Pendiente
 
+* Permitir eliminar archivos y carpetas.
+
 
 ### Consideraciones
 
@@ -14,3 +16,9 @@
 * Cuando el usuario "sube un archivo" este se guarda en el directorio principal de su DrobPox.
 
 * Cuando el usuario "sube una carpeta" esta se guarda en el directorio principal de su DrobPox.
+
+* La subida de archivos y carpetas demora un poco, pero resulta.
+
+* Si se sube una carpeta o un archivo que ya se encontraba en el directorio principal, se reemplaza completamente.
+
+* 

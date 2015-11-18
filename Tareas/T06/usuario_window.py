@@ -125,10 +125,8 @@ class UsuarioWindow(ventana[0], ventana[1]):
         data_solicitar = "LISTA_ARCHIVOS" + " " + self.usuario
         sleep(1.6)  # Espera a que el servidor efectivamente haya cargado el archivo.
         self.socket_usuario.send(data_solicitar.encode('utf-8'))
-        print("ENVIO SOLICITUD ARBOL")
         recibido = self.socket_usuario.recv(1024)
         lista_archivos = pickle.loads(recibido)
-        print("RECIBO ARBOL")
         self.ArchivosTree.clear()
         self.mostrar_archivos(lista_archivos, self.ArchivosTree)
 
@@ -238,7 +236,6 @@ class UsuarioWindow(ventana[0], ventana[1]):
         self.stop_escuchar()
 
         (filepath, filename) = os.path.split(path_archivo)
-        print("ARCHIVO A SUBIR:", filename)
 
         # Se lee el archivo en bytes y se guarda la data.
         with open(path_archivo, "rb") as nuevo_archivo:
@@ -277,6 +274,7 @@ class UsuarioWindow(ventana[0], ventana[1]):
 
     def subir_carpeta(self, path_carpeta, parent="__ROOT__"):
         (folderpath, foldername) = os.path.split(path_carpeta)
+
         self.stop_escuchar()
 
         meta = "CARPETA" \

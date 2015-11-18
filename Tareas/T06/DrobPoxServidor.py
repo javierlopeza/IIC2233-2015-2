@@ -179,6 +179,17 @@ class DrobPoxServidor:
 
     def agregar_archivo(self, usuario, padre, filename, data_archivo):
         if padre == "__ROOT__":
+            # Se revisa pre existencia del archivo.
+            for i in range(len(self.database_archivos[usuario])):
+                if self.database_archivos[usuario][i][2] == filename:
+                    del self.database_archivos[usuario][i]
+                    break
+
+            for i in range(len(self.database_arboles[usuario])):
+                if self.database_arboles[usuario][i][2] == filename:
+                    del self.database_arboles[usuario][i]
+                    break
+
             self.database_archivos[usuario].append(("file", padre, filename, data_archivo))
             with open("database/database_archivos.txt", "wb") as database_file:
                 pickle.dump(self.database_archivos, database_file)
@@ -204,6 +215,17 @@ class DrobPoxServidor:
 
     def agregar_carpeta(self, usuario, padre, foldername):
         if padre == "__ROOT__":
+            # Se revisa pre existencia de la carpeta.
+            for i in range(len(self.database_archivos[usuario])):
+                if self.database_archivos[usuario][i][2] == foldername:
+                    del self.database_archivos[usuario][i]
+                    break
+
+            for i in range(len(self.database_arboles[usuario])):
+                if self.database_arboles[usuario][i][2] == foldername:
+                    del self.database_arboles[usuario][i]
+                    break
+
             self.database_archivos[usuario].append(("folder", padre, foldername, []))
             with open("database/database_archivos.txt", "wb") as database_file:
                 pickle.dump(self.database_archivos, database_file)
