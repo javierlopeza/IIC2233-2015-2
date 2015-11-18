@@ -74,8 +74,9 @@ class DrobPoxServidor:
                 usuario = meta[1]
                 padre = meta[2]
                 filename = meta[3]
-                data_contenido = data[largo_info_meta:]
+                data = data[largo_info_meta:]
 
+                data_contenido = b''
                 while data:
                     data_contenido += data
                     ready = select.select([cliente], [], [], 0)
@@ -287,14 +288,11 @@ class DrobPoxServidor:
     def enviar_archivo(self, usuario, nombre_archivo, ruta_hijo):
 
         def obtener_data_hijo(lista, nombre_archivo, ruta_hijo):
-            print(ruta_hijo)
             for (tipo, padre, nombre, contenido) in lista:
                 if len(ruta_hijo) == 1 and tipo == "file" and nombre == nombre_archivo:
-                    print("ARCHIVO ENCONTRADO!", nombre_archivo)
                     return contenido
                 elif len(ruta_hijo) > 1 and tipo == "folder" and nombre == ruta_hijo[0]:
                     return obtener_data_hijo(contenido, nombre_archivo, ruta_hijo[1:])
-            print("ERROR")
             return "ERROR"
 
         ruta_hijo = ruta_hijo.split("\\")
