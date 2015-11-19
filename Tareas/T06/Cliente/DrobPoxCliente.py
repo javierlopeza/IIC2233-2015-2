@@ -3,6 +3,7 @@
 from PyQt4 import QtGui
 from Cliente.login_window import LoginWindow
 
+
 class DrobPoxCliente:
     def __init__(self, host, port):
         self.app = QtGui.QApplication([])

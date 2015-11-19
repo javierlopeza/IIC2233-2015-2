@@ -492,7 +492,9 @@ class UsuarioWindow(ventana[0], ventana[1]):
                     QtGui.QMessageBox.critical(None, 'ERROR', "Los nombres coinciden, "
                                                               "no esta cambiando el nombre.", QtGui.QMessageBox.Ok)
             else:
-                QtGui.QMessageBox.critical(None, 'ERROR', "Verifique el nombre ingresado, no puede contener puntos '.'.", QtGui.QMessageBox.Ok)
+                QtGui.QMessageBox.critical(None, 'ERROR',
+                                           "Verifique el nombre ingresado, no puede contener puntos '.'.",
+                                           QtGui.QMessageBox.Ok)
         else:
             QtGui.QMessageBox.critical(None, 'ERROR', "Seleccione un archivo de su DrobPox.", QtGui.QMessageBox.Ok)
 

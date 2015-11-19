@@ -1,11 +1,21 @@
 ﻿## Tarea 06
 
-### Ahora
+
+### Ejemplo Interfaz Funcionando
+
+En la imagen *ejemplo_interfaz.jpg* que se encuentra en la carpeta ````T06```` se puede ver un ejemplo del programa funcionando. La imagen fue tomada cuando todas las funcionalidades mostradas estaban implementadas.
 
 
-### Pendiente
+### Estructura de Archivos
 
-* Fix tiempo carga de archivos y carpetas.
+* Para que el Cliente corra bien en un computador, se deben tener todos los archivos de la carpeta Cliente. Para correr el Cliente se debe ejecutar ````mainCliente.py````.
+
+* Para que el Servidor corra bien en un computador, se deben tener todos los archivos de la carpeta Servidor. Para correr el Servidor se debe ejecutar ````mainServidor.py````.
+
+
+### HOST & PORT
+
+En los programas ````mainCliente.py```` y ````mainServidor.py```` se ven a primera vista las variables ````HOST```` y ````PORT```` que hay que cambiar.
 
 
 ### Completado
