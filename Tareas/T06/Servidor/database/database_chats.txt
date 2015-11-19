@@ -1,1 +1,0 @@
-{"JavierLopez-JuanPerez": ["JavierLopez: Hola Juan", "JuanPerez: Hola Javier", "JuanPerez: Como estas?", "JavierLopez: Bien y tu? (\u00b0 \u035c \u00b0)", "JuanPerez: Mal, me fue mal en la tarea de progra (\u00b0\ufe35\u00b0)", "JavierLopez: (\u00b0o\u00b0)"]}
