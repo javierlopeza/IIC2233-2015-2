@@ -14,6 +14,16 @@
 
 ### Consideraciones
 
+* Se recomienda tratar con cuidado la interfaz para evitar que se caiga o pegue :pray::
+
+	* Esperar unos segundos entre cada acción a realizar :clock2:.
+
+	* No hacer clicks seguidos en los botones, con un click y paciencia basta :relieved:.
+
+	* **ARREGLAR:** Al subir carpetas pareciera que se queda pegado pero es solo momentaneo, luego de unos segundos se actualiza bien :+1:.
+
+	* No se recomienda subir archivos tan pesados, es DrobPox no DropBox :disappointed:.
+
 * El boton Actualizar Todo, actualiza la lista de amigos y los archivos mostrados.
 
 * Cuando yo agrego un usuario a mi lista de amigos, automaticamente queda registrado en mi lista de amigos. De la misma forma, yo soy agregado automaticamente a su lista de amigos.
@@ -34,3 +44,4 @@
 
 * Para enviar un archivo a un amigo, este se debe encontrar en linea, ya que debe aceptar (o rechazar) la notificacion que le pregunta por el envio. En caso de aceptar el envio, debe seleccionar en que lugar de su computador se guardara el archivo. Solo se permitira el envio de archivos, no de carpetas (no se pasa por encima de ningun aspecto del enunciado).
  
+* Al recibir un archivo enviado por un amigo, este se guarda con el nombre original en el destino elegido.
