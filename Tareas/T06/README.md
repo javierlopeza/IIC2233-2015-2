@@ -2,9 +2,6 @@
 
 ### Ahora
 
-* Renombrar archivos.
-
-* Renombrar carpetas.
 
 ### Pendiente
 
@@ -43,7 +40,9 @@
 
 * Historial de modificaciones de carpetas y archivos observados.
 
-* Eliminar archivos (**bonus**).
+* Eliminar archivos y carpetas (**bonus**).
+
+* Renombrar archivos y carpetas (**bonus**).
 
 
 ### Consideraciones
@@ -94,6 +93,7 @@
 
 * **BONUS** Para borrar una carpeta se debe seleccionar una en el arbol de archivos y hacer click en el boton Borrar Carpeta.
 
-* 
+* **BONUS** Para renombrar un archivo se debe seleccionar uno en el arbol de archivos y hacer click en el boton Renombrar Archivo, habiendo escrito el nuevo nombre del archivo en el campo inferior al boton.
 
+* **BONUS** Para renombrar una carpeta se debe seleccionar una en el arbol de archivos y hacer click en el boton Renombrar Carpeta, habiendo escrito el nuevo nombre de la carpeta en el campo inferior al boton.
 

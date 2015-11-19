@@ -167,6 +167,15 @@ class DrobPoxServidor:
                                  "eliminar archivos con este boton.".encode('utf-8'))
 
                 else:
+                    tiempo = str(datetime.now()).split(".")[0]
+                    padre = ruta_hijo
+                    path_log = "__ROOT__" + "\\" + padre
+                    log_historial = '{0} - REMOVED  "{1}" by {2}'.format(tiempo, path_log, usuario)
+
+                    self.database_historiales[usuario].append(log_historial)
+                    with open("database/database_historiales.txt", "w") as historiales:
+                        json.dump(self.database_historiales, historiales)
+
                     cliente.send("TODO_OK".encode('utf-8'))
 
             elif data_dec.startswith("RENOMBRAR_ARCHIVO"):
@@ -181,6 +190,18 @@ class DrobPoxServidor:
                                  "renombrar archivos con este boton.".encode('utf-8'))
 
                 else:
+                    tiempo = str(datetime.now()).split(".")[0]
+                    padre = ruta_hijo
+                    path_log = "__ROOT__" + "\\" + padre
+                    log_historial = '{0} - RENAMED  "{1}" to "{3}" by {2}'.format(tiempo,
+                                                                                  path_log,
+                                                                                  usuario,
+                                                                                  nuevo_nombre)
+
+                    self.database_historiales[usuario].append(log_historial)
+                    with open("database/database_historiales.txt", "w") as historiales:
+                        json.dump(self.database_historiales, historiales)
+
                     cliente.send("TODO_OK".encode('utf-8'))
 
             elif data_dec.startswith("ELIMINAR_CARPETA"):
@@ -194,6 +215,15 @@ class DrobPoxServidor:
                                  "eliminar carpetas con este boton.".encode('utf-8'))
 
                 else:
+                    tiempo = str(datetime.now()).split(".")[0]
+                    padre = ruta_hijo
+                    path_log = "__ROOT__" + "\\" + padre
+                    log_historial = '{0} - REMOVED  "{1}" by {2}'.format(tiempo, path_log, usuario)
+
+                    self.database_historiales[usuario].append(log_historial)
+                    with open("database/database_historiales.txt", "w") as historiales:
+                        json.dump(self.database_historiales, historiales)
+
                     cliente.send("TODO_OK".encode('utf-8'))
 
             elif data_dec.startswith("RENOMBRAR_CARPETA"):
@@ -208,6 +238,18 @@ class DrobPoxServidor:
                                  "renombrar carpetas con este boton.".encode('utf-8'))
 
                 else:
+                    tiempo = str(datetime.now()).split(".")[0]
+                    padre = ruta_hijo
+                    path_log = "__ROOT__" + "\\" + padre
+                    log_historial = '{0} - RENAMED  "{1}" to "{3}" by {2}'.format(tiempo,
+                                                                                  path_log,
+                                                                                  usuario,
+                                                                                  nuevo_nombre)
+
+                    self.database_historiales[usuario].append(log_historial)
+                    with open("database/database_historiales.txt", "w") as historiales:
+                        json.dump(self.database_historiales, historiales)
+
                     cliente.send("TODO_OK".encode('utf-8'))
 
             elif data_dec.startswith("ACEPTAR"):
