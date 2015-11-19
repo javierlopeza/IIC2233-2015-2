@@ -1,9 +1,5 @@
-import os
-'''
-directory = os.path.dirname("C:\\Users\\Javier\\Desktop\\Anto123\\javier\\bacanmusica\\")
-if not os.path.exists(directory):
-    os.makedirs(directory)
-'''
+from datetime import datetime
+from time import sleep
 
-a= (1,2,3,4)
-print(a[0:3])
+print("REMOVED  archivo")
+print("ADDED    archivo")

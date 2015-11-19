@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>941</width>
-    <height>651</height>
+    <width>1230</width>
+    <height>704</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>530</x>
-     <y>80</y>
+     <y>90</y>
      <width>141</width>
      <height>31</height>
     </rect>
@@ -30,7 +30,7 @@
    <property name="geometry">
     <rect>
      <x>530</x>
-     <y>120</y>
+     <y>130</y>
      <width>141</width>
      <height>31</height>
     </rect>
@@ -43,10 +43,16 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>60</y>
+     <y>70</y>
      <width>321</width>
      <height>241</height>
     </rect>
+   </property>
+   <property name="verticalScrollBarPolicy">
+    <enum>Qt::ScrollBarAlwaysOn</enum>
+   </property>
+   <property name="horizontalScrollBarPolicy">
+    <enum>Qt::ScrollBarAlwaysOn</enum>
    </property>
    <property name="animated">
     <bool>true</bool>
@@ -61,9 +67,9 @@
    <property name="geometry">
     <rect>
      <x>530</x>
-     <y>180</y>
+     <y>250</y>
      <width>141</width>
-     <height>101</height>
+     <height>41</height>
     </rect>
    </property>
    <property name="text">
@@ -74,9 +80,9 @@
    <property name="geometry">
     <rect>
      <x>730</x>
-     <y>50</y>
+     <y>360</y>
      <width>181</width>
-     <height>211</height>
+     <height>281</height>
     </rect>
    </property>
   </widget>
@@ -84,7 +90,7 @@
    <property name="geometry">
     <rect>
      <x>740</x>
-     <y>20</y>
+     <y>330</y>
      <width>161</width>
      <height>21</height>
     </rect>
@@ -105,7 +111,7 @@
    <property name="geometry">
     <rect>
      <x>730</x>
-     <y>270</y>
+     <y>650</y>
      <width>81</width>
      <height>31</height>
     </rect>
@@ -118,7 +124,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>570</y>
+     <y>630</y>
      <width>471</width>
      <height>51</height>
     </rect>
@@ -138,8 +144,8 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>500</x>
-     <y>570</y>
-     <width>171</width>
+     <y>630</y>
+     <width>181</width>
      <height>51</height>
     </rect>
    </property>
@@ -151,7 +157,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>340</y>
+     <y>360</y>
      <width>361</width>
      <height>31</height>
     </rect>
@@ -172,7 +178,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>320</y>
+     <y>330</y>
      <width>681</width>
      <height>20</height>
     </rect>
@@ -185,15 +191,18 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>380</y>
-     <width>651</width>
-     <height>181</height>
+     <y>400</y>
+     <width>661</width>
+     <height>221</height>
     </rect>
    </property>
    <property name="font">
     <font>
      <pointsize>14</pointsize>
     </font>
+   </property>
+   <property name="verticalScrollBarPolicy">
+    <enum>Qt::ScrollBarAlwaysOn</enum>
    </property>
    <property name="alternatingRowColors">
     <bool>false</bool>
@@ -209,7 +218,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>10</y>
+     <y>20</y>
      <width>401</width>
      <height>41</height>
     </rect>
@@ -230,7 +239,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>370</x>
-     <y>80</y>
+     <y>90</y>
      <width>141</width>
      <height>31</height>
     </rect>
@@ -243,7 +252,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>370</x>
-     <y>120</y>
+     <y>130</y>
      <width>141</width>
      <height>31</height>
     </rect>
@@ -255,8 +264,8 @@ p, li { white-space: pre-wrap; }
   <widget class="QLabel" name="AgregarAmigoLabel">
    <property name="geometry">
     <rect>
-     <x>740</x>
-     <y>340</y>
+     <x>990</x>
+     <y>330</y>
      <width>161</width>
      <height>21</height>
     </rect>
@@ -276,8 +285,8 @@ p, li { white-space: pre-wrap; }
   <widget class="QLineEdit" name="AgregarAmigoLineEdit">
    <property name="geometry">
     <rect>
-     <x>740</x>
-     <y>370</y>
+     <x>990</x>
+     <y>360</y>
      <width>161</width>
      <height>21</height>
     </rect>
@@ -289,8 +298,8 @@ p, li { white-space: pre-wrap; }
   <widget class="QPushButton" name="AgregarAmigoButton">
    <property name="geometry">
     <rect>
-     <x>770</x>
-     <y>400</y>
+     <x>1020</x>
+     <y>390</y>
      <width>101</width>
      <height>31</height>
     </rect>
@@ -303,7 +312,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>820</x>
-     <y>270</y>
+     <y>650</y>
      <width>91</width>
      <height>31</height>
     </rect>
@@ -316,9 +325,9 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>690</x>
-     <y>10</y>
+     <y>20</y>
      <width>20</width>
-     <height>631</height>
+     <height>681</height>
     </rect>
    </property>
    <property name="orientation">
@@ -328,10 +337,10 @@ p, li { white-space: pre-wrap; }
   <widget class="QLabel" name="IconoLabel">
    <property name="geometry">
     <rect>
-     <x>750</x>
-     <y>472</y>
-     <width>150</width>
-     <height>150</height>
+     <x>960</x>
+     <y>440</y>
+     <width>221</width>
+     <height>221</height>
     </rect>
    </property>
    <property name="text">
@@ -345,7 +354,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>420</x>
-     <y>20</y>
+     <y>30</y>
      <width>201</width>
      <height>41</height>
     </rect>
@@ -366,8 +375,8 @@ p, li { white-space: pre-wrap; }
   <widget class="QLabel" name="NotificacionLabel">
    <property name="geometry">
     <rect>
-     <x>270</x>
-     <y>210</y>
+     <x>430</x>
+     <y>230</y>
      <width>411</width>
      <height>181</height>
     </rect>
@@ -399,8 +408,8 @@ p, li { white-space: pre-wrap; }
   <widget class="QDialogButtonBox" name="NotificacionButton">
    <property name="geometry">
     <rect>
-     <x>269</x>
-     <y>240</y>
+     <x>430</x>
+     <y>270</y>
      <width>411</width>
      <height>211</height>
     </rect>
@@ -426,9 +435,9 @@ p, li { white-space: pre-wrap; }
   <widget class="QLabel" name="NotificacionTextLabel">
    <property name="geometry">
     <rect>
-     <x>275</x>
-     <y>280</y>
-     <width>401</width>
+     <x>430</x>
+     <y>310</y>
+     <width>411</width>
      <height>31</height>
     </rect>
    </property>
@@ -438,7 +447,7 @@ p, li { white-space: pre-wrap; }
     </font>
    </property>
    <property name="text">
-    <string>&quot;javier&quot; desea enviarle el archivo &quot;javierfoto.png&quot;</string>
+    <string>&quot;javier&quot; desea enviarle el archivo &quot;foto.png&quot;</string>
    </property>
    <property name="scaledContents">
     <bool>true</bool>
@@ -454,7 +463,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>370</x>
-     <y>180</y>
+     <y>190</y>
      <width>141</width>
      <height>31</height>
     </rect>
@@ -467,7 +476,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>370</x>
-     <y>220</y>
+     <y>230</y>
      <width>141</width>
      <height>31</height>
     </rect>
@@ -480,13 +489,76 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>370</x>
-     <y>250</y>
+     <y>260</y>
      <width>141</width>
      <height>31</height>
     </rect>
    </property>
    <property name="text">
     <string>nuevo_nombre.abc</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="VerHistorialButton">
+   <property name="geometry">
+    <rect>
+     <x>530</x>
+     <y>190</y>
+     <width>141</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Ver Historial</string>
+   </property>
+  </widget>
+  <widget class="Line" name="line_3">
+   <property name="geometry">
+    <rect>
+     <x>700</x>
+     <y>300</y>
+     <width>511</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QListWidget" name="HistorialList">
+   <property name="geometry">
+    <rect>
+     <x>720</x>
+     <y>60</y>
+     <width>491</width>
+     <height>221</height>
+    </rect>
+   </property>
+   <property name="verticalScrollBarPolicy">
+    <enum>Qt::ScrollBarAlwaysOn</enum>
+   </property>
+   <property name="horizontalScrollBarPolicy">
+    <enum>Qt::ScrollBarAlwaysOn</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="HistorialLabel">
+   <property name="geometry">
+    <rect>
+     <x>720</x>
+     <y>20</y>
+     <width>491</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>13</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Historial de Modificaciones</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
   <zorder>SubirArchivoButton</zorder>
@@ -514,9 +586,13 @@ p, li { white-space: pre-wrap; }
   <zorder>EliminarArchivoButton</zorder>
   <zorder>RenombrarArchivoButton</zorder>
   <zorder>NuevoNombreArchivo</zorder>
-  <zorder>NotificacionTextLabel</zorder>
-  <zorder>NotificacionButton</zorder>
+  <zorder>VerHistorialButton</zorder>
+  <zorder>line_3</zorder>
+  <zorder>HistorialList</zorder>
+  <zorder>HistorialLabel</zorder>
   <zorder>NotificacionLabel</zorder>
+  <zorder>NotificacionButton</zorder>
+  <zorder>NotificacionTextLabel</zorder>
  </widget>
  <resources/>
  <connections/>

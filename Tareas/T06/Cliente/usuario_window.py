@@ -20,6 +20,7 @@ class UsuarioWindow(ventana[0], ventana[1]):
         super().__init__()
         self.setupUi(self)
         self.usuario = usuario
+        self.carpetas_observadas = []
 
         self.host = host
         self.port = port
@@ -55,6 +56,8 @@ class UsuarioWindow(ventana[0], ventana[1]):
         self.BajarCarpetaButton.clicked.connect(self.bajar_carpeta_pressed)
 
         self.EnviarArchivoButton.clicked.connect(self.enviar_archivo_pressed)
+
+        self.VerHistorialButton.clicked.connect(self.actualizar_historial)
 
         # Notificacion
         self.NotificacionLabel.setStyleSheet("background-color: #cccccc;")
@@ -203,10 +206,21 @@ class UsuarioWindow(ventana[0], ventana[1]):
 
     def actualizar_todo_pressed(self):
         self.CargandoLabel.setText("Cargando...")
+
+        for path_carpeta in self.carpetas_observadas:
+            if os.path.isdir(path_carpeta):
+                self.subir_carpeta(path_carpeta)
+            else:
+                # TODO ?eliminar carpeta del servidor o no?
+                pass
+
+        sleep(0.5)
+
         self.stop_escuchar()
         self.actualizar_lista_amigos()
         self.actualizar_arbol_archivos()
         self.start_escuchar()
+
         self.CargandoLabel.setText(" ")
 
     def actualizar_lista_amigos(self):
@@ -220,6 +234,22 @@ class UsuarioWindow(ventana[0], ventana[1]):
             self.AmigosList.addItem(item_nuevo_amigo)
             self.AmigosList.scrollToItem(item_nuevo_amigo)
             self.AgregarAmigoLineEdit.clear()
+
+    def actualizar_historial(self):
+        self.stop_escuchar()
+        data_solicitar = "LISTA_HISTORIAL" + " " + self.usuario
+        self.socket_usuario.send(data_solicitar.encode('utf-8'))
+        recibido = self.socket_usuario.recv(1024).decode('utf-8')
+        try:
+            lista_historial = json.loads(recibido)
+            self.HistorialList.clear()
+            for log_historial in lista_historial:
+                item_nuevo_log_historial = QtGui.QListWidgetItem(log_historial)
+                self.HistorialList.addItem(item_nuevo_log_historial)
+                self.HistorialList.scrollToItem(item_nuevo_log_historial)
+        except:
+            pass
+        self.start_escuchar()
 
     def actualizar_arbol_archivos(self):
         data_solicitar = "LISTA_ARCHIVOS" + " " + self.usuario
@@ -428,6 +458,10 @@ class UsuarioWindow(ventana[0], ventana[1]):
         path_carpeta = QtGui.QFileDialog.getExistingDirectory(self)
 
         if path_carpeta:
+            # Se agrega a las carpetas observadas.
+            self.carpetas_observadas.append(path_carpeta)
+            self.carpetas_observadas = list(set(self.carpetas_observadas))
+
             # Se sube la carpeta.
             self.subir_carpeta(path_carpeta)
 
@@ -521,6 +555,12 @@ class UsuarioWindow(ventana[0], ventana[1]):
             ruta_llegar = get_tree_path(carpeta_seleccionada)
             path_destino = QtGui.QFileDialog.getExistingDirectory(self)
             if path_destino:
+                # Se agrega la carpeta a carpetas observadas.
+                path_carpeta = os.path.join(path_destino, nombre_carpeta)
+                self.carpetas_observadas.append(path_carpeta)
+                self.carpetas_observadas = list(set(self.carpetas_observadas))
+
+                # Se baja la carpeta.
                 self.bajar_carpeta(nombre_carpeta, ruta_llegar, path_destino)
         else:
             QtGui.QMessageBox.critical(None,
@@ -531,10 +571,7 @@ class UsuarioWindow(ventana[0], ventana[1]):
     def bajar_carpeta(self, nombre_carpeta, ruta_llegar, path_destino):
         self.stop_escuchar()
 
-        print(nombre_carpeta)
-        print(ruta_llegar)
         dir_destino = os.path.join(path_destino, nombre_carpeta)
-        print(dir_destino)
 
         if not os.path.exists(dir_destino):
 
@@ -547,13 +584,11 @@ class UsuarioWindow(ventana[0], ventana[1]):
                                + ruta_llegar
 
             self.socket_usuario.send(solicitud_bajada.encode('utf-8'))
-            print("COMIENZA RECEPCION CARPETA")
             data = self.socket_usuario.recv(1024)
 
             if "ERROR" not in data[:6].decode('utf-8', errors="ignore"):
                 data_contenido = b''
                 while data:
-                    print("SIGUE RECEPCION CARPETA")
                     data_contenido += data
                     ready = select.select([self.socket_usuario], [], [], 0)
                     if (ready[0]):
@@ -561,7 +596,6 @@ class UsuarioWindow(ventana[0], ventana[1]):
                     else:
                         data = b''
 
-                print("PROCESANDO CARPETA RECIBIDA")
                 with open("carpeta_{}.txt".format(nombre_carpeta), "wb+") as file_carpeta:
                     file_carpeta.write(data_contenido)
 

@@ -2,12 +2,9 @@
 
 ### Ahora
 
-* Observar carpeta.
-
+* Eliminar archivos.
 
 ### Pendiente
-
-* Observar carpeta.
 
 * Permitir eliminar archivos y carpetas.
 
@@ -21,6 +18,8 @@
 * Creacion de usuarios unicos. Con HASH + SALT para las claves.
 
 * Log In usuarios.
+
+* Agregar amigos.
 
 * Chat instantáneo, con emojis.
 
@@ -40,6 +39,8 @@
 
 * Envío de archivos a amigos.
 
+* Observar carpetas recientemente subidas y bajadas.
+
 
 ### Consideraciones
 
@@ -52,8 +53,10 @@
 	* **ARREGLAR:** Al subir carpetas pareciera que se queda pegado pero es solo momentaneo, luego de unos segundos se actualiza bien :+1:.
 
 	* No se recomienda subir archivos tan pesados, es DrobPox no DropBox :disappointed:.
+	
+	* La mayoría de la interfaz se actualiza automáticamente (lista de amigos, arbol de archivos, etc.) de no actualizarse, por favor hacer click en Actualizar Todo. En el peor de los casos vaciar la carpeta ````database```` y volver a iniciar el servidor.
 
-* El boton Actualizar Todo, actualiza la lista de amigos y los archivos mostrados.
+* El boton Actualizar Todo, actualiza la lista de amigos y los archivos mostrados. Funciona algo lento por todo lo que hace, pero paciencia que sí funciona.
 
 * Cuando yo agrego un usuario a mi lista de amigos, automaticamente queda registrado en mi lista de amigos. De la misma forma, yo soy agregado automaticamente a su lista de amigos.
 
@@ -79,6 +82,8 @@
 
 * Cuando se observa una carpeta, se debe hacer click en Actualizar Todo para subir los cambios al servidor. Luego para descargar los cambios de la carpeta en otro computador se debe clickear Descargar Carpeta seleccionando la carpeta correspondiente.
 
+* Para ver el Historial de Modificaciones de las carpetas observadas, se debe hacer click en Ver Historial.
 
+* A la carpeta principal (main directory) la llamé ````__ROOT__````.
 
 

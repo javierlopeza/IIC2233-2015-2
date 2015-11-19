@@ -7,7 +7,9 @@ from Servidor.cargar_database_amistades import cargar_database_amistades
 from Servidor.cargar_database_chats import cargar_database_chats
 from Servidor.cargar_database_archivos import cargar_database_archivos
 from Servidor.cargar_database_arboles import cargar_database_arboles
+from Servidor.cargar_database_historiales import cargar_database_historiales
 from Servidor.hashear import hashear
+from datetime import datetime
 import threading
 import json
 import pickle
@@ -43,6 +45,7 @@ class DrobPoxServidor:
         self.database_chats = cargar_database_chats()
         self.database_archivos = cargar_database_archivos()
         self.database_arboles = cargar_database_arboles()
+        self.database_historiales = cargar_database_historiales()
 
     def aceptar(self):
         print("SERVIDOR ACTIVO...")
@@ -204,6 +207,12 @@ class DrobPoxServidor:
                 lista_amigos = self.database_amistades[usuario]
                 lista_enc = json.dumps(lista_amigos)
                 cliente.send(lista_enc.encode('utf-8'))
+                
+            elif data_dec.startswith("LISTA_HISTORIAL"):
+                usuario = data_dec.split(" ")[1]
+                lista_historial = self.database_historiales[usuario]
+                lista_enc = json.dumps(lista_historial)
+                cliente.send(lista_enc.encode('utf-8'))
 
             elif data_dec.startswith("HISTORIAL_CHAT"):
                 usuario = data_dec.split(" ")[1]
@@ -250,6 +259,15 @@ class DrobPoxServidor:
             for i in range(len(self.database_archivos[usuario])):
                 if self.database_archivos[usuario][i][2] == filename:
                     del self.database_archivos[usuario][i]
+
+                    tiempo = str(datetime.now()).split(".")[0]
+                    path_log = padre + "\\" + filename
+                    log_historial = '{0} - REMOVED  "{1}" by {2}'.format(tiempo, path_log, usuario)
+
+                    self.database_historiales[usuario].append(log_historial)
+                    with open("database/database_historiales.txt", "w") as historiales:
+                        json.dump(self.database_historiales, historiales)
+
                     break
 
             for i in range(len(self.database_arboles[usuario])):
@@ -291,6 +309,14 @@ class DrobPoxServidor:
         with open("database/database_arboles.txt", "wb") as database_tree_file:
             pickle.dump(self.database_arboles, database_tree_file)
 
+        tiempo = str(datetime.now()).split(".")[0]
+        path_log = padre + "\\" + filename
+        log_historial = '{0} - ADDED    "{1}" by {2}'.format(tiempo, path_log, usuario)
+
+        self.database_historiales[usuario].append(log_historial)
+        with open("database/database_historiales.txt", "w") as historiales:
+            json.dump(self.database_historiales, historiales)
+
     def agregar_carpeta(self, usuario, padre, foldername):
         if padre == "__ROOT__":
             # Se revisa pre existencia de la carpeta.
@@ -302,6 +328,15 @@ class DrobPoxServidor:
             for i in range(len(self.database_arboles[usuario])):
                 if self.database_arboles[usuario][i][2] == foldername:
                     del self.database_arboles[usuario][i]
+
+                    tiempo = str(datetime.now()).split(".")[0]
+                    path_log = padre + "\\" + foldername
+                    log_historial = '{0} - REMOVED  "{1}" by {2}'.format(tiempo, path_log, usuario)
+
+                    self.database_historiales[usuario].append(log_historial)
+                    with open("database/database_historiales.txt", "w") as historiales:
+                        json.dump(self.database_historiales, historiales)
+
                     break
 
             self.database_archivos[usuario].append(("folder", padre, foldername, []))
@@ -314,18 +349,38 @@ class DrobPoxServidor:
 
         else:
 
-            def llegar_a_padre(lista, nombre_carpeta, ruta_padre):
+            def llegar_a_padre(self, lista, nombre_carpeta, ruta_padre, ruta_padre2):
                 for (tipo, padre, nombre, contenido) in lista:
                     if tipo == "folder" and nombre == ruta_padre[0] and len(ruta_padre) == 1:
+                        for (t,p,n,c) in contenido:
+                            print(n)
+                            if t=="folder" and n==nombre_carpeta:
+                                print("Ya estaba, borrada.")
+                                tiempo = str(datetime.now()).split(".")[0]
+                                path_log = "\\".join(ruta_padre2) + "\\" + foldername
+                                log_historial = '{0} - REMOVED  "{1}" by {2}'.format(tiempo, path_log, usuario)
+
+                                self.database_historiales[usuario].append(log_historial)
+                                with open("database/database_historiales.txt", "w") as historiales:
+                                    json.dump(self.database_historiales, historiales)
+                        print("Agregada.")
                         contenido.append(("folder", ruta_padre[0], nombre_carpeta, []))
                         break
                     elif tipo == "folder" and nombre == ruta_padre[0] and len(ruta_padre) > 1:
-                        llegar_a_padre(contenido, nombre_carpeta, ruta_padre[1:])
+                        llegar_a_padre(self, contenido, nombre_carpeta, ruta_padre[1:], ruta_padre2)
                         break
 
             ruta_padre = padre.split("\\")[1:]
-            llegar_a_padre(self.database_archivos[usuario], foldername, ruta_padre)
-            llegar_a_padre(self.database_arboles[usuario], foldername, ruta_padre)
+            llegar_a_padre(self, self.database_archivos[usuario], foldername, ruta_padre, ruta_padre)
+            llegar_a_padre(self, self.database_arboles[usuario], foldername, ruta_padre, ruta_padre)
+
+        tiempo = str(datetime.now()).split(".")[0]
+        path_log = padre + "\\" + foldername
+        log_historial = '{0} - ADDED    "{1}" by {2}'.format(tiempo, path_log, usuario)
+
+        self.database_historiales[usuario].append(log_historial)
+        with open("database/database_historiales.txt", "w") as historiales:
+            json.dump(self.database_historiales, historiales)
 
     def encontrar_archivo(self, usuario, nombre_archivo, ruta_hijo):
 
@@ -344,24 +399,18 @@ class DrobPoxServidor:
 
     def encontrar_carpeta(self, usuario, nombre_carpeta, ruta_llegar):
 
-        print("ARCHIVOS", self.database_archivos[usuario])
-
         def obtener_data_carpeta(lista, nombre_carpeta, ruta_llegar):
             for (tipo, padre, nombre, contenido) in lista:
                 if len(ruta_llegar) == 1 and tipo == "folder" and nombre == nombre_carpeta:
-                    print("ENCONTRE LA CARPETA!!")
                     return (tipo, padre, nombre, contenido)
                 elif len(ruta_llegar) > 1 and tipo == "folder" and nombre == ruta_llegar[0]:
                     return obtener_data_carpeta(contenido, nombre_carpeta, ruta_llegar[1:])
             return "ERROR"
 
-        print(ruta_llegar)
         data_carpeta = obtener_data_carpeta(self.database_archivos[usuario], nombre_carpeta, ruta_llegar)
-        print("DATA", data_carpeta)
         return data_carpeta
 
     def enviar_carpeta(self, usuario, carpeta):
-        print(carpeta[0])
 
         with open("data_carpeta_{}.txt".format(usuario), "wb+") as data_carpeta_file:
             pickle.dump(carpeta, data_carpeta_file)
@@ -424,3 +473,8 @@ class DrobPoxServidor:
         self.database_arboles.update({usuario: []})
         with open("database/database_arboles.txt", "wb") as new_trees_db:
             pickle.dump(self.database_arboles, new_trees_db)
+        # y historial.
+        self.database_historiales.update({usuario: []})
+        with open("database/database_historiales.txt", "wb") as new_hist_db:
+            pickle.dump(self.database_historiales, new_hist_db)
+
