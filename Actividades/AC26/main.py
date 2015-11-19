@@ -133,6 +133,7 @@ class Servidor:
     def escuchar(self):
         while True:
             data = self.cliente.recv(1024)
+            print("algo ha recibido")
             data_str = data.decode('utf-8', errors="ignore")
             datos = data_str.split("separadorespecial")
 

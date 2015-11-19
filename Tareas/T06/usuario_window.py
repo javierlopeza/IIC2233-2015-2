@@ -42,17 +42,82 @@ class UsuarioWindow(ventana[0], ventana[1]):
 
         self.amigo_chat = None
 
-        self.EnviarButton.clicked.connect(self.enviar_pressed)
-        self.AgregarAmigoButton.clicked.connect(self.agregar_amigo_pressed)
         self.ActualizarTodoButton.clicked.connect(self.actualizar_todo_pressed)
+
+        self.AgregarAmigoButton.clicked.connect(self.agregar_amigo_pressed)
         self.ConversarButton.clicked.connect(self.conversar_pressed)
+        self.EnviarButton.clicked.connect(self.enviar_pressed)
+
         self.SubirArchivoButton.clicked.connect(self.subir_archivo_pressed)
         self.SubirCarpetaButton.clicked.connect(self.subir_carpeta_pressed)
+
         self.BajarArchivoButton.clicked.connect(self.bajar_archivo_pressed)
         self.BajarCarpetaButton.clicked.connect(self.bajar_carpeta_pressed)
 
+        self.EnviarArchivoButton.clicked.connect(self.enviar_archivo_pressed)
+
+        # Notificacion
+        self.NotificacionLabel.setStyleSheet("background-color: #cccccc;")
+        self.NotificacionButton.accepted.connect(self.aceptar_notificacion)
+        self.NotificacionButton.rejected.connect(self.rechazar_notificacion)
+        self.ocultar_notificacion()
+        self.archivo_recibido = None
+
+
         # Cargar todos los datos del usuario.
         self.start_up()
+
+    def mostrar_notificacion(self, usuario, nombre_archivo):
+        self.NotificacionLabel.setVisible(True)
+        self.NotificacionTextLabel.setVisible(True)
+        self.NotificacionButton.setVisible(True)
+
+        self.NotificacionTextLabel.setText('"{}" desea enviarle el '
+                                           'archivo "{}"'.
+                                           format(usuario, nombre_archivo))
+
+        self.EnviarButton.setEnabled(False)
+        self.ConversarButton.setEnabled(False)
+        self.EnviarArchivoButton.setEnabled(False)
+        self.AgregarAmigoButton.setEnabled(False)
+        self.SubirArchivoButton.setEnabled(False)
+        self.SubirCarpetaButton.setEnabled(False)
+        self.BajarArchivoButton.setEnabled(False)
+        self.BajarCarpetaButton.setEnabled(False)
+        self.ActualizarTodoButton.setEnabled(False)
+
+    def ocultar_notificacion(self):
+        self.NotificacionLabel.setVisible(False)
+        self.NotificacionTextLabel.setVisible(False)
+        self.NotificacionButton.setVisible(False)
+
+        self.EnviarButton.setEnabled(True)
+        self.ConversarButton.setEnabled(True)
+        self.EnviarArchivoButton.setEnabled(True)
+        self.AgregarAmigoButton.setEnabled(True)
+        self.SubirArchivoButton.setEnabled(True)
+        self.SubirCarpetaButton.setEnabled(True)
+        self.BajarArchivoButton.setEnabled(True)
+        self.BajarCarpetaButton.setEnabled(True)
+        self.ActualizarTodoButton.setEnabled(True)
+
+    def aceptar_notificacion(self):
+        nombre_archivo = self.archivo_recibido[0]
+        data_archivo = self.archivo_recibido[1]
+
+        path_elegido = QtGui.QFileDialog.getExistingDirectory(self)
+
+        if path_elegido:
+            path_final = os.path.join(path_elegido, nombre_archivo)
+            with open(path_final, "wb+") as file_output:
+                file_output.write(data_archivo)
+
+        self.archivo_recibido = None
+
+        self.ocultar_notificacion()
+
+    def rechazar_notificacion(self):
+        self.ocultar_notificacion()
 
     def setup_networking(self):
         self.socket_usuario = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -96,6 +161,32 @@ class UsuarioWindow(ventana[0], ventana[1]):
                     item_nuevo_msg = QtGui.QListWidgetItem(mensaje)
                     self.ChatList.addItem(item_nuevo_msg)
                     self.ChatList.scrollToItem(item_nuevo_msg)
+
+            elif data_dec.startswith("ARCHIVO_AMIGO1"):
+                self.recibir_archivo_amigo(data)
+
+    def recibir_archivo_amigo(self, data):
+        data_dec = data.decode('utf-8', errors='ignore')
+
+        sender = data_dec.split("SEPARADOR123456789ESPECIAL")[1]
+        nombre_archivo = data_dec.split("SEPARADOR123456789ESPECIAL")[2]
+
+        largo_meta = len("ARCHIVO_AMIGO2" + sender + nombre_archivo + 3 * "SEPARADOR123456789ESPECIAL")
+
+        data = data[largo_meta:]
+
+        data_contenido = b''
+        while data:
+            data_contenido += data
+            ready = select.select([self.socket_usuario], [], [], 0)
+            if (ready[0]):
+                data = self.socket_usuario.recv(1024)
+            else:
+                data = b''
+
+        self.archivo_recibido = (nombre_archivo, data_contenido)
+
+        self.mostrar_notificacion(sender, nombre_archivo)
 
     def stop_escuchar(self):
         self.socket_usuario.send("STOP_ESCUCHAR".encode('utf-8'))
@@ -173,6 +264,48 @@ class UsuarioWindow(ventana[0], ventana[1]):
             item_nuevo_msg = QtGui.QListWidgetItem(msg)
             self.ChatList.addItem(item_nuevo_msg)
             self.ChatList.scrollToItem(item_nuevo_msg)
+
+        self.start_escuchar()
+
+    def enviar_archivo_pressed(self):
+        amigo_seleccionado = self.AmigosList.currentItem()
+        archivo_seleccionado = self.ArchivosTree.currentItem()
+        if amigo_seleccionado:
+            if archivo_seleccionado:
+                nombre_amigo = amigo_seleccionado.text()
+                nombre_archivo = archivo_seleccionado.text(0)
+                ruta_hijo = get_tree_path(archivo_seleccionado)
+
+                self.enviar_archivo(nombre_amigo, nombre_archivo, ruta_hijo)
+
+            else:
+                QtGui.QMessageBox.critical(None, 'ERROR', "Seleccione un archivo de su DrobPox.", QtGui.QMessageBox.Ok)
+        else:
+            QtGui.QMessageBox.critical(None, 'ERROR', "Seleccione uno de sus amigos.", QtGui.QMessageBox.Ok)
+
+    def enviar_archivo(self, nombre_amigo, nombre_archivo, ruta_hijo):
+        self.stop_escuchar()
+
+        solicitud_envio = "ENVIAR_ARCHIVO" \
+                          + "SEPARADOR123456789ESPECIAL" \
+                          + self.usuario \
+                          + "SEPARADOR123456789ESPECIAL" \
+                          + nombre_amigo \
+                          + "SEPARADOR123456789ESPECIAL" \
+                          + nombre_archivo \
+                          + "SEPARADOR123456789ESPECIAL" \
+                          + ruta_hijo
+
+        self.socket_usuario.send(solicitud_envio.encode('utf-8'))
+
+        data_recibida = self.socket_usuario.recv(1024)
+
+        if "ERROR" in data_recibida[:6].decode('utf-8', errors="ignore"):
+            tipo_error = data_recibida.decode('utf-8', errors='ignore').split("...")[1]
+            QtGui.QMessageBox.critical(None,
+                                       'ERROR',
+                                       tipo_error,
+                                       QtGui.QMessageBox.Ok)
 
         self.start_escuchar()
 
@@ -420,9 +553,9 @@ class UsuarioWindow(ventana[0], ventana[1]):
 
             else:
                 QtGui.QMessageBox.critical(None,
-                                       'ERROR',
-                                       "No se ha podido descargar la carpeta.",
-                                       QtGui.QMessageBox.Ok)
+                                           'ERROR',
+                                           "No se ha podido descargar la carpeta.",
+                                           QtGui.QMessageBox.Ok)
 
 
         else:
@@ -432,10 +565,9 @@ class UsuarioWindow(ventana[0], ventana[1]):
                                        QtGui.QMessageBox.Ok)
         self.start_escuchar()
 
-
     def escribir_archivo(self, path_destino, file_data):
-            with open(path_destino, "wb+") as new_file:
-                new_file.write(file_data)
+        with open(path_destino, "wb+") as new_file:
+            new_file.write(file_data)
 
     def escribir_carpeta(self, data_carpeta, path):
         # Se crea la carpeta.
@@ -456,11 +588,6 @@ class UsuarioWindow(ventana[0], ventana[1]):
                                        'ERROR',
                                        "Ya existe una carpeta con el mismo nombre en el destino seleccionado.",
                                        QtGui.QMessageBox.Ok)
-
-
-
-
-
 
     def closeEvent(self, QCloseEvent):
         self.stop_escuchar()

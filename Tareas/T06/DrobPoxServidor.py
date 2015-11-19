@@ -106,7 +106,7 @@ class DrobPoxServidor:
                 nombre_archivo = data_dec.split("SEPARADOR123456789ESPECIAL")[2]
                 ruta_hijo = data_dec.split("SEPARADOR123456789ESPECIAL")[3]
 
-                data_archivo = self.enviar_archivo(usuario, nombre_archivo, ruta_hijo)
+                data_archivo = self.encontrar_archivo(usuario, nombre_archivo, ruta_hijo)
 
                 if usuario in self.clientes_conectados.keys():
                     if data_archivo != "ERROR":
@@ -125,6 +125,34 @@ class DrobPoxServidor:
 
                 cliente.send(data_enviar_carpeta)
 
+            elif data_dec.startswith("ENVIAR_ARCHIVO"):
+                usuario = data_dec.split("SEPARADOR123456789ESPECIAL")[1]
+                amigo = data_dec.split("SEPARADOR123456789ESPECIAL")[2]
+                nombre_archivo = data_dec.split("SEPARADOR123456789ESPECIAL")[3]
+                ruta_hijo = data_dec.split("SEPARADOR123456789ESPECIAL")[4]
+
+                if amigo not in self.clientes_conectados.keys():
+                    cliente.send("ERROR...Tu amigo {} no se encuentra online.".format(amigo).encode('utf-8'))
+
+                else:
+                    data_archivo = self.encontrar_archivo(usuario, nombre_archivo, ruta_hijo)
+                    if data_archivo == "ERROR":
+                        cliente.send(
+                            "ERROR...Recuerda que solo puedes enviar archivos"
+                            " a tus amigos, no carpetas.".format(amigo).encode('utf-8'))
+
+                    else:
+                        verificar_aceptacion = (("ARCHIVO_AMIGO1"
+                                                 + "SEPARADOR123456789ESPECIAL"
+                                                 + usuario
+                                                 + "SEPARADOR123456789ESPECIAL"
+                                                 + nombre_archivo
+                                                 + "SEPARADOR123456789ESPECIAL").encode('utf-8')
+                                                + data_archivo)
+
+                        self.clientes_conectados[amigo].send(verificar_aceptacion)
+
+                        cliente.send("TODO_OK".encode('utf-8'))
 
             elif data_dec.startswith("ACEPTAR"):
                 usuario = data_dec.split(" ")[1]
@@ -299,7 +327,7 @@ class DrobPoxServidor:
             llegar_a_padre(self.database_archivos[usuario], foldername, ruta_padre)
             llegar_a_padre(self.database_arboles[usuario], foldername, ruta_padre)
 
-    def enviar_archivo(self, usuario, nombre_archivo, ruta_hijo):
+    def encontrar_archivo(self, usuario, nombre_archivo, ruta_hijo):
 
         def obtener_data_hijo(lista, nombre_archivo, ruta_hijo):
             for (tipo, padre, nombre, contenido) in lista:
@@ -313,7 +341,6 @@ class DrobPoxServidor:
         data_archivo = obtener_data_hijo(self.database_archivos[usuario], nombre_archivo, ruta_hijo)
 
         return data_archivo
-
 
     def encontrar_carpeta(self, usuario, nombre_carpeta, ruta_llegar):
 
