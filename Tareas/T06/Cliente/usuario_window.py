@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from PyQt4 import QtGui, uic, QtCore
+from PyQt4 import QtGui, uic
 import socket
 import select
 import sys
@@ -62,7 +62,6 @@ class UsuarioWindow(ventana[0], ventana[1]):
         self.NotificacionButton.rejected.connect(self.rechazar_notificacion)
         self.ocultar_notificacion()
         self.archivo_recibido = None
-
 
         # Cargar todos los datos del usuario.
         self.start_up()
@@ -159,7 +158,7 @@ class UsuarioWindow(ventana[0], ventana[1]):
                 mensaje = data_dec.split("S1E2P3A4R5A6D7O8R9M0A1G2I3C4O5")[2]
                 if sender == self.amigo_chat:
                     item_nuevo_msg = QtGui.QListWidgetItem(mensaje)
-                    color = QtGui.QColor(28,74,255)
+                    color = QtGui.QColor(28, 74, 255)
                     brush = QtGui.QBrush()
                     brush.setColor(color)
                     item_nuevo_msg.setForeground(brush)
@@ -268,13 +267,13 @@ class UsuarioWindow(ventana[0], ventana[1]):
         for msg in lista_historial:
             item_nuevo_msg = QtGui.QListWidgetItem(msg)
             if msg.startswith(self.usuario):
-                color = QtGui.QColor(1,188,26)
+                color = QtGui.QColor(1, 188, 26)
                 brush = QtGui.QBrush()
                 brush.setColor(color)
                 item_nuevo_msg.setForeground(brush)
                 item_nuevo_msg.setTextAlignment(2)
             else:
-                color = QtGui.QColor(28,74,255)
+                color = QtGui.QColor(28, 74, 255)
                 brush = QtGui.QBrush()
                 brush.setColor(color)
                 item_nuevo_msg.setForeground(brush)
@@ -360,7 +359,7 @@ class UsuarioWindow(ventana[0], ventana[1]):
             mensaje_final = reemplazar_emojis(mensaje_final)
 
             item_mensaje = QtGui.QListWidgetItem(mensaje_final)
-            color = QtGui.QColor(1,188,26)
+            color = QtGui.QColor(1, 188, 26)
             brush = QtGui.QBrush()
             brush.setColor(color)
             item_mensaje.setForeground(brush)

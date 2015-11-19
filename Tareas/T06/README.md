@@ -2,14 +2,43 @@
 
 ### Ahora
 
-* Envio de archivos de amigos en linea.
+* Observar carpeta.
 
 
 ### Pendiente
 
+* Observar carpeta.
+
 * Permitir eliminar archivos y carpetas.
 
 * Fix tiempo carga de archivos y carpetas.
+
+
+### Completado
+
+* Servidor y clientes implementados independientemente.
+
+* Creacion de usuarios unicos. Con HASH + SALT para las claves.
+
+* Log In usuarios.
+
+* Chat instantáneo, con emojis.
+
+* Cargar historial chat.
+
+* Cargar arbol de archivos en el sistema.
+
+* Cargar lista de amigos.
+
+* Subir archivos.
+
+* Subir carpetas.
+
+* Bajar archivos.
+
+* Bajar carpetas.
+
+* Envío de archivos a amigos.
 
 
 ### Consideraciones
@@ -45,3 +74,11 @@
 * Para enviar un archivo a un amigo, este se debe encontrar en linea, ya que debe aceptar (o rechazar) la notificacion que le pregunta por el envio. En caso de aceptar el envio, debe seleccionar en que lugar de su computador se guardara el archivo. Solo se permitira el envio de archivos, no de carpetas (no se pasa por encima de ningun aspecto del enunciado).
  
 * Al recibir un archivo enviado por un amigo, este se guarda con el nombre original en el destino elegido.
+
+* Una carpeta es observada solamente durante el tiempo que el usuario se encuentre en linea. Es decir, si el usuario sube una carpeta, realiza cambios en ella y luego hace click en Actualizar Todo, efectivamente esa carpeta se actualizara en el servidor. De igual forma, si el usuario descarga una carpeta, realiza cambios en ella y luego hace click en Actualizar Todo, esa carpeta se actualizara en el servidor.
+
+* Cuando se observa una carpeta, se debe hacer click en Actualizar Todo para subir los cambios al servidor. Luego para descargar los cambios de la carpeta en otro computador se debe clickear Descargar Carpeta seleccionando la carpeta correspondiente.
+
+
+
+
