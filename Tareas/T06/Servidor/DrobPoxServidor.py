@@ -169,6 +169,20 @@ class DrobPoxServidor:
                 else:
                     cliente.send("TODO_OK".encode('utf-8'))
 
+            elif data_dec.startswith("RENOMBRAR_ARCHIVO"):
+                usuario = data_dec.split("SEPARADOR123456789ESPECIAL")[1]
+                nombre_archivo = data_dec.split("SEPARADOR123456789ESPECIAL")[2]
+                ruta_hijo = data_dec.split("SEPARADOR123456789ESPECIAL")[3]
+                nuevo_nombre = data_dec.split("SEPARADOR123456789ESPECIAL")[4]
+
+                data_archivo = self.renombrar_archivo(usuario, nombre_archivo, ruta_hijo, nuevo_nombre)
+                if data_archivo == "ERROR":
+                    cliente.send("ERROR...Recuerda que solo puedes "
+                                 "renombrar archivos con este boton.".encode('utf-8'))
+
+                else:
+                    cliente.send("TODO_OK".encode('utf-8'))
+
             elif data_dec.startswith("ELIMINAR_CARPETA"):
                 usuario = data_dec.split("SEPARADOR123456789ESPECIAL")[1]
                 nombre_carpeta = data_dec.split("SEPARADOR123456789ESPECIAL")[2]
@@ -178,6 +192,20 @@ class DrobPoxServidor:
                 if data_carpea == "ERROR":
                     cliente.send("ERROR...Recuerda que solo puedes "
                                  "eliminar carpetas con este boton.".encode('utf-8'))
+
+                else:
+                    cliente.send("TODO_OK".encode('utf-8'))
+
+            elif data_dec.startswith("RENOMBRAR_CARPETA"):
+                usuario = data_dec.split("SEPARADOR123456789ESPECIAL")[1]
+                nombre_carpeta = data_dec.split("SEPARADOR123456789ESPECIAL")[2]
+                ruta_hijo = data_dec.split("SEPARADOR123456789ESPECIAL")[3]
+                nuevo_nombre = data_dec.split("SEPARADOR123456789ESPECIAL")[4]
+
+                data_archivo = self.renombrar_carpeta(usuario, nombre_carpeta, ruta_hijo, nuevo_nombre)
+                if data_archivo == "ERROR":
+                    cliente.send("ERROR...Recuerda que solo puedes "
+                                 "renombrar carpetas con este boton.".encode('utf-8'))
 
                 else:
                     cliente.send("TODO_OK".encode('utf-8'))
@@ -459,6 +487,59 @@ class DrobPoxServidor:
         ruta_hijo = ruta_hijo.split("\\")
         data_carpeta1 = obtener_data_hijo(self.database_archivos[usuario], nombre_carpeta, ruta_hijo)
         data_carpeta2 = obtener_data_hijo(self.database_arboles[usuario], nombre_carpeta, ruta_hijo)
+
+        with open("database/database_archivos.txt", "wb") as database_file:
+            pickle.dump(self.database_archivos, database_file)
+
+        with open("database/database_arboles.txt", "wb") as database_tree_file:
+            pickle.dump(self.database_arboles, database_tree_file)
+
+        return data_carpeta1
+
+    def renombrar_archivo(self, usuario, nombre_archivo, ruta_hijo, nuevo_nombre):
+        def obtener_data_hijo(lista, nombre_archivo, ruta_hijo, nuevo_name):
+            for (tipo, padre, nombre, contenido) in lista:
+                if len(ruta_hijo) == 1 and tipo == "file" and nombre == nombre_archivo:
+                    aux_padre = padre
+                    aux_cont = contenido
+                    lista.remove((tipo, padre, nombre, contenido))
+                    lista.append(("file", aux_padre, nuevo_name, aux_cont))
+                    return "OK"
+                elif len(ruta_hijo) > 1 and tipo == "folder" and nombre == ruta_hijo[0]:
+                    return obtener_data_hijo(contenido, nombre_archivo, ruta_hijo[1:], nuevo_name)
+            return "ERROR"
+
+        ruta_hijo = ruta_hijo.split("\\")
+        data_archivo1 = obtener_data_hijo(self.database_archivos[usuario], nombre_archivo, ruta_hijo, nuevo_nombre)
+        data_archivo2 = obtener_data_hijo(self.database_arboles[usuario], nombre_archivo, ruta_hijo, nuevo_nombre)
+
+        with open("database/database_archivos.txt", "wb") as database_file:
+            pickle.dump(self.database_archivos, database_file)
+
+        with open("database/database_arboles.txt", "wb") as database_tree_file:
+            pickle.dump(self.database_arboles, database_tree_file)
+
+        return data_archivo1
+
+    def renombrar_carpeta(self, usuario, nombre_carpeta, ruta_hijo, nuevo_nombre):
+
+        def obtener_data_hijo(lista, nombre_carpeta, ruta_hijo, nuevo_name):
+            for (tipo, padre, nombre, contenido) in lista:
+                if len(ruta_hijo) == 1 and tipo == "folder" and nombre == nombre_carpeta:
+
+                    aux_padre = padre
+                    aux_cont = contenido
+                    lista.remove((tipo, padre, nombre, contenido))
+                    lista.append(("folder", aux_padre, nuevo_name, aux_cont))
+
+                    return "OK"
+                elif len(ruta_hijo) > 1 and tipo == "folder" and nombre == ruta_hijo[0]:
+                    return obtener_data_hijo(contenido, nombre_carpeta, ruta_hijo[1:], nuevo_name)
+            return "ERROR"
+
+        ruta_hijo = ruta_hijo.split("\\")
+        data_carpeta1 = obtener_data_hijo(self.database_archivos[usuario], nombre_carpeta, ruta_hijo, nuevo_nombre)
+        data_carpeta2 = obtener_data_hijo(self.database_arboles[usuario], nombre_carpeta, ruta_hijo, nuevo_nombre)
 
         with open("database/database_archivos.txt", "wb") as database_file:
             pickle.dump(self.database_archivos, database_file)

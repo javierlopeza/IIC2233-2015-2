@@ -60,6 +60,9 @@ class UsuarioWindow(ventana[0], ventana[1]):
         self.EliminarArchivoButton.clicked.connect(self.eliminar_archivo_pressed)
         self.EliminarCarpetaButton.clicked.connect(self.eliminar_carpeta_pressed)
 
+        self.RenombrarArchivoButton.clicked.connect(self.renombrar_archivo_pressed)
+        self.RenombrarCarpetaButton.clicked.connect(self.renombrar_carpeta_pressed)
+
         self.VerHistorialButton.clicked.connect(self.actualizar_historial)
 
         # Notificacion
@@ -428,8 +431,98 @@ class UsuarioWindow(ventana[0], ventana[1]):
 
         self.start_escuchar()
 
+    def renombrar_archivo_pressed(self):
+        archivo_seleccionado = self.ArchivosTree.currentItem()
+        nuevo_nombre = self.NuevoNombreArchivo.text()
+        if archivo_seleccionado:
+            nombre_archivo = archivo_seleccionado.text(0)
+            if nuevo_nombre.count(".") == nombre_archivo.count(".") == 1 and nuevo_nombre.split(".")[1] == \
+                    nombre_archivo.split(".")[1]:
+                if nuevo_nombre != nombre_archivo:
+                    ruta_hijo = get_tree_path(archivo_seleccionado)
+                    self.renombrar_archivo(nombre_archivo, ruta_hijo, nuevo_nombre)
+                else:
+                    QtGui.QMessageBox.critical(None, 'ERROR', "Los nombres coinciden, "
+                                                              "no esta cambiando el nombre.", QtGui.QMessageBox.Ok)
+            else:
+                QtGui.QMessageBox.critical(None, 'ERROR', "Verifique el nuevo nombre ingresado "
+                                                          "y el archivo seleccionado, ambos deben "
+                                                          "tener la misma extension.", QtGui.QMessageBox.Ok)
+        else:
+            QtGui.QMessageBox.critical(None, 'ERROR', "Seleccione un archivo de su DrobPox.", QtGui.QMessageBox.Ok)
 
+    def renombrar_archivo(self, nombre_archivo, ruta_hijo, nuevo_nombre):
+        self.stop_escuchar()
 
+        solicitud_envio = "RENOMBRAR_ARCHIVO" \
+                          + "SEPARADOR123456789ESPECIAL" \
+                          + self.usuario \
+                          + "SEPARADOR123456789ESPECIAL" \
+                          + nombre_archivo \
+                          + "SEPARADOR123456789ESPECIAL" \
+                          + ruta_hijo \
+                          + "SEPARADOR123456789ESPECIAL" \
+                          + nuevo_nombre
+
+        self.socket_usuario.send(solicitud_envio.encode('utf-8'))
+
+        data_recibida = self.socket_usuario.recv(1024)
+
+        if "ERROR" in data_recibida[:6].decode('utf-8', errors="ignore"):
+            tipo_error = data_recibida.decode('utf-8', errors='ignore').split("...")[1]
+            QtGui.QMessageBox.critical(None,
+                                       'ERROR',
+                                       tipo_error,
+                                       QtGui.QMessageBox.Ok)
+        else:
+            self.actualizar_arbol_archivos()
+
+        self.start_escuchar()
+
+    def renombrar_carpeta_pressed(self):
+        carpeta_seleccionada = self.ArchivosTree.currentItem()
+        nuevo_nombre = self.NuevoNombreCarpeta.text()
+        if carpeta_seleccionada:
+            nombre_carpeta = carpeta_seleccionada.text(0)
+            if nuevo_nombre.count(".") == nombre_carpeta.count(".") == 0:
+                if nuevo_nombre != nombre_carpeta:
+                    ruta_hijo = get_tree_path(carpeta_seleccionada)
+                    self.renombrar_carpeta(nombre_carpeta, ruta_hijo, nuevo_nombre)
+                else:
+                    QtGui.QMessageBox.critical(None, 'ERROR', "Los nombres coinciden, "
+                                                              "no esta cambiando el nombre.", QtGui.QMessageBox.Ok)
+            else:
+                QtGui.QMessageBox.critical(None, 'ERROR', "Verifique el nombre ingresado, no puede contener puntos '.'.", QtGui.QMessageBox.Ok)
+        else:
+            QtGui.QMessageBox.critical(None, 'ERROR', "Seleccione un archivo de su DrobPox.", QtGui.QMessageBox.Ok)
+
+    def renombrar_carpeta(self, nombre_carpeta, ruta_hijo, nuevo_nombre):
+        self.stop_escuchar()
+
+        solicitud_envio = "RENOMBRAR_CARPETA" \
+                          + "SEPARADOR123456789ESPECIAL" \
+                          + self.usuario \
+                          + "SEPARADOR123456789ESPECIAL" \
+                          + nombre_carpeta \
+                          + "SEPARADOR123456789ESPECIAL" \
+                          + ruta_hijo \
+                          + "SEPARADOR123456789ESPECIAL" \
+                          + nuevo_nombre
+
+        self.socket_usuario.send(solicitud_envio.encode('utf-8'))
+
+        data_recibida = self.socket_usuario.recv(1024)
+
+        if "ERROR" in data_recibida[:6].decode('utf-8', errors="ignore"):
+            tipo_error = data_recibida.decode('utf-8', errors='ignore').split("...")[1]
+            QtGui.QMessageBox.critical(None,
+                                       'ERROR',
+                                       tipo_error,
+                                       QtGui.QMessageBox.Ok)
+        else:
+            self.actualizar_arbol_archivos()
+
+        self.start_escuchar()
 
     def solicitar_agregar_amigo(self, amigo):
         self.stop_escuchar()

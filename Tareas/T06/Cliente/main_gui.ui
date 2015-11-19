@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>530</x>
-     <y>90</y>
+     <y>70</y>
      <width>141</width>
      <height>31</height>
     </rect>
@@ -30,7 +30,7 @@
    <property name="geometry">
     <rect>
      <x>530</x>
-     <y>130</y>
+     <y>110</y>
      <width>141</width>
      <height>31</height>
     </rect>
@@ -67,7 +67,7 @@
    <property name="geometry">
     <rect>
      <x>530</x>
-     <y>283</y>
+     <y>280</y>
      <width>141</width>
      <height>41</height>
     </rect>
@@ -239,7 +239,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>370</x>
-     <y>90</y>
+     <y>70</y>
      <width>141</width>
      <height>31</height>
     </rect>
@@ -252,7 +252,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>370</x>
-     <y>130</y>
+     <y>110</y>
      <width>141</width>
      <height>31</height>
     </rect>
@@ -354,7 +354,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>420</x>
-     <y>30</y>
+     <y>20</y>
      <width>201</width>
      <height>41</height>
     </rect>
@@ -463,7 +463,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>370</x>
-     <y>190</y>
+     <y>160</y>
      <width>141</width>
      <height>31</height>
     </rect>
@@ -476,7 +476,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>370</x>
-     <y>230</y>
+     <y>200</y>
      <width>141</width>
      <height>31</height>
     </rect>
@@ -489,7 +489,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>370</x>
-     <y>260</y>
+     <y>230</y>
      <width>141</width>
      <height>31</height>
     </rect>
@@ -501,8 +501,8 @@ p, li { white-space: pre-wrap; }
   <widget class="QPushButton" name="VerHistorialButton">
    <property name="geometry">
     <rect>
-     <x>530</x>
-     <y>230</y>
+     <x>370</x>
+     <y>280</y>
      <width>141</width>
      <height>41</height>
     </rect>
@@ -565,7 +565,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>530</x>
-     <y>190</y>
+     <y>160</y>
      <width>141</width>
      <height>31</height>
     </rect>
@@ -574,6 +574,34 @@ p, li { white-space: pre-wrap; }
     <string>Eliminar Carpeta</string>
    </property>
   </widget>
+  <widget class="QLineEdit" name="NuevoNombreCarpeta">
+   <property name="geometry">
+    <rect>
+     <x>530</x>
+     <y>230</y>
+     <width>141</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>nuevo_nombre</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="RenombrarCarpetaButton">
+   <property name="geometry">
+    <rect>
+     <x>530</x>
+     <y>200</y>
+     <width>141</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Renombrar Carpeta</string>
+   </property>
+  </widget>
+  <zorder>RenombrarCarpetaButton</zorder>
+  <zorder>NuevoNombreCarpeta</zorder>
   <zorder>SubirArchivoButton</zorder>
   <zorder>SubirCarpetaButton</zorder>
   <zorder>ArchivosTree</zorder>
