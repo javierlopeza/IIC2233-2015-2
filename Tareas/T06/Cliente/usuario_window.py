@@ -58,6 +58,7 @@ class UsuarioWindow(ventana[0], ventana[1]):
         self.EnviarArchivoButton.clicked.connect(self.enviar_archivo_pressed)
 
         self.EliminarArchivoButton.clicked.connect(self.eliminar_archivo_pressed)
+        self.EliminarCarpetaButton.clicked.connect(self.eliminar_carpeta_pressed)
 
         self.VerHistorialButton.clicked.connect(self.actualizar_historial)
 
@@ -391,6 +392,44 @@ class UsuarioWindow(ventana[0], ventana[1]):
             self.actualizar_arbol_archivos()
 
         self.start_escuchar()
+
+    def eliminar_carpeta_pressed(self):
+        carpeta_seleccionada = self.ArchivosTree.currentItem()
+        if carpeta_seleccionada:
+            nombre_carpeta = carpeta_seleccionada.text(0)
+            ruta_hijo = get_tree_path(carpeta_seleccionada)
+            self.eliminar_carpeta(nombre_carpeta, ruta_hijo)
+        else:
+            QtGui.QMessageBox.critical(None, 'ERROR', "Seleccione una carpeta de su DrobPox.", QtGui.QMessageBox.Ok)
+
+    def eliminar_carpeta(self, nombre_carpeta, ruta_hijo):
+        self.stop_escuchar()
+
+        solicitud_envio = "ELIMINAR_CARPETA" \
+                          + "SEPARADOR123456789ESPECIAL" \
+                          + self.usuario \
+                          + "SEPARADOR123456789ESPECIAL" \
+                          + nombre_carpeta \
+                          + "SEPARADOR123456789ESPECIAL" \
+                          + ruta_hijo
+
+        self.socket_usuario.send(solicitud_envio.encode('utf-8'))
+
+        data_recibida = self.socket_usuario.recv(1024)
+
+        if "ERROR" in data_recibida[:6].decode('utf-8', errors="ignore"):
+            tipo_error = data_recibida.decode('utf-8', errors='ignore').split("...")[1]
+            QtGui.QMessageBox.critical(None,
+                                       'ERROR',
+                                       tipo_error,
+                                       QtGui.QMessageBox.Ok)
+        else:
+            self.actualizar_arbol_archivos()
+
+        self.start_escuchar()
+
+
+
 
     def solicitar_agregar_amigo(self, amigo):
         self.stop_escuchar()

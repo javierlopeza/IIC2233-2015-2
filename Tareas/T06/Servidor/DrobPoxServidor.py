@@ -163,8 +163,21 @@ class DrobPoxServidor:
 
                 data_archivo = self.eliminar_archivo(usuario, nombre_archivo, ruta_hijo)
                 if data_archivo == "ERROR":
-                    cliente.send("ERROR...Recuerda que solo puedes eliminar archivos"
-                                 " , no carpetas.".encode('utf-8'))
+                    cliente.send("ERROR...Recuerda que solo puedes "
+                                 "eliminar archivos con este boton.".encode('utf-8'))
+
+                else:
+                    cliente.send("TODO_OK".encode('utf-8'))
+
+            elif data_dec.startswith("ELIMINAR_CARPETA"):
+                usuario = data_dec.split("SEPARADOR123456789ESPECIAL")[1]
+                nombre_carpeta = data_dec.split("SEPARADOR123456789ESPECIAL")[2]
+                ruta_hijo = data_dec.split("SEPARADOR123456789ESPECIAL")[3]
+
+                data_carpea = self.eliminar_carpeta(usuario, nombre_carpeta, ruta_hijo)
+                if data_carpea == "ERROR":
+                    cliente.send("ERROR...Recuerda que solo puedes "
+                                 "eliminar carpetas con este boton.".encode('utf-8'))
 
                 else:
                     cliente.send("TODO_OK".encode('utf-8'))
@@ -431,6 +444,29 @@ class DrobPoxServidor:
             pickle.dump(self.database_arboles, database_tree_file)
 
         return data_archivo1
+
+    def eliminar_carpeta(self, usuario, nombre_carpeta, ruta_hijo):
+
+        def obtener_data_hijo(lista, nombre_carpeta, ruta_hijo):
+            for (tipo, padre, nombre, contenido) in lista:
+                if len(ruta_hijo) == 1 and tipo == "folder" and nombre == nombre_carpeta:
+                    lista.remove((tipo, padre, nombre, contenido))
+                    return "OK"
+                elif len(ruta_hijo) > 1 and tipo == "folder" and nombre == ruta_hijo[0]:
+                    return obtener_data_hijo(contenido, nombre_carpeta, ruta_hijo[1:])
+            return "ERROR"
+
+        ruta_hijo = ruta_hijo.split("\\")
+        data_carpeta1 = obtener_data_hijo(self.database_archivos[usuario], nombre_carpeta, ruta_hijo)
+        data_carpeta2 = obtener_data_hijo(self.database_arboles[usuario], nombre_carpeta, ruta_hijo)
+
+        with open("database/database_archivos.txt", "wb") as database_file:
+            pickle.dump(self.database_archivos, database_file)
+
+        with open("database/database_arboles.txt", "wb") as database_tree_file:
+            pickle.dump(self.database_arboles, database_tree_file)
+
+        return data_carpeta1
 
     def encontrar_carpeta(self, usuario, nombre_carpeta, ruta_llegar):
 

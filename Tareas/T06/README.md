@@ -2,11 +2,11 @@
 
 ### Ahora
 
-* Eliminar archivos.
+* Renombrar archivos.
+
+* Renombrar carpetas.
 
 ### Pendiente
-
-* Permitir eliminar archivos y carpetas.
 
 * Fix tiempo carga de archivos y carpetas.
 
@@ -91,5 +91,9 @@
 * A la carpeta principal (main directory) la llamé ````__ROOT__````.
 
 * **BONUS** Para borrar un archivo se debe seleccionar uno en el arbol de archivos y hacer click en el boton Borrar Archivo.
+
+* **BONUS** Para borrar una carpeta se debe seleccionar una en el arbol de archivos y hacer click en el boton Borrar Carpeta.
+
+* 
 
 
