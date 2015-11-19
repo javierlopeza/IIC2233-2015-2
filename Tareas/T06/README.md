@@ -41,6 +41,10 @@
 
 * Observar carpetas recientemente subidas y bajadas.
 
+* Historial de modificaciones de carpetas y archivos observados.
+
+* Eliminar archivos (**bonus**).
+
 
 ### Consideraciones
 
@@ -85,5 +89,7 @@
 * Para ver el Historial de Modificaciones de las carpetas observadas, se debe hacer click en Ver Historial.
 
 * A la carpeta principal (main directory) la llamé ````__ROOT__````.
+
+* **BONUS** Para borrar un archivo se debe seleccionar uno en el arbol de archivos y hacer click en el boton Borrar Archivo.
 
 

@@ -57,6 +57,8 @@ class UsuarioWindow(ventana[0], ventana[1]):
 
         self.EnviarArchivoButton.clicked.connect(self.enviar_archivo_pressed)
 
+        self.EliminarArchivoButton.clicked.connect(self.eliminar_archivo_pressed)
+
         self.VerHistorialButton.clicked.connect(self.actualizar_historial)
 
         # Notificacion
@@ -352,6 +354,41 @@ class UsuarioWindow(ventana[0], ventana[1]):
                                        'ERROR',
                                        tipo_error,
                                        QtGui.QMessageBox.Ok)
+
+        self.start_escuchar()
+
+    def eliminar_archivo_pressed(self):
+        archivo_seleccionado = self.ArchivosTree.currentItem()
+        if archivo_seleccionado:
+            nombre_archivo = archivo_seleccionado.text(0)
+            ruta_hijo = get_tree_path(archivo_seleccionado)
+            self.eliminar_archivo(nombre_archivo, ruta_hijo)
+        else:
+            QtGui.QMessageBox.critical(None, 'ERROR', "Seleccione un archivo de su DrobPox.", QtGui.QMessageBox.Ok)
+
+    def eliminar_archivo(self, nombre_archivo, ruta_hijo):
+        self.stop_escuchar()
+
+        solicitud_envio = "ELIMINAR_ARCHIVO" \
+                          + "SEPARADOR123456789ESPECIAL" \
+                          + self.usuario \
+                          + "SEPARADOR123456789ESPECIAL" \
+                          + nombre_archivo \
+                          + "SEPARADOR123456789ESPECIAL" \
+                          + ruta_hijo
+
+        self.socket_usuario.send(solicitud_envio.encode('utf-8'))
+
+        data_recibida = self.socket_usuario.recv(1024)
+
+        if "ERROR" in data_recibida[:6].decode('utf-8', errors="ignore"):
+            tipo_error = data_recibida.decode('utf-8', errors='ignore').split("...")[1]
+            QtGui.QMessageBox.critical(None,
+                                       'ERROR',
+                                       tipo_error,
+                                       QtGui.QMessageBox.Ok)
+        else:
+            self.actualizar_arbol_archivos()
 
         self.start_escuchar()
 

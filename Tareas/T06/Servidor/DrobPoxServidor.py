@@ -140,9 +140,8 @@ class DrobPoxServidor:
                 else:
                     data_archivo = self.encontrar_archivo(usuario, nombre_archivo, ruta_hijo)
                     if data_archivo == "ERROR":
-                        cliente.send(
-                            "ERROR...Recuerda que solo puedes enviar archivos"
-                            " a tus amigos, no carpetas.".format(amigo).encode('utf-8'))
+                        cliente.send("ERROR...Recuerda que solo puedes enviar archivos a tus amigos"
+                                     " , no carpetas.".encode('utf-8'))
 
                     else:
                         verificar_aceptacion = (("ARCHIVO_AMIGO1"
@@ -156,6 +155,19 @@ class DrobPoxServidor:
                         self.clientes_conectados[amigo].send(verificar_aceptacion)
 
                         cliente.send("TODO_OK".encode('utf-8'))
+
+            elif data_dec.startswith("ELIMINAR_ARCHIVO"):
+                usuario = data_dec.split("SEPARADOR123456789ESPECIAL")[1]
+                nombre_archivo = data_dec.split("SEPARADOR123456789ESPECIAL")[2]
+                ruta_hijo = data_dec.split("SEPARADOR123456789ESPECIAL")[3]
+
+                data_archivo = self.eliminar_archivo(usuario, nombre_archivo, ruta_hijo)
+                if data_archivo == "ERROR":
+                    cliente.send("ERROR...Recuerda que solo puedes eliminar archivos"
+                                 " , no carpetas.".encode('utf-8'))
+
+                else:
+                    cliente.send("TODO_OK".encode('utf-8'))
 
             elif data_dec.startswith("ACEPTAR"):
                 usuario = data_dec.split(" ")[1]
@@ -207,7 +219,7 @@ class DrobPoxServidor:
                 lista_amigos = self.database_amistades[usuario]
                 lista_enc = json.dumps(lista_amigos)
                 cliente.send(lista_enc.encode('utf-8'))
-                
+
             elif data_dec.startswith("LISTA_HISTORIAL"):
                 usuario = data_dec.split(" ")[1]
                 lista_historial = self.database_historiales[usuario]
@@ -352,9 +364,9 @@ class DrobPoxServidor:
             def llegar_a_padre(self, lista, nombre_carpeta, ruta_padre, ruta_padre2):
                 for (tipo, padre, nombre, contenido) in lista:
                     if tipo == "folder" and nombre == ruta_padre[0] and len(ruta_padre) == 1:
-                        for (t,p,n,c) in contenido:
+                        for (t, p, n, c) in contenido:
                             print(n)
-                            if t=="folder" and n==nombre_carpeta:
+                            if t == "folder" and n == nombre_carpeta:
                                 print("Ya estaba, borrada.")
                                 tiempo = str(datetime.now()).split(".")[0]
                                 path_log = "\\".join(ruta_padre2) + "\\" + foldername
@@ -396,6 +408,29 @@ class DrobPoxServidor:
         data_archivo = obtener_data_hijo(self.database_archivos[usuario], nombre_archivo, ruta_hijo)
 
         return data_archivo
+
+    def eliminar_archivo(self, usuario, nombre_archivo, ruta_hijo):
+
+        def obtener_data_hijo(lista, nombre_archivo, ruta_hijo):
+            for (tipo, padre, nombre, contenido) in lista:
+                if len(ruta_hijo) == 1 and tipo == "file" and nombre == nombre_archivo:
+                    lista.remove((tipo, padre, nombre, contenido))
+                    return "OK"
+                elif len(ruta_hijo) > 1 and tipo == "folder" and nombre == ruta_hijo[0]:
+                    return obtener_data_hijo(contenido, nombre_archivo, ruta_hijo[1:])
+            return "ERROR"
+
+        ruta_hijo = ruta_hijo.split("\\")
+        data_archivo1 = obtener_data_hijo(self.database_archivos[usuario], nombre_archivo, ruta_hijo)
+        data_archivo2 = obtener_data_hijo(self.database_arboles[usuario], nombre_archivo, ruta_hijo)
+
+        with open("database/database_archivos.txt", "wb") as database_file:
+            pickle.dump(self.database_archivos, database_file)
+
+        with open("database/database_arboles.txt", "wb") as database_tree_file:
+            pickle.dump(self.database_arboles, database_tree_file)
+
+        return data_archivo1
 
     def encontrar_carpeta(self, usuario, nombre_carpeta, ruta_llegar):
 
@@ -477,4 +512,3 @@ class DrobPoxServidor:
         self.database_historiales.update({usuario: []})
         with open("database/database_historiales.txt", "wb") as new_hist_db:
             pickle.dump(self.database_historiales, new_hist_db)
-

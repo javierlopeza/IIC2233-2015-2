@@ -1,5 +1,7 @@
 from datetime import datetime
 from time import sleep
 
-print("REMOVED  archivo")
-print("ADDED    archivo")
+l = [(1,2,3,4),(4,4,4,4),(3,3,3,3)]
+
+l.remove((1,2,3,4))
+print(l)

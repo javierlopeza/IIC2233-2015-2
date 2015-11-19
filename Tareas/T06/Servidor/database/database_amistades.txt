@@ -1,1 +1,1 @@
-{"Javier": ["Juanito"], "Juanito": ["Javier"]}
+{"Javier": []}
