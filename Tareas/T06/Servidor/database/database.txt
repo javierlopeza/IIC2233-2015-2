@@ -1,0 +1,8 @@
+Este archivo lo subí para que aparezca la carpeta "database" en Git, 
+de lo contrario no subia la carpeta vacía. 
+
+No tiene ninguna importancia este archivo. 
+
+Se puede borrar.
+
+Es para dejar claro la importancia de tener la carpeta "database" dentro de "Servidor".
