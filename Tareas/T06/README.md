@@ -63,9 +63,9 @@ En los programas ````mainCliente.py```` y ````mainServidor.py```` se ven a prime
 
 	* No hacer clicks seguidos en los botones, con un click y paciencia basta :relieved:.
 
-	* **ARREGLAR:** Al subir carpetas pareciera que se queda pegado pero es solo momentaneo, luego de unos segundos se actualiza bien :+1:.
+	* Al subir carpetas pareciera que se queda pegado pero es solo momentaneo, luego de unos segundos se actualiza bien :+1:.
 
-	* No se recomienda subir archivos tan pesados, es DrobPox no DropBox :disappointed:.
+	* No se recomienda subir archivos taaan pesados, es DrobPox no DropBox :disappointed:. Canciones, fotos y archivos de esa magnitud no hay problemas. Pero subir películas puede costarle la vida al programa.
 	
 	* La mayoría de la interfaz se actualiza automáticamente (lista de amigos, arbol de archivos, etc.) de no actualizarse, por favor hacer click en Actualizar Todo. En el peor de los casos vaciar la carpeta ````database```` y volver a iniciar el servidor.
 
@@ -81,7 +81,7 @@ En los programas ````mainCliente.py```` y ````mainServidor.py```` se ven a prime
 
 * Cuando el usuario "sube una carpeta" esta se guarda en el directorio principal de su DrobPox.
 
-* **ARREGLAR:** La subida de archivos y carpetas demora un poco, pero resulta. Incluso a veces puede quedar unos segundos en "No Responde", pero un par de segundos despues la carga se efectua sin problemas.
+* La subida de archivos y carpetas demora un poco, pero resulta. Incluso a veces puede quedar unos segundos en "No Responde", pero un par de segundos despues la carga se efectua sin problemas.
 
 * Si se sube una carpeta o un archivo que ya se encontraba en el directorio principal, se reemplaza completamente.
 
@@ -103,7 +103,7 @@ En los programas ````mainCliente.py```` y ````mainServidor.py```` se ven a prime
 
 * **BONUS** Para borrar una carpeta se debe seleccionar una en el arbol de archivos y hacer click en el boton Borrar Carpeta.
 
-* **BONUS** Para renombrar un archivo se debe seleccionar uno en el arbol de archivos y hacer click en el boton Renombrar Archivo, habiendo escrito el nuevo nombre del archivo en el campo inferior al boton.
+* **BONUS** Para renombrar un archivo se debe seleccionar uno en el arbol de archivos y hacer click en el boton Renombrar Archivo, habiendo escrito el nuevo nombre del archivo en el campo inferior al boton (es importante haber escrito el nuevo nombre con la misma extensión del archivo de origen).
 
 * **BONUS** Para renombrar una carpeta se debe seleccionar una en el arbol de archivos y hacer click en el boton Renombrar Carpeta, habiendo escrito el nuevo nombre de la carpeta en el campo inferior al boton.
 
