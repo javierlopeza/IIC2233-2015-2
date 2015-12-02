@@ -5,6 +5,7 @@ import dropbox
 import dropbox.files
 import threading
 import os
+import time
 
 ventana = uic.loadUiType("main.ui")
 
@@ -15,8 +16,15 @@ class MainWindow(ventana[0], ventana[1]):
         self.setupUi(self)
         self.dbx = dbx
 
+        icono = QtGui.QIcon(QtGui.QPixmap('assets/logo.png'))
+        self.setWindowIcon(icono)
+
+        self.LogoLabel.setPixmap(QtGui.QPixmap('assets/logo.png'))
+        self.LogoLabel.setScaledContents(True)
+
         # Se actualiza arbol de archivos.
-        self.crear_thread(self.update_files_tree, (self.ArbolArchivos,), "thread_actualizar_arbol")
+        self.actualizar = True
+        self.crear_thread(self.update_files_tree, (self.ArbolArchivos, self.ArbolArchivos2), "thread_actualizar_arbol")
 
         # Mostrar historial button
         self.VerHistorialButton.clicked.connect(self.mostrar_historial)
@@ -39,22 +47,45 @@ class MainWindow(ventana[0], ventana[1]):
         # Descargar carpeta button
         self.DescargarCarpetaButton.clicked.connect(self.descargar_carpeta_pressed)
 
+        # Renombrar button
+        self.RenombrarButton.clicked.connect(self.renombrar_pressed)
+        self.thread_renombrar = threading.Thread()
+
+        # Mover button
+        self.MoverButton.clicked.connect(self.mover_pressed)
+        self.thread_mover = threading.Thread()
+
+        # Aceptar Button
+        self.AceptarButton.clicked.connect(self.aceptar_pressed)
+        self.thread_aceptar = threading.Thread()
+
+        # Cancelar button
+        self.CancelarButton.clicked.connect(self.habilitar)
+
+        # Arbol 2 label item changed
+        self.ArbolArchivos2.itemClicked.connect(self.update_pathlabel)
+
     def crear_thread(self, funcion, argumentos, nombre):
         t = threading.Thread(name=nombre, target=funcion, args=argumentos)
         t.setDaemon(True)
         t.start()
         setattr(self, nombre, t)
 
-    def update_files_tree(self, parent, folder=''):
-        for entry in self.dbx.files_list_folder(folder).entries:
-            # print(entry.name)
-            if isinstance(entry, dropbox.files.FolderMetadata):
-                new_carpeta = QtGui.QTreeWidgetItem(parent)
-                new_carpeta.setText(0, entry.name)
-                self.update_files_tree(new_carpeta, entry.path_lower)
-            else:
-                new_file = QtGui.QTreeWidgetItem(parent)
-                new_file.setText(0, entry.name)
+    def update_files_tree(self, parent1, parent2, folder=''):
+        if self.actualizar:
+            for entry in self.dbx.files_list_folder(folder).entries:
+                # print(entry.name)
+                if isinstance(entry, dropbox.files.FolderMetadata):
+                    new_carpeta1 = QtGui.QTreeWidgetItem(parent1)
+                    new_carpeta1.setText(0, entry.name)
+                    new_carpeta2 = QtGui.QTreeWidgetItem(parent2)
+                    new_carpeta2.setText(0, entry.name)
+                    self.update_files_tree(new_carpeta1, new_carpeta2, entry.path_lower)
+                else:
+                    new_file1 = QtGui.QTreeWidgetItem(parent1)
+                    new_file1.setText(0, entry.name)
+                    new_file2 = QtGui.QTreeWidgetItem(parent2)
+                    new_file2.setText(0, entry.name)
 
     def mostrar_historial(self):
         archivo_seleccionado = self.ArbolArchivos.currentItem()
@@ -98,9 +129,20 @@ class MainWindow(ventana[0], ventana[1]):
             QtGui.QMessageBox.critical(None, 'ERROR', "Debe seleccionar un archivo.", QtGui.QMessageBox.Ok)
 
     def actualizar_pressed(self):
-        if not self.thread_actualizar_arbol.isAlive():
+        self.actualizar_method()
+
+    def actualizar_method(self):
+        try:
+            self.actualizar = False
+            while self.thread_actualizar_arbol.isAlive():
+                time.sleep(0.05)
+            self.actualizar = True
             self.ArbolArchivos.clear()
-            self.crear_thread(self.update_files_tree, (self.ArbolArchivos,), "thread_actualizar_arbol")
+            self.ArbolArchivos2.clear()
+            self.crear_thread(self.update_files_tree, (self.ArbolArchivos, self.ArbolArchivos2),
+                              "thread_actualizar_arbol")
+        except:
+            pass
 
     def descargar_pressed(self):
         if not self.thread_descarga_archivo.isAlive():
@@ -200,7 +242,6 @@ class MainWindow(ventana[0], ventana[1]):
                 path = path[:-1]
                 path_dir = '/' + '/'.join(path)
 
-
                 path_origen_subida = QtGui.QFileDialog.getOpenFileName(self)
                 if path_origen_subida:
                     nombre_archivo = os.path.split(path_origen_subida)[1]
@@ -224,7 +265,7 @@ class MainWindow(ventana[0], ventana[1]):
         try:
             with open(path_origen_subida, 'rb') as archivo:
                 self.dbx.files_upload(archivo, path_subida)
-            self.actualizar_pressed()
+            self.actualizar_method()
         except:
             pass
 
@@ -266,5 +307,167 @@ class MainWindow(ventana[0], ventana[1]):
     def crear_carpeta(self, path_creacion):
         try:
             self.dbx.files_create_folder(path_creacion)
+            self.actualizar_method()
         except:
             pass
+
+    def renombrar_pressed(self):
+        if not self.thread_renombrar.isAlive():
+            archivo_seleccionado = self.ArbolArchivos.currentItem()
+            if archivo_seleccionado:
+                nombre_archivo = archivo_seleccionado.text(0)
+
+                if nombre_archivo.count(".") > 0:
+                    extension = os.path.splitext(nombre_archivo)[1]
+                    item = archivo_seleccionado
+
+                    path = []
+                    while item is not None:
+                        path.append(str(item.text(0)))
+                        item = item.parent()
+                    path_archivo = '/' + '/'.join(reversed(path))
+
+                    nuevo_nombre = self.NuevoNombreLineEdit.text()
+                    if nuevo_nombre:
+                        nuevo_nombre += extension
+                        self.crear_thread(self.renombrar,
+                                          (path_archivo, nuevo_nombre),
+                                          "thread_renombrar")
+                    else:
+                        QtGui.QMessageBox.critical(None, 'ERROR', "Debe ingresar un nuevo nombre.",
+                                                   QtGui.QMessageBox.Ok)
+
+                else:
+                    item = archivo_seleccionado
+
+                    path = []
+                    while item is not None:
+                        path.append(str(item.text(0)))
+                        item = item.parent()
+                    path_archivo = '/' + '/'.join(reversed(path))
+
+                    nuevo_nombre = self.NuevoNombreLineEdit.text()
+                    if nuevo_nombre:
+                        self.crear_thread(self.renombrar,
+                                          (path_archivo, nuevo_nombre),
+                                          "thread_renombrar")
+                    else:
+                        QtGui.QMessageBox.critical(None, 'ERROR', "Debe ingresar un nuevo nombre.",
+                                                   QtGui.QMessageBox.Ok)
+
+            else:
+                QtGui.QMessageBox.critical(None, 'ERROR', "Debe seleccionar un archivo o carpeta.",
+                                           QtGui.QMessageBox.Ok)
+
+        else:
+            QtGui.QMessageBox.critical(None,
+                                       'ERROR',
+                                       "Actualmente se esta renombrando "
+                                       "un archivo o carpeta, por favor espere.",
+                                       QtGui.QMessageBox.Ok)
+
+    def renombrar(self, path_original, nuevo_nombre):
+        try:
+            path_llegada = os.path.split(path_original)[0]
+            nuevo_path = path_llegada + "/" + nuevo_nombre
+            self.dbx.files_move(path_original, nuevo_path)
+            self.actualizar_method()
+        except Exception as err:
+            print(err)
+
+    def mover_pressed(self):
+        if not self.thread_mover.isAlive():
+            archivo_seleccionado = self.ArbolArchivos.currentItem()
+            if archivo_seleccionado:
+                self.deshabilitar()
+
+            else:
+                QtGui.QMessageBox.critical(None, 'ERROR', "Debe seleccionar un archivo o carpeta.",
+                                           QtGui.QMessageBox.Ok)
+
+        else:
+            QtGui.QMessageBox.critical(None,
+                                       'ERROR',
+                                       "Actualmente se esta moviendo "
+                                       "un archivo o carpeta, por favor espere.",
+                                       QtGui.QMessageBox.Ok)
+
+    def aceptar_pressed(self):
+        archivo_seleccionado = self.ArbolArchivos.currentItem()
+        item = archivo_seleccionado
+
+        path = []
+        while item is not None:
+            path.append(str(item.text(0)))
+            item = item.parent()
+        path_origen = '/' + '/'.join(reversed(path))
+
+        path_destino = self.DestinoLabel.text().split(": ")[1]
+
+        if path_destino:
+            self.crear_thread(self.mover,
+                              (path_origen, path_destino),
+                              "thread_mover")
+
+    def mover(self, path_origen, path_destino):
+        try:
+            self.dbx.files_move(path_origen, path_destino)
+            self.habilitar()
+            self.actualizar_method()
+        except:
+            self.habilitar()
+
+    def deshabilitar(self):
+        self.DestinoLabel.setText("Destino Archivo A Mover: ")
+
+        self.ArbolArchivos.setEnabled(False)
+        self.ActualizarButton.setEnabled(False)
+        self.VerHistorialButton.setEnabled(False)
+        self.DescargarArchivoButton.setEnabled(False)
+        self.DescargarCarpetaButton.setEnabled(False)
+        self.SubirArchivoButton.setEnabled(False)
+        self.MoverButton.setEnabled(False)
+        self.MoverButton.setEnabled(False)
+        self.CrearCarpetaButton.setEnabled(False)
+        self.RenombrarButton.setEnabled(False)
+        self.NombreCarpetaLineEdit.setEnabled(False)
+        self.NuevoNombreLineEdit.setEnabled(False)
+        self.HistorialTable.setEnabled(False)
+
+        self.ArbolArchivos2.setEnabled(True)
+        self.CancelarButton.setEnabled(True)
+
+    def habilitar(self):
+        self.DestinoLabel.setText("Destino Archivo A Mover: ")
+
+        self.ArbolArchivos.setEnabled(True)
+        self.ActualizarButton.setEnabled(True)
+        self.VerHistorialButton.setEnabled(True)
+        self.DescargarArchivoButton.setEnabled(True)
+        self.DescargarCarpetaButton.setEnabled(True)
+        self.SubirArchivoButton.setEnabled(True)
+        self.MoverButton.setEnabled(True)
+        self.MoverButton.setEnabled(True)
+        self.CrearCarpetaButton.setEnabled(True)
+        self.RenombrarButton.setEnabled(True)
+        self.NombreCarpetaLineEdit.setEnabled(True)
+        self.NuevoNombreLineEdit.setEnabled(True)
+        self.HistorialTable.setEnabled(True)
+
+        self.ArbolArchivos2.setEnabled(False)
+        self.AceptarButton.setEnabled(False)
+        self.CancelarButton.setEnabled(False)
+
+    def update_pathlabel(self):
+        self.AceptarButton.setEnabled(True)
+        nombre_archivo = self.ArbolArchivos.currentItem().text(0)
+        item = self.ArbolArchivos2.currentItem()
+        path = []
+        while item is not None:
+            path.append(str(item.text(0)))
+            item = item.parent()
+        path.reverse()
+        path = path[:-1]
+        path_item = '/' + '/'.join(path) + '/' + nombre_archivo
+        path_item = path_item.replace('//', '/')
+        self.DestinoLabel.setText("Destino Archivo A Mover: {}".format(path_item))
