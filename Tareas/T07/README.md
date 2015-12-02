@@ -11,3 +11,5 @@
 * Al subir un archivo, mover de un directorio a otro o renombrar, se actualiza todo el arbol de archivos. De esta forma se aprovecha de actualizar posibles cambios que se hayan hecho externamente durante la sesión, dejando al usuario su arbol de archivos verdadero.
 
 * Al descargar una carpeta, no se permite descargarla en una ubicacion donde existe una carpeta con el mismo nombre.
+
+* Al pedir el historial de modificaciones de una carpeta, se muestran los historiales de modificaciones de todos los archivos que contiene, omitiendo las subcarpetas.

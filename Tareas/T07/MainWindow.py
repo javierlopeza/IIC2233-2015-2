@@ -102,17 +102,64 @@ class MainWindow(ventana[0], ventana[1]):
                 item = item.parent()
             path = '/' + '/'.join(reversed(path))
 
-            try:
-                revisiones = self.dbx.files_list_revisions(path, limit=99)
-                num_rows = self.HistorialTable.rowCount()
+            path_llegada, nombre = os.path.split(path)
 
-                # Se limpia la HistorialTable.
-                for r in range(num_rows):
-                    self.HistorialTable.removeRow(0)
+            if nombre.count(".") == 0 or nombre.count(".") > 1:
+                es_carpeta = True
+            else:
+                es_carpeta = False
 
-                # Se muestra el nombre archivo del que se obtuvo el historial.
-                self.HistorialLabel.setText("Historial de Modificaciones del Archivo: {}".
-                                            format(archivo_seleccionado.text(0)))
+            if not es_carpeta:
+                self.crear_thread(self.historial_archivo, (path, nombre), "thread_historial")
+
+            elif es_carpeta:
+                self.crear_thread(self.historial_carpeta, (path, nombre), "thread_historial")
+        else:
+            QtGui.QMessageBox.critical(None, 'ERROR', "Debe seleccionar un archivo.", QtGui.QMessageBox.Ok)
+
+    def historial_archivo(self, path_archivo, nombre_archivo):
+        try:
+            revisiones = self.dbx.files_list_revisions(path_archivo, limit=99)
+            num_rows = self.HistorialTable.rowCount()
+
+            # Se limpia la HistorialTable.
+            for r in range(num_rows):
+                self.HistorialTable.removeRow(0)
+
+            # Se muestra el nombre archivo del que se obtuvo el historial.
+            self.HistorialLabel.setText("Historial de Modificaciones del Archivo: {}".
+                                        format(nombre_archivo))
+
+            # Se agregan las revisiones obtenidas a la HistorialTable.
+            for rev in revisiones.entries:
+                n_row = self.HistorialTable.rowCount()
+                self.HistorialTable.insertRow(n_row)
+                self.HistorialTable.setVerticalHeaderItem(n_row, QtGui.QTableWidgetItem(rev.name))
+                fecha = "-".join(reversed(str(rev.client_modified).split(" ")[0].split("-")))
+                hora = str(rev.client_modified).split(" ")[1]
+                size = rev.size
+                self.HistorialTable.setItem(n_row, 0, QtGui.QTableWidgetItem(str(fecha)))
+                self.HistorialTable.setItem(n_row, 1, QtGui.QTableWidgetItem(str(hora)))
+                self.HistorialTable.setItem(n_row, 2, QtGui.QTableWidgetItem(str(size)))
+
+        except:
+            QtGui.QMessageBox.critical(None, 'ERROR', "Vuelva a intentarlo.", QtGui.QMessageBox.Ok)
+
+
+    def historial_carpeta(self, path_carpeta, nombre_carpeta):
+        try:
+            # Se limpia la HistorialTable.
+            num_rows = self.HistorialTable.rowCount()
+            for r in range(num_rows):
+                self.HistorialTable.removeRow(0)
+            # Se muestra el nombre de la carpeta del que se obtuvo el historial.
+            self.HistorialLabel.setText("Historial de Modificaciones de la Carpeta: {}".
+                                        format(nombre_carpeta))
+            for entry in self.dbx.files_list_folder(path_carpeta).entries:
+                try:
+                    revisiones = self.dbx.files_list_revisions(entry.path_lower, limit=99)
+                except:
+                    continue
 
                 # Se agregan las revisiones obtenidas a la HistorialTable.
                 for rev in revisiones.entries:
@@ -126,11 +173,12 @@ class MainWindow(ventana[0], ventana[1]):
                     self.HistorialTable.setItem(n_row, 1, QtGui.QTableWidgetItem(str(hora)))
                     self.HistorialTable.setItem(n_row, 2, QtGui.QTableWidgetItem(str(size)))
 
-            except:
-                QtGui.QMessageBox.critical(None, 'ERROR', "Debe seleccionar un archivo.", QtGui.QMessageBox.Ok)
+        except:
+            QtGui.QMessageBox.critical(None, 'ERROR', "Vuelva a intentarlo.", QtGui.QMessageBox.Ok)
 
-        else:
-            QtGui.QMessageBox.critical(None, 'ERROR', "Debe seleccionar un archivo.", QtGui.QMessageBox.Ok)
+
+
+
 
     def actualizar_pressed(self):
         self.actualizar_method()
