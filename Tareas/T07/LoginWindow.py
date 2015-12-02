@@ -28,8 +28,6 @@ class LoginWindow(ventana[0], ventana[1]):
         else:
             try:
                 dbx = dropbox.Dropbox(token_ingresado)
-                dbx.users_get_current_account()
-                print(dbx.__dict__)
 
             except:
                 QtGui.QMessageBox.critical(None,

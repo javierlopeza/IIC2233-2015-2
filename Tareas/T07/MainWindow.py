@@ -16,6 +16,10 @@ class MainWindow(ventana[0], ventana[1]):
         self.setupUi(self)
         self.dbx = dbx
 
+        user_info = self.dbx.users_get_current_account()
+        self.username = user_info.name.display_name
+        self.EstadoLabel.setText("Usuario Conectado: {}".format(self.username))
+
         icono = QtGui.QIcon(QtGui.QPixmap('assets/logo.png'))
         self.setWindowIcon(icono)
 
@@ -205,7 +209,7 @@ class MainWindow(ventana[0], ventana[1]):
                     if path_destino_descarga:
                         path_destino_descarga = os.path.join(path_destino_descarga, nombre_carpeta)
                         self.crear_thread(self.descargar_carpeta,
-                                          (path_destino_descarga, path_carpeta),
+                                          (path_destino_descarga, path_carpeta, nombre_carpeta),
                                           "thread_descarga_archivo")
 
                 else:
@@ -222,11 +226,24 @@ class MainWindow(ventana[0], ventana[1]):
                                        "un archivo, por favor espere.",
                                        QtGui.QMessageBox.Ok)
 
-    def descargar_carpeta(self, path_destino_descarga, path_carpeta):
-        nombre_carpeta = os.path.split(path_carpeta)[1]
-        dir_carpeta = os.path.join(path_destino_descarga, nombre_carpeta)
-        if not os.path.exists(dir_carpeta):
-            os.makedirs(dir_carpeta)
+    def descargar_carpeta(self, path_destino_descarga, path_carpeta_dbx, nombre_carpeta):
+        if not os.path.exists(path_destino_descarga):
+            self.crear_thread(self.bajar_contenido,
+                              (path_destino_descarga, path_carpeta_dbx),
+                              "thread_descarga_archivo")
+
+    def bajar_contenido(self, path_destino_pc, path_carpeta_dbx):
+        try:
+            os.makedirs(path_destino_pc)
+            for entry in self.dbx.files_list_folder(path_carpeta_dbx).entries:
+                if isinstance(entry, dropbox.files.FolderMetadata):
+                    self.bajar_contenido(os.path.join(path_destino_pc, entry.name), entry.path_lower)
+                else:
+                    self.dbx.files_download_to_file(os.path.join(path_destino_pc, entry.name),
+                                                    entry.path_lower,
+                                                    rev=None)
+        except Exception as err:
+            print(err)
 
     def subir_pressed(self):
         if not self.thread_subir_archivo.isAlive():

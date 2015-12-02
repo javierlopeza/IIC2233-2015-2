@@ -1,10 +1,5 @@
 ﻿## Tarea 07
 
-### Pendiente
-
-* Bajar carpeta.
-
-
 ### Consideraciones
 
 * Al iniciar el programa, se carga el arbol completo de archivos del Dropbox del usuario.
@@ -14,3 +9,5 @@
 * La consideración anterior funciona de igual forma para la creación de carpetas, mover carpetas y mover archivos.
 
 * Al subir un archivo, mover de un directorio a otro o renombrar, se actualiza todo el arbol de archivos. De esta forma se aprovecha de actualizar posibles cambios que se hayan hecho externamente durante la sesión, dejando al usuario su arbol de archivos verdadero.
+
+* Al descargar una carpeta, no se permite descargarla en una ubicacion donde existe una carpeta con el mismo nombre.

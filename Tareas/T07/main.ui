@@ -91,7 +91,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Estado: Conectado</string>
+    <string>Usuario Conectado: </string>
    </property>
   </widget>
   <widget class="QLabel" name="HistorialLabel">
